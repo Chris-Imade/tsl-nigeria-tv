@@ -83,13 +83,13 @@ const Login = () => {
                     
                     if(data) {
                         setIsLoading("false");
-                        console.log("<------------ Data is returned ----------------->");
+                        // console.log("<------------ Data is returned ----------------->");
                     } else {
-                        console.log("What could go wrong?")
+                        // console.log("What could go wrong?")
                     }
 
-                console.log(data)
-                console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
+                console.log(data);
+                // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
             });
 
         }
@@ -253,7 +253,7 @@ const Login = () => {
                     justifyContent: "center",
                     alignItems: "center"
                 }}>
-                    <TouchableHighlight onPress={() => {}}>
+                    <TouchableHighlight disabled onPress={() => {}}>
                         <View className='items-center'>
                             <Image 
                                 source={images.GoogleIcon}
@@ -268,7 +268,7 @@ const Login = () => {
                             }}>Google</Text>
                         </View>
                     </TouchableHighlight>
-                    <TouchableHighlight onPress={() => {}}>
+                    <TouchableHighlight disabled onPress={() => {}}>
                         <View className='items-center'>
                             <Image 
                                 source={images.FaceBookIcon}
