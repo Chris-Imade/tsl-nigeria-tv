@@ -33,7 +33,7 @@ const Login = () => {
     const [passwordFocus, setPasswordFocus] = useState("no");
     const [hideTxt, setHideTxt] = useState(true);
     const [responseData, setResponseData] = useState("");
-    const [errorResponseData, setErrorResponseData] = useState("Unable to login");
+    const [errorResponseData, setErrorResponseData] = useState("");
     const [isLoading, setIsLoading] = useState("false");
 
     const dispatch = useDispatch();
@@ -84,8 +84,6 @@ const Login = () => {
                     if(data) {
                         setIsLoading("false");
                         console.log("<------------ Data is returned ----------------->");
-                    } else if (data.error) {
-                        alert(errorResponseData);
                     } else {
                         console.log("What could go wrong?")
                     }
@@ -148,6 +146,23 @@ const Login = () => {
                         fontSize: 17,
                         marginBottom: 38
                     }}>Sign in</Text>
+
+                    {/* Error value */}
+                    {errorResponseData && (
+                        <View style={{
+                            width: "100%",
+                            bottom: 30,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            paddingVertical: 1,
+                        }}>
+                            <Text style={{
+                                color: "red",
+                                textAlign: "center",
+                                fontFamily: "Stem-Regular"
+                            }}>{errorResponseData}</Text>
+                        </View>
+                    )}
 
                     <TextInput 
                         style={[
@@ -319,7 +334,7 @@ const Login = () => {
             </View>
             )}
 
-            {/* Show loading spinnerr */}
+            {/* Show error logging in spinnerr */}
         </ScrollView>
     )
 }
