@@ -75,7 +75,7 @@ const SignUp = () => {
                 return response.json(); // parses JSON response into native JavaScript objects
               }
               
-            postData("https://web-production-c1bd.up.railway.app/auth/users/", userCredentials)
+            postData("https://web-production-93c3.up.railway.app/auth/users/", userCredentials)
             .then((data) => {
                 data.error && setErrorResponseData(data.error.message);
                 console.log(data);

@@ -18,7 +18,7 @@ import { images } from "../../assets/images";
 import { colors, ScreenHeight, ScreenWidth } from "../../components/shared";
 import { 
     setAccessToken, 
-    setRefreshToken 
+    // setRefreshToken 
 } from "../../Redux/Slice/AppSlice";
 
 const Login = () => {
@@ -40,6 +40,9 @@ const Login = () => {
 
     const navigation = useNavigation();
 
+
+    const accessToken = useSelector((state) => state.data.accessToken);
+    console.log("AccessToken", accessToken);
     
     
     const loginAlready = () => {
@@ -71,14 +74,15 @@ const Login = () => {
               
               
             return response.json(); // parses JSON response into native JavaScript objects
-          }
+        }
           
-            postData("https://web-production-c1bd.up.railway.app/auth/token/login/", userCredentials)
+            postData("https://web-production-93c3.up.railway.app/auth/token/login/", userCredentials)
             .then((data) => {
                 data.error && setErrorResponseData(data.error.message);
                 console.log(data);
                     if(!data.error) {
                         setResponseData(data);
+                        dispatch(setAccessToken(data.auth_token));
                     }
                     
                     if(data) {
@@ -92,7 +96,7 @@ const Login = () => {
                 // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
             });
 
-        }
+    }
 
         
 
