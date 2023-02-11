@@ -118,6 +118,9 @@ const SignUp = () => {
         return false;
     }
 
+    responseData && setTimeout(() => {
+        navigation.navigate("Login");
+    }, 5000)
 
 
     return (
@@ -143,22 +146,25 @@ const SignUp = () => {
                         color: "#D6D6D7",
                         fontSize: 17,
                         marginBottom: 38
-                    }}>Sign up</Text>
+                    }}>
+                        Sign up
+                    </Text>
 
                     {/* Error value */}
                     {errorResponseData && (
                         <View style={{
                             width: "100%",
-                            bottom: 30,
+                            bottom: 15,
                             justifyContent: "center",
                             alignItems: "center",
-                            paddingVertical: 1,
                         }}>
-                            <Text style={{
+                            <Text className="opacity-30" style={{
                                 color: "red",
                                 textAlign: "center",
                                 fontFamily: "Stem-Regular"
-                            }}>{errorResponseData}</Text>
+                            }}>
+                                {errorResponseData}
+                            </Text>
                         </View>
                     )}
                     
@@ -166,21 +172,19 @@ const SignUp = () => {
                     {responseData && (
                         <View style={{
                             width: "100%",
-                            bottom: 30,
+                            bottom: 15,
                             justifyContent: "center",
                             alignItems: "center",
-                            paddingVertical: 1,
                         }}>
                             <Text style={{
                                 color: "#80D200",
                                 textAlign: "center",
                                 fontFamily: "Stem-Regular"
-                            }}>{"Please check your mail to activate your account"}</Text>
+                            }}>
+                                Please check your mail to activate your account
+                            </Text>
                         </View>
                     )}
-                    {responseData && setTimeout(() => {
-                        navigation.navigate("Login");
-                    }, 5000)}
                     <TextInput 
                         style={[styles.txtInput, { backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a", marginBottom: !emailValid ? 5 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: !emailValid ? "red" : emailFocus === "yes" ? "#80D200" : null }]}
                         placeholder="Enter your email"
@@ -202,17 +206,25 @@ const SignUp = () => {
                         <View style={{
                             width: "100%",
                             justifyContent: "center",
-                            paddingVertical: 1,
                             marginBottom: !emailValid ? 5 : 0,
                         }}>
-                            <Text className="text-red-600" style={{
-                                fontFamily: "Stem-Regular"
-                            }}>Invalid email! please enter a valid email</Text>
+                            <Text className="text-red-600 opacity-30" style={{
+                                fontFamily: "Stem-Regular",
+                                textAlign: "center"
+                            }}>
+                                Invalid email! please enter a valid email
+                            </Text>
                         </View>
                     )}
                     <View style={{ width: "100%", position: "relative" }}>
                         <TextInput
-                            style={[styles.txtInput, { backgroundColor: secondIntBg ? secondIntBg : "#1a1a1a", marginBottom: !passValid ? 5 : 0, borderWidth: 0.5, borderStyle: "solid", borderColor: !passValid ? "red" : passwordFocus === "yes" ? "#80D200" : null }]}
+                            style={[styles.txtInput, { 
+                                backgroundColor: secondIntBg ? secondIntBg : "#1a1a1a", 
+                                marginBottom: 20, 
+                                borderWidth: 0.5, 
+                                borderStyle: "solid", 
+                                borderColor: !passValid ? "red" : passwordFocus === "yes" ? "#80D200" : null 
+                            }]}
                             placeholder="Password"
                             placeholderTextColor={"#545558"}
                             onBlur={() => {
@@ -240,23 +252,10 @@ const SignUp = () => {
                             />
                         </TouchableWithoutFeedback>
                     </View>
-                    {/* Password Error Toast */}
-                    {!passValid && (
-                        <View style={{
-                                width: "100%",
-                                justifyContent: "center",
-                                paddingVertical: 1,
-                                marginBottom: !passValid ? 5 : 0,
-                        }}>
-                            <Text className="text-red-600" style={{
-                                textAlign: "center",
-                                fontFamily: "Stem-Regular"
-                            }}>Not less than 8 char + Atleast 1 letter, 1 number, and 1 special character</Text>
-                    </View>
-                    )}
+                    
                     <View style={{ width: "100%", position: "relative" }}>
                         <TextInput 
-                            style={[styles.txtInput, { backgroundColor: thirdIntBg ? thirdIntBg : "#1a1a1a", marginBottom: 40, borderWidth: 0.5, borderStyle: "solid", borderColor: !passValid ? "red" : confirmPasswordFocus === "yes" ? "#80D200" : null }]}
+                            style={[styles.txtInput, { backgroundColor: thirdIntBg ? thirdIntBg : "#1a1a1a", marginBottom: !passValid ? 5 : 40, borderWidth: 0.5, borderStyle: "solid", borderColor: !passValid ? "red" : confirmPasswordFocus === "yes" ? "#80D200" : null }]}
                             placeholder="Confirm Password"
                             placeholderTextColor={"#545558"}
                             onBlur={() => {
@@ -284,16 +283,41 @@ const SignUp = () => {
                             />
                         </TouchableWithoutFeedback>
                     </View>
+                    {/* Password Error Toast */}
+                    {!passValid && (
+                        <View style={{
+                                width: "100%",
+                                justifyContent: "center",
+                                paddingVertical: 1,
+                        }}>
+                            <Text className="text-red-600 opacity-30" style={{
+                                textAlign: "center",
+                                fontFamily: "Stem-Regular"
+                            }}>
+                                Not less than 8 char + Atleast 1 letter, 1 number, and 1 special character
+                            </Text>
+                    </View>
+                    )}
                 </KeyboardAvoidingView>
 
                 <View style={{ justifyContent: "center", alignItems: "center", marginTop: 40, marginHorizontal: 20 }}>
+                {isLoading === "true" ? (
                     <TouchableOpacity
                         style={styles.signInBtn}
                         onPress={() => onSignUp()}
-                        disabled={password !== confirmPassword || !emailValid || !passValid || isLoading === "true"}
+                        disabled={ password !== confirmPassword || !emailValid || !passValid || isLoading === "true" || email === "" || password === "" || confirmPassword === "" }
                     >
-                        <Text style={styles.signInTxt}>{isLoading === "true" ? (<ActivityIndicator size={"small"} color="white" />) :"Sign Up"}</Text>
+                        <ActivityIndicator size={"small"} color="white" />
                     </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity
+                        style={styles.signInBtn}
+                        onPress={() => onSignUp()}
+                        disabled={ password !== confirmPassword || !emailValid || !passValid || isLoading === "true" || email === "" || password === "" || confirmPassword === "" }
+                    >
+                        <Text style={styles.signInTxt}>Sign Up</Text>
+                    </TouchableOpacity>
+                )}
                 </View>
 
                 <View style={{

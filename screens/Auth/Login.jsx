@@ -156,7 +156,7 @@ const Login = () => {
                             alignItems: "center",
                             paddingVertical: 1,
                         }}>
-                            <Text style={{
+                            <Text className="opacity-30" style={{
                                 color: "red",
                                 textAlign: "center",
                                 fontFamily: "Stem-Regular"
@@ -169,7 +169,7 @@ const Login = () => {
                             styles.txtInput, 
                             { 
                                 backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a", 
-                                marginBottom: 16, 
+                                marginBottom: !emailValid ? 5 : 16,
                                 borderWidth: 0.5, 
                                 borderStyle: "solid", 
                                 borderColor: !emailValid ? "red" : emailFocus === "yes" ? "#80D200" : null 
@@ -188,9 +188,29 @@ const Login = () => {
                         keyboardType={"email-address"}
                         selectionColor={"white"}
                     />
+
+                    {/* Error Toast */}
+                    {!emailValid && (
+                        <View style={{
+                            width: "100%",
+                            paddingVertical: 1,
+                            marginBottom: !emailValid ? 5 : 0,
+                        }}>
+                            <Text className="text-red-600 opacity-30" style={{
+                                fontFamily: "Stem-Regular",
+                                textAlign: "center"
+                            }}>Invalid email! please enter a valid email</Text>
+                        </View>
+                    )}
                     <View style={{ width: "100%", position: "relative" }}>
                         <TextInput
-                            style={[styles.txtInput, { backgroundColor: secondIntBg ? secondIntBg : "#1a1a1a", marginBottom: 20, borderWidth: 0.5, borderStyle: "solid", borderColor: !passValid ? "red" : passwordFocus === "yes" ? "#80D200" : null }]}
+                            style={[styles.txtInput, { 
+                                backgroundColor: secondIntBg ? secondIntBg : "#1a1a1a", 
+                                marginBottom: !emailValid ? 5 : 20, 
+                                borderWidth: 0.5, 
+                                borderStyle: "solid", 
+                                borderColor: !passValid ? "red" : passwordFocus === "yes" ? "#80D200" : null 
+                            }]}
                             placeholder="Password"
                             placeholderTextColor={"#545558"}
                             onBlur={() => {
@@ -233,12 +253,25 @@ const Login = () => {
                             </TouchableWithoutFeedback>
                         )}
                     </View>
+                    {/* Password Error Toast */}
+                    {!passValid && (
+                        <View style={{
+                            width: "100%",
+                            paddingVertical: 1
+                        }}>
+                            <Text className="opacity-30" style={{
+                                color: "red",
+                                textAlign: "center",
+                                fontFamily: "Stem-Regular"
+                            }}>Not less than 8 char + Atleast 1 letter, 1 number, and 1 special character</Text>
+                    </View>
+                    )}
                 </KeyboardAvoidingView>
 
                 <View style={{ justifyContent: "center", alignItems: "center", marginTop: 40, marginHorizontal: 20 }}>
                     <TouchableOpacity
                         style={styles.signInBtn}
-                        disabled={isLoading === "true"}
+                        disabled={ !emailValid || !passValid || isLoading === "true" || email === "" || password === "" }
                         onPress={() => {
                             loginAlready();
                         }}
@@ -296,43 +329,6 @@ const Login = () => {
                 </View>
             </View>
 
-            {/* Email Error Toast */}
-            {!emailValid && (
-                <View style={{
-                    position: "absolute",
-                    backgroundColor: "red",
-                    width: "100%",
-                    bottom: 0,
-                    height: 30,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    paddingVertical: 1
-                }}>
-                    <Text style={{
-                        color: colors.white,
-                        fontFamily: "Stem-Regular"
-                    }}>Invalid email! please enter a valid email</Text>
-                </View>
-            )}
-
-            {/* Password Error Toast */}
-            {!passValid && (
-                <View style={{
-                    position: "absolute",
-                    backgroundColor: "red",
-                    width: "100%",
-                    bottom: 30,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    paddingVertical: 1
-                }}>
-                    <Text style={{
-                        color: colors.white,
-                        textAlign: "center",
-                        fontFamily: "Stem-Regular"
-                    }}>Not less than 8 char + Atleast 1 letter, 1 number, and 1 special character</Text>
-            </View>
-            )}
 
             {/* Show error logging in spinnerr */}
         </ScrollView>
