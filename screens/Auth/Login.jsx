@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../../assets/images";
-import { colors, ScreenHeight, ScreenWidth } from "../../components/shared";
+import { baseUrl, colors, ScreenHeight, ScreenWidth } from "../../components/shared";
 import { 
     setAccessToken, 
     // setRefreshToken 
@@ -76,7 +76,7 @@ const Login = () => {
             return response.json(); // parses JSON response into native JavaScript objects
         }
           
-            postData("https://web-production-93c3.up.railway.app/auth/token/login/", userCredentials)
+            postData(`${baseUrl}auth/token/login/`, userCredentials)
             .then((data) => {
                 data.error && setErrorResponseData(data.error.message);
                 console.log(data);

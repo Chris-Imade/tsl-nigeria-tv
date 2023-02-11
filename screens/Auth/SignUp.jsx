@@ -17,7 +17,7 @@ import {
 } from "react-native";
 import { useSelector } from "react-redux";
 import { images } from "../../assets/images";
-import { colors } from "../../components/shared";
+import { baseUrl, colors } from "../../components/shared";
 
 // const verifyEndpoint = "https://web-production-c1bd.up.railway.app/auth/jwt/verify/"
 // const refreshEndpoint = "https://web-production-c1bd.up.railway.app/auth/jwt/refresh/"
@@ -75,10 +75,10 @@ const SignUp = () => {
                 return response.json(); // parses JSON response into native JavaScript objects
               }
               
-            postData("https://web-production-93c3.up.railway.app/auth/users/", userCredentials)
+            postData(`${baseUrl}auth/users/`, userCredentials)
             .then((data) => {
                 data.error && setErrorResponseData(data.error.message);
-                console.log(data);
+                // console.log(data);
                     if(!data.error) {
                         setResponseData(data);
                     }
@@ -92,6 +92,10 @@ const SignUp = () => {
 
                 console.log(data)
                 // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
+            }).catch((error) => {
+                setIsLoading("false");
+                console.warn(error.message);
+                setErrorResponseData(error.message);
             });
     }
 
