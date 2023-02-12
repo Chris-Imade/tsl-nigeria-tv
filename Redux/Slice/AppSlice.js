@@ -1,20 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    catStatus: "",
     categories: [],
     searchQuery: "",
     user: {},
     lightModeEnabled: false,
-    userInfo: {
-      location: "Country",
-      flag: ""
-    },
-    userDetails: {
-      phoneCode: "",
-      flag: ""
-    },
-    robostUserUpdateDetails: {},
     tvShowsData: [],
     searchList: false,
     searchNotification: false,
@@ -22,7 +12,7 @@ const initialState = {
     videoDownloadData: [],
     downloadDetails: {},
     accessToken: "",
-    refreshToken: ""
+    refreshToken: "",
 }
 
 // export const getMovies = createAsyncThunk('data/getMovies', () => {
@@ -66,7 +56,8 @@ export const appSlice = createSlice({
     },
     setRefreshToken: (state, action) => {
       state.refreshToken = action.payload;
-    }
+    },
+
     // extraReducers: (builder) => {
     //   // Add reducers for additional action types here, and handle loading state as needed
     //   builder.addCase(fetchTvCategories.fulfilled, (state, action) => {

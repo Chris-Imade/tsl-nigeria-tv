@@ -4,9 +4,10 @@ import { NativeBaseProvider } from "native-base";
 import { Provider } from "react-redux";
 import { useFonts } from 'expo-font';
 import AppRoot from "./navigation/AppRoot";
-import store from "./Redux/store";
 import { News, Profile, VideoScreen, Welcome } from "./screens";
 import Search from "./screens/Search";
+import { store, persistor } from "./Redux/store";
+import { PersistGate } from 'redux-persist/integration/react';
 
   const App = () => {
 
@@ -29,9 +30,11 @@ import Search from "./screens/Search";
   return (
     <NavigationContainer>
       <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
         <NativeBaseProvider>
          <AppRoot />
         </NativeBaseProvider>
+      </PersistGate>
       </Provider>
     </NavigationContainer>
   );

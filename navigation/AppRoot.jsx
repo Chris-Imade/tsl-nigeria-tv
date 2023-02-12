@@ -7,7 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from '../components/shared';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from "react-redux";
-import { Downloads, Home, Lists, Login, News, Notification, Profile, SignUp, VideoScreen, Welcome } from '../screens';
+import { ChangeCredentials, Downloads, Home, Lists, Login, News, Notification, PasswordReset, Profile, SignUp, VideoScreen, Welcome } from '../screens';
 import Search from '../screens/Search';
 import { TouchableHighlight } from 'react-native';
 import { Image } from 'react-native';
@@ -50,13 +50,14 @@ const HomeStack = () => {
             }} name='home-screen' component={Home} />
             <RootStack.Screen  
             options={{
-                headerTintColor: colors.white,
-                headerStyle: {
-                    backgroundColor: colors.black
-                },
-                headerTitleStyle: {
-                    color: "transparent"
-                }
+                // headerTintColor: colors.white,
+                // headerStyle: {
+                //     backgroundColor: colors.black
+                // },
+                // headerTitleStyle: {
+                //     color: "transparent"
+                // },
+                headerShown: false
             }}
             name='video-screen' component={VideoScreen} />
             <RootStack.Screen options={{
@@ -159,6 +160,8 @@ const AuthStack = () => {
             {/* All the auth related screens */}
             <Auth.Screen name="Login" component={Login} />
             <Auth.Screen name="SignUp" component={SignUp} />
+            <Auth.Screen name="change-credential" component={ChangeCredentials} />
+            <Auth.Screen name="password-reset" component={PasswordReset} />
             <Auth.Screen
             options={{
                 headerShown: false

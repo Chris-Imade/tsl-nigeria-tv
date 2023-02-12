@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, Platform, Image, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Animated, SafeAreaView, TouchableHighlight, ImageBackground } from "react-native";
+import { StyleSheet, Text, View, Platform, Image, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Animated, SafeAreaView, TouchableHighlight, ImageBackground, Dimensions } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { AnimatedScroll, MobileNav } from "../../components";
 import { colors, ScreenHeight, ScreenWidth } from "../../components/shared";
@@ -11,30 +11,11 @@ const Home = () => {
 
     const [loaded, setLoaded] =  useState(false);    
 
-    const [portrait, setPortrait] = useState();
-
     const navigation = useNavigation();
 
-    const [showDetailedMenu, setShowDetailedMenu] = useState(false);
+    const [showDetailedMenu, setShowDetailedMenu] = useState(false);    
 
-    
-    const useForceUpdate = () => useState()[1];
-    
-    
-    
-    setTimeout(() => {
-        setLoaded(true);
-        // useForceUpdate();
-        ScreenOrientation.addOrientationChangeListener((orientation) => console.log("Just change Orientation!!!-------------------------------->>", orientation));
 
-    }, 1500)
-    
-    const changeScreenOrientation = async() => {
-        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
-    }
-    useEffect(() => {
-        changeScreenOrientation();
-    }, [ScreenOrientation])
 
     const lightModeEnabled = useSelector((state) => state?.data?.lightModeEnabled);
 

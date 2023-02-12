@@ -42,7 +42,7 @@ const Login = () => {
 
 
     const accessToken = useSelector((state) => state.data.accessToken);
-    console.log("AccessToken", accessToken);
+    console.log(accessToken);
     
     
     const loginAlready = () => {
@@ -55,7 +55,6 @@ const Login = () => {
         const validMail = isEmail(email);
         const validPass = isPassword(password);
 
-        // console.log(validMail);
         validMail ? setEmailValid(true) : setEmailValid(false);
         validPass ? setPassValid(true) : setPassValid(false);
 
@@ -66,24 +65,26 @@ const Login = () => {
             // Default options are marked with *
             const response = await fetch(url, {
                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                mode: 'no-cors',
                 headers: {
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
                 },
                 body: JSON.stringify(data) // body data type must match "Content-Type" header
               });
               
-              
+            
             return response.json(); // parses JSON response into native JavaScript objects
         }
           
-            postData(`${baseUrl}auth/token/login/`, userCredentials)
+            postData(`https://web-production-93c3.up.railway.app/auth/token/login/`, userCredentials)
             .then((data) => {
                 data.error && setErrorResponseData(data.error.message);
-                console.log(data);
                     if(!data.error) {
                         setResponseData(data);
                         dispatch(setAccessToken(data.auth_token));
                     }
+                    console.log(data);
                     
                     if(data) {
                         setIsLoading("false");
@@ -92,10 +93,12 @@ const Login = () => {
                         // console.log("What could go wrong?")
                     }
 
-                console.log(data);
                 // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
+            }).catch((error) => {
+                setIsLoading("false");
+                console.log(error);
+                setErrorResponseData(error.message);
             });
-
     }
 
         
@@ -323,7 +326,7 @@ const Login = () => {
                 </View>
 
                 <View style={[{ width: "100%", marginTop: 40 }, styles.bottomActions]}>
-                    <TouchableOpacity onPress={() => {}}><Text style={styles.needHelp}>Need help?</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("password-reset")}><Text style={styles.needHelp}>Forgot password?</Text></TouchableOpacity>
                     <View className="flex-row">
                         <Text style={styles.signUp} onPress={() => navigation.navigate("Welcome")}>New to TSL TV? </Text>
                         <TouchableHighlight onPress={() => navigation.navigate("SignUp")}>

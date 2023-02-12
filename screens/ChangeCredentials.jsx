@@ -1,28 +1,13 @@
-// jwt/verify
-
-import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { 
-    KeyboardAvoidingView, 
-    StyleSheet, 
-    TextInput, 
-    TouchableOpacity, 
-    View, 
-    Text, 
-    Image, 
-    ScrollView,
-    TouchableHighlight,
-    TouchableWithoutFeedback,
-    ActivityIndicator
-} from "react-native";
+import { ActivityIndicator, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { Image, KeyboardAvoidingView, Text, TouchableWithoutFeedback, View } from "react-native";
 import { useSelector } from "react-redux";
-import { images } from "../../assets/images";
-import { baseUrl, colors } from "../../components/shared";
+import { images } from "../assets/images";
+import { colors } from "../components/shared";
 
-// const verifyEndpoint = "https://web-production-c1bd.up.railway.app/auth/jwt/verify/"
-// const refreshEndpoint = "https://web-production-c1bd.up.railway.app/auth/jwt/refresh/"
-
-const SignUp = () => {
+const ChangeCredentials = () => {
+    const [errorResponseData, setErrorResponseData] = useState("");
+    const [responseData, setResponseData] = useState("");
     const [firstIntBg, setFirstIntBg] = useState("");
     const [secondIntBg, setSecondIntBg] = useState("");
     const [thirdIntBg, setThirdIntBg] = useState("");
@@ -35,17 +20,11 @@ const SignUp = () => {
     const [confirmPasswordFocus, setConfirmPasswordFocus] = useState("no");
     const [emailFocus, setEmailFocus] = useState("no");
     const [hideTxt, setHideTxt] = useState(true);
-    const [responseData, setResponseData] = useState("");
-    const [errorResponseData, setErrorResponseData] = useState("");
     const [isLoading, setIsLoading] = useState("false");
-
-    // console.log(emailValid);
 
     const lightModeEnabled = useSelector((state) => state?.data?.lightModeEnabled);
 
-    const navigation = useNavigation();
-
-    const onSignUp = () => {
+    const onLogin = () => {
         const validMail = isEmail(email);
         const validPass = isPassword(password);
 
@@ -59,43 +38,6 @@ const SignUp = () => {
             }
 
             setIsLoading("true");
-
-            const postData = async(url = '', data) => {
-                // Default options are marked with *
-                const response = await fetch(url, {
-                    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                    mode: 'no-cors',
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(data) // body data type must match "Content-Type" header
-                  });
-                  
-                  
-                return response.json(); // parses JSON response into native JavaScript objects
-              }
-              
-            postData(`https://web-production-93c3.up.railway.app/auth/users/`, userCredentials)
-            .then((data) => {
-                data.error && setErrorResponseData(data.error.message);
-                // console.log(data);
-                    if(!data.error) {
-                        setResponseData(data);
-                    }
-                    
-                    if(data) {
-                        setIsLoading("false");
-                        // console.log("<------------ Data is returned ----------------->");
-                    } else {
-                        // console.log("What could go wrong?")
-                    }
-
-                // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
-            }).catch((error) => {
-                setIsLoading("false");
-                setErrorResponseData(error.message);
-            });
     }
 
 
@@ -121,38 +63,32 @@ const SignUp = () => {
         return false;
     }
 
-    responseData && setTimeout(() => {
-        navigation.navigate("Login");
-    }, 5000)
-
-
     return (
-        <ScrollView 
-        showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.container}>
-            <View style={{ width: "100%", justifyContent: "center", flex: 2 }}>
-                <KeyboardAvoidingView style={{ width: "100%",  alignItems: "center", justifyContent: "center", paddingHorizontal: 20 }}>
+        <View style={{ flex: 1, backgroundColor: lightModeEnabled ? colors.white : colors.black }}>
+            <View>
+                <KeyboardAvoidingView style={{ width: "100%",  alignItems: "flex-start", justifyContent: "center", paddingHorizontal: 20 }}>
 
-                    <Image 
-                        source={images.TvLogo}
-                        resizeMode={"contain"}
-                        style={{
-                            width: 152,
-                            height: 86,
-                            marginTop: 68,
-                            marginBottom: 20
-                        }}
-                    />
-
+                <View style={{ marginTop: 64 }}>
                     <Text style={{
+                        color: lightModeEnabled ? colors.black : "#D6D6D7",
                         fontFamily: "Stem-Medium",
-                        color: "#D6D6D7",
-                        fontSize: 17,
-                        marginBottom: 38
-                    }}>
-                        Sign up
-                    </Text>
+                        fontSize: 20
 
+                    }}>Login with your new password</Text>
+                    <Text style={{
+                        color: lightModeEnabled ? colors.black : "#D6D6D7",
+                        fontFamily: "Stem-Medium",
+                        fontSize: 15,
+                        marginTop: 16
+                    }}>Change your password and login</Text>
+                </View>
+                
+                
+                <View style={{
+                    width: "100%",
+                    alignItems: "center",
+                    marginTop: 40
+                }}>
                     {/* Error value */}
                     {errorResponseData && (
                         <View style={{
@@ -170,7 +106,7 @@ const SignUp = () => {
                             </Text>
                         </View>
                     )}
-                    
+
                     {/* Response value */}
                     {responseData && (
                         <View style={{
@@ -188,37 +124,7 @@ const SignUp = () => {
                             </Text>
                         </View>
                     )}
-                    <TextInput 
-                        style={[styles.txtInput, { backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a", marginBottom: !emailValid ? 5 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: !emailValid ? "red" : emailFocus === "yes" ? "#80D200" : null }]}
-                        placeholder="Enter your email"
-                        placeholderTextColor={"#545558"}
-                        onBlur={() => {
-                            setFirstIntBg(colors.darkMode);
-                            setEmailFocus("no");
-                        }}
-                        onFocus={() => {
-                            setFirstIntBg(colors.firstGradientShade);
-                            setEmailFocus("yes");
-                        }}
-                        onChangeText={(text) => setEmail(text)}
-                        keyboardType={"email-address"}
-                        selectionColor={"white"}
-                    />
-                    {/* Error Toast */}
-                    {!emailValid && (
-                        <View style={{
-                            width: "100%",
-                            justifyContent: "center",
-                            marginBottom: !emailValid ? 5 : 0,
-                        }}>
-                            <Text className="text-red-600 opacity-30" style={{
-                                fontFamily: "Stem-Regular",
-                                textAlign: "center"
-                            }}>
-                                Invalid email! please enter a valid email
-                            </Text>
-                        </View>
-                    )}
+
                     <View style={{ width: "100%", position: "relative" }}>
                         <TextInput
                             style={[styles.txtInput, { 
@@ -255,10 +161,10 @@ const SignUp = () => {
                             />
                         </TouchableWithoutFeedback>
                     </View>
-                    
+
                     <View style={{ width: "100%", position: "relative" }}>
                         <TextInput 
-                            style={[styles.txtInput, { backgroundColor: thirdIntBg ? thirdIntBg : "#1a1a1a", marginBottom: !passValid ? 5 : 40, borderWidth: 0.5, borderStyle: "solid", borderColor: !passValid ? "red" : confirmPasswordFocus === "yes" ? "#80D200" : null }]}
+                            style={[styles.txtInput, { backgroundColor: thirdIntBg ? thirdIntBg : "#1a1a1a", marginBottom: !passValid ? 5 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: !passValid ? "red" : confirmPasswordFocus === "yes" ? "#80D200" : null }]}
                             placeholder="Confirm Password"
                             placeholderTextColor={"#545558"}
                             onBlur={() => {
@@ -301,13 +207,44 @@ const SignUp = () => {
                             </Text>
                     </View>
                     )}
+                    <TextInput 
+                        style={[styles.txtInput, { backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a", marginBottom: !emailValid ? 5 : 40, borderWidth: 0.5, borderStyle: "solid", borderColor: !emailValid ? "red" : emailFocus === "yes" ? "#80D200" : null }]}
+                        placeholder="Enter your email"
+                        placeholderTextColor={"#545558"}
+                        onBlur={() => {
+                            setFirstIntBg(colors.darkMode);
+                            setEmailFocus("no");
+                        }}
+                        onFocus={() => {
+                            setFirstIntBg(colors.firstGradientShade);
+                            setEmailFocus("yes");
+                        }}
+                        onChangeText={(text) => setEmail(text)}
+                        keyboardType={"email-address"}
+                        selectionColor={"white"}
+                    />
+                    {/* Error Toast */}
+                    {!emailValid && (
+                        <View style={{
+                            width: "100%",
+                            justifyContent: "center",
+                            marginBottom: !emailValid ? 5 : 0,
+                        }}>
+                            <Text className="text-red-600 opacity-30" style={{
+                                fontFamily: "Stem-Regular",
+                                textAlign: "center"
+                            }}>
+                                Invalid email! please enter a valid email
+                            </Text>
+                        </View>
+                    )}
+                </View>
                 </KeyboardAvoidingView>
-
                 <View style={{ justifyContent: "center", alignItems: "center", marginTop: 40, marginHorizontal: 20 }}>
                 {isLoading === "true" ? (
                     <TouchableOpacity
                         style={styles.signInBtn}
-                        onPress={() => onSignUp()}
+                        onPress={() => onLogin()}
                         disabled={ password !== confirmPassword || !emailValid || !passValid || isLoading === "true" || email === "" || password === "" || confirmPassword === "" }
                     >
                         <ActivityIndicator size={"small"} color="white" />
@@ -315,65 +252,18 @@ const SignUp = () => {
                 ) : (
                     <TouchableOpacity
                         style={styles.signInBtn}
-                        onPress={() => onSignUp()}
-                        disabled={ password !== confirmPassword || !emailValid || !passValid || isLoading === "true" || email === "" || password === "" || confirmPassword === "" }
+                        onPress={() => onLogin()}
+                        disabled={ password!== confirmPassword || !emailValid || !passValid || isLoading === "true" || email === "" || password === "" || confirmPassword === "" }
                     >
-                        <Text style={styles.signInTxt}>Sign Up</Text>
+                        <Text style={styles.signInTxt}>Login</Text>
                     </TouchableOpacity>
                 )}
                 </View>
-
-                <View style={{
-                    marginTop: 40,
-                    flexDirection: "row", 
-                    justifyContent: "center",
-                    alignItems: "center"
-                }}>
-                    <TouchableHighlight disabled onPress={() => {}}>
-                        <View className='items-center'>
-                            <Image 
-                                source={images.GoogleIcon}
-                                style={{
-                                    width: 70,
-                                    height: 70
-                                }}
-                            />
-                            <Text style={{
-                                color: "#545558",
-                                fontFamily: "Stem-SemiLight",
-                            }}>Google</Text>
-                        </View>
-                    </TouchableHighlight>
-                    <TouchableHighlight disabled onPress={() => {}}>
-                        <View className='items-center'>
-                            <Image 
-                                source={images.FaceBookIcon}
-                                style={{
-                                    width: 70,
-                                    height: 70
-                                }}
-                            />
-                            <Text style={{
-                                color: "#545558",
-                                fontFamily: "Stem-SemiLight",
-                            }}>Facebook</Text>
-                        </View>
-                    </TouchableHighlight>
-                </View>
-
-                <View style={[{ width: "100%", marginTop: 40 }, styles.bottomActions]}>
-                    <TouchableOpacity onPress={() => {}}><Text style={styles.needHelp}>Need help?</Text></TouchableOpacity>
-                    <View className="flex-row">
-                        <Text style={styles.signUp}>Already have an account? </Text>
-                        <TouchableHighlight onPress={() => navigation.navigate("Login")}>
-                            <Text style={{ color: "#98999B", fontFamily: "Stem-Regular", marginLeft: 10 }}>Sign In now.</Text>
-                        </TouchableHighlight>
-                    </View>
-                </View>
             </View>
-        </ScrollView>
+        </View>
     )
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -395,7 +285,7 @@ const styles = StyleSheet.create({
     },
     signInTxt: {
         fontFamily: "Stem-Medium",
-        color: "#D6D6D7",
+        color: colors.black,
         fontSize: 17,
     },
     signInBtn: {
@@ -404,23 +294,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 12,
-        borderWidth: 1.5, 
-        borderStyle: "solid", 
-        borderColor: colors.grayMedium
-    },
-    needHelp: {
-        marginBottom: 20,
-        color: "#545558",
-        fontFamily: "Stem-SemiLight",
-    },
-    signUp: {
-        color: "#545558",
-        fontFamily: "Stem-Regular",
-    },
-    bottomActions: {
-        justifyContent: "center",
-        alignItems: "center"
+        backgroundColor: colors.companyGreen
     }
 })
 
-export default SignUp;
+export default ChangeCredentials;
