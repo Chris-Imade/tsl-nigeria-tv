@@ -9,10 +9,12 @@ import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from "react-redux";
 import { ChangeCredentials, Downloads, Home, Lists, Login, News, Notification, PasswordReset, Profile, SignUp, VideoScreen, Welcome } from '../screens';
 import Search from '../screens/Search';
-import { TouchableHighlight } from 'react-native';
+import { TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native';
 import { Image } from 'react-native';
 import { images } from '../assets/images';
 import { setSearchList, setSearchNotification } from '../Redux/Slice/AppSlice';
+import { TouchableOpacity } from 'react-native';
+import CategoryDetails from '../screens/CategoryDetails';
 
 
 const AppStack = createNativeStackNavigator();
@@ -121,6 +123,13 @@ const HomeStack = () => {
                 </TouchableHighlight>
                 )
             }} name='notification-screen' component={Notification} />
+            <RootStack.Screen options={{
+                headerStyle: {
+                    backgroundColor: lightModeEnabled ? colors.white : colors.black
+                },
+                headerTintColor: lightModeEnabled ? colors.black : colors.white,
+                headerTitle: ""
+            }} name='category-details' component={CategoryDetails} />
         </RootStack.Navigator>
   )
 }
@@ -179,6 +188,8 @@ const Tab = createBottomTabNavigator();
 const HomeApp = () => {
 
     const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
+
+    const navigation = useNavigation();
 
     return (
         <Tab.Navigator
@@ -262,8 +273,39 @@ const HomeApp = () => {
             {/* All the tab related screens */}
             <Tab.Screen name='Home' component={HomeStack} />
             <Tab.Screen name='Hot & Spicy' component={News} />
-            <Tab.Screen name='Downloads' component={Downloads} />
-            {/* <Tab.Screen name='Profile' component={ProfileStack} /> */}
+            <Tab.Screen options={{
+                headerShown: true,
+                headerStyle: {
+                    backgroundColor: lightModeEnabled ? colors.white : colors.black
+                },
+                headerTitleStyle: {
+                    color: lightModeEnabled ? colors.black : colors.white
+                },
+                headerRight: () => (
+                    <View
+                        className="flex-row">
+                            <TouchableOpacity 
+                            onPress={() => {}}
+                            className="mr-[26px] w-[28px] h-[28px]">
+                                <Image
+                                    source={images.SearchSmall}
+                                    style={{
+                                        width: 24,
+                                        height: 24,
+                                    }}
+                                />
+                            </TouchableOpacity>
+
+                            <TouchableWithoutFeedback onPress={() => navigation.navigate("profile-screen")}>
+                                <Image 
+                                    source={images.MaleProfile}
+                                    resizeMode="contain"
+                                    className="w-[28px] h-[28px] mr-[26px]"
+                                />
+                            </TouchableWithoutFeedback>
+                        </View>
+                ),
+            }} name='Downloads' component={Downloads} />
         </Tab.Navigator>
     )
 }

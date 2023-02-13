@@ -13,8 +13,8 @@ const VideoScreen = (props) => {
 
     const dispatch = useDispatch();
 
-    // const baseUrl = "https://www.youtube.com/watch?v="
-
+    // const baseUrl = "https://www.youtube.com/watch?v=EyqI0B4C0D4"
+    const embedURI = `https://www.youtube.com/embed/${data}`
 
     return (
             <View className="flex-1 absolute top-0 right-0 left-0 z-50" style={{
@@ -26,7 +26,7 @@ const VideoScreen = (props) => {
                     javaScriptEnabled={true}
                     // userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
                     scrollEnabled={false}
-                    source={{ uri: data }} 
+                    source={{ uri: embedURI }} 
                     style={{ 
                         width: "100%",
                         height: Dimensions.get("window").height > 300 ? 300 : "100%",

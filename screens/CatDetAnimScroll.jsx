@@ -1,16 +1,16 @@
 import { Skeleton, View, VStack } from "native-base";
 import React, { useState } from "react";
 import { Animated, Image, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
-import { images } from "../assets/images";
 import { Actionsheet, Box, useDisclose, Center } from "native-base";
 import { StyleSheet } from "react-native";
-import { colors } from "./shared";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { setVideoDownloadData, setVideoIdForDownload, setVideoList } from "../Redux/Slice/AppSlice";
+import { setVideoDownloadData, setVideoList, setCategoryDetailsPage } from "../Redux/Slice/AppSlice";
+import { images } from "../assets/images";
+import { colors } from "../components/shared";
 
 
-const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
+const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
 
     const [info, setInfo] = useState({})
 
@@ -24,8 +24,11 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
 
     const navigation = useNavigation();
 
-    const categories = useSelector((state) => state.data.categories);
-    // console.log(categories[2].videos[0].video_link);
+    const videoList = useSelector((state) => state.data?.videoList);
+
+    const categoryDetailsPage = useSelector((state) => state.data?.categoryDetailsPage);
+    
+    // console.log(categoryDetailsPage);
 
     return (
         <Animated.ScrollView
@@ -41,7 +44,7 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                     <View style={{ flex: 1 }}>
                         {/* <MobileNav /> */}
                         <Image 
-                            source={{ uri: categories[2].videos[0].mobile_banner }}
+                            source={{ uri: categoryDetailsPage?.videos[0]?.mobile_banner }}
                             resizeMode={"cover"}
                             style={{
                                 width: "100%",
@@ -52,13 +55,13 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                         />
                     <View className="w-full items-center justify-center">
                         <View className="w-[79%] mt-[-50px] items-center flex-row justify-around mx-[18px] space-x-1">
-                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categories[2].videos[0].mood[0]}</Text>
+                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categoryDetailsPage?.videos[0]?.mood[0]}</Text>
                             <Text style={styles.menuTxt} className="w-1 h-1 rounded-full bg-white"></Text>
-                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categories[2].videos[0].mood[1]}</Text>
+                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categoryDetailsPage?.videos[0]?.mood[1]}</Text>
                             <Text style={styles.menuTxt} className="w-1 h-1 rounded-full bg-white"></Text>
-                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categories[2].videos[0].genres[0]}</Text>
+                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categoryDetailsPage?.videos[0]?.genres[0]}</Text>
                             <Text style={styles.menuTxt} className="w-1 h-1 rounded-full bg-white"></Text>
-                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categories[2].videos[0].genres[1]}</Text>
+                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categoryDetailsPage?.videos[0]?.genres[1]}</Text>
                         </View>
                     </View>
                     </View>
@@ -74,7 +77,7 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                                 <Text style={styles.menuTxt} className="text-white text-[9px] pt-[8px]">My List</Text>
                             </View>
                             <TouchableOpacity 
-                            onPress={() => navigation.navigate("video-screen", { data: categories[2].videos[0].video_link })}
+                            onPress={() => navigation.navigate("video-screen", { data: categoryDetailsPage.videos[0].video_link })}
                             className="rounded-[4px] justify-center items-center bg-slate-50 w-[108px] h-[42px] flex-row">
                                 {/* Play Icon */}
                                 <Image 
@@ -87,7 +90,7 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                             <TouchableOpacity
                             onPress={() => {
                                 onOpen();
-                                setInfo(categories[2].videos[0]);
+                                setInfo(categoryDetailsPage.videos[0]);
                             }} className="items-center">
                                 <Image
                                     source={images.InfoMain}
@@ -107,40 +110,40 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                     </View>
                 ) : null}
 
-                {!isLoading ? categories.map((item, index) => (
-                        <View className="" key={index}>
+                {!isLoading ? (
+                        <View className="">
                             <View className="my-[8px] ml-2">
                                 <Text style={{
                                     fontFamily: "Stem-Medium"
-                                }} className="text-[17px] text-white">{item.name}</Text>
+                                }} className="text-[17px] text-white">Trending</Text>
                             </View>
                             <ScrollView 
-                                horizontal
                                 contentContainerStyle={{
                                     // paddingBottom: 14
+                                    width: "100%"
                                 }}>
-                                {item.videos.map((item, index) => (
+                                    <View className="flex-wrap justify-center flex-row mx-[16px] w-full">
+                                    {categoryDetailsPage ? categoryDetailsPage.videos.map((item, index) => (
                                         <TouchableOpacity key={index} 
-                                        onPress={() => {
-                                            setInfo(item);
-                                            onOpen();
-                                        }}>
-                                        <Image 
-                                            source={{ uri: item.mobile_thumbnail }}
-                                            resizeMode={"contain"}
-                                            style={{
-                                                width: 124,
-                                                height: 176,
-                                                marginHorizontal: 4,
-                                                marginLeft: 8,
-                                                borderRadius: 8
-                                            }}
-                                        />
+                                                onPress={() => {
+                                                    setInfo(item);
+                                                    onOpen();
+                                                }}>
+                                                <Image 
+                                                    source={{ uri: item.mobile_thumbnail }}
+                                                    resizeMode={"contain"}
+                                                    className="my-[6px] mx-[6px] h-[176px] w-[124px] rounded-[8px]"
+                                                />
                                         </TouchableOpacity>
-                                ))}
+                                        )) : (
+                                            <View key={index}>
+                                                <Skeleton className="bg-slate-900/60 my-[6px] mx-[6px] h-[176px] w-[124px] rounded-[8px]"></Skeleton>
+                                            </View>
+                                    )}
+                                    </View>
                             </ScrollView>
                         </View>
-                    ))
+                    )
                 : <ScrollView showsVerticalScrollIndicator={false}>
                         <View>
                             <Skeleton className="ml-4 mb-4 w-40 bg-slate-900/60 h-4 rounded-md"></Skeleton>
@@ -267,4 +270,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default AnimatedScroll;
+export default CatDetAnimScroll;

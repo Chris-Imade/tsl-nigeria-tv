@@ -18,9 +18,91 @@ import {
     setVideoIdForDownload,
     setDownloadDetails
 } from "../Redux/Slice/AppSlice";
-import ytdl from "react-native-ytdl" 
+import * as FileSystem from 'expo-file-system';
 
 const Downloads = (props) => {
+    // Initials
+    const { StorageAccessFramework } = FileSystem;
+    const [downloadProgress, setDownloadProgress] = React.useState();
+    const downloadPath = FileSystem.documentDirectory + (Platform.OS == 'android' ? '' : '');
+    console.log("DwnloadPath", downloadPath);
+
+    // Ensure path exists
+    const ensureDirAsync = async (dir, intermediates = true) => {
+        const props = await FileSystem.getInfoAsync(dir)
+        if (props.exist && props.isDirectory) {
+            return props;
+        }
+        let _ = await FileSystem.makeDirectoryAsync(dir, { intermediates })
+        return await ensureDirAsync(dir, intermediates)
+    }
+
+    // show download progress
+    const downloadCallback = downloadProgress => {
+        const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite;
+        setDownloadProgress(progress);
+    };
+
+    console.log("DownloadProgress", downloadProgress);
+    
+    // Initial download for  android/Ios
+    const downloadFile = async (fileUrl) => {
+        if (Platform.OS == 'android') {
+          const dir = ensureDirAsync(downloadPath);
+        }
+    
+        let fileName = fileUrl.split('Reports/')[1];
+        //alert(fileName)
+        const downloadResumable = FileSystem.createDownloadResumable(
+          fileUrl,
+          downloadPath + fileName,
+          {},
+          downloadCallback
+        );
+    
+        try {
+          const { uri } = await downloadResumable.downloadAsync();
+          if (Platform.OS == 'android')
+            saveAndroidFile(uri, fileName)
+          else
+            saveIosFile(uri);
+        } catch (e) {
+          console.error('download error:', e);
+        }
+    }
+        // Save android file in publlic directory
+        const saveAndroidFile = async (fileUri, fileName = 'File') => {
+            try {
+            const fileString = await FileSystem.readAsStringAsync(fileUri, { encoding: FileSystem.EncodingType.Base64 });
+            
+            const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync();
+            if (!permissions.granted) {
+                return;
+            }
+
+            try {
+                await StorageAccessFramework.createFileAsync(permissions.directoryUri, fileName, 'application/pdf')
+                .then(async (uri) => {
+                    await FileSystem.writeAsStringAsync(uri, fileString, { encoding: FileSystem.EncodingType.Base64 });
+                    alert('Report Downloaded Successfully')
+                })
+                .catch((e) => {
+                });
+            } catch (e) {
+                throw new Error(e);
+            }
+
+            } catch (err) {
+            }
+        }
+        // save ios file in directory
+        const saveIosFile = (fileUri) => {
+            // your ios code
+            // i use expo share module to save ios file
+        }
+
+
+    
 
     const [modalVisible, setModalVisible] = React.useState(false);
     const [loadingModal, setLoadingModal] = useState(false);
@@ -36,27 +118,25 @@ const Downloads = (props) => {
     const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
     const downloadDetails = useSelector((state) => state.data.downloadDetails);
 
+    console.log(videoDownloadData);
 
-    console.log(downloadDetails);
+    const getVideoDownloadURL = (id) => {
 
-    const getValidDownloadInfo = async(id) => {
-        const youtubeURL = `http://www.youtube.com/watch?v=${videoIdForDownload}`;
-        dispatch(setVideoIdForDownload(id));
-        setLoadingModal(true);
-        try {
-            const urls = await ytdl(youtubeURL, { filter: format => format.container === 'mp4' });
-            console.log(urls);
-            setLoadingModal(false);
-            setModalVisible(false);
-            setShowModal(true);
-            // dispatch(setDownloadDetails(response));
-        } catch (error) {
-            setLoadingModal(false);
-            setModalVisible(true);
-        }
+        const options = {
+            method: 'GET',
+            mode: 'no-cors',
+            headers: {
+                'X-RapidAPI-Key': 'c0557c4efamshcd93e3522c4f925p1500b0jsn50f58dc496f0',
+                'X-RapidAPI-Host': 'youtube-dl4.p.rapidapi.com'
+            }
+        };
+        
+        fetch(`https://youtube-dl4.p.rapidapi.com/fc8c5416b9cfd8fc?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D${id}`, options)
+            .then(response => response.json())
+            .then(response => console.log(downloadFile(response.formats[3].url)))
+            .catch(err => console.error(err));
+
     }
-    
-
 
     // useEffect(() => {
     // }, [videoIdForDownload])
@@ -68,7 +148,7 @@ const Downloads = (props) => {
                 paddingTop: Platform.OS === "android" ? 30 : null, 
                 flex: 1, 
                 backgroundColor: colors.black,
-                justifyContent: "center",
+                // justifyContent: "center",
                 alignItems: "center",
             }}>
                 <View style={{
@@ -108,163 +188,46 @@ const Downloads = (props) => {
                     className="" contentContainerStyle={{ width: ScreenWidth, alignItems: "center" }}>
                         {videoDownloadData?.map((item, index) => (
                             <TouchableHighlight  
-                                onPress={() => getValidDownloadInfo("BkL9l7qovsE")}
+                                onPress={() => getVideoDownloadURL("BkL9l7qovsE")}
                                 key={index} 
-                                className="flex flex-row items-center bg-slate-800 w-[90%] p-3 rounded-md min-h-[50px] my-2">
-                                <View className="flex-row justify-between flex-1 pr-3">
+                                className="w-[90%] mb-[21px]"
+                                >
+                                <View style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    justifyContent: "center"
+                                }} className="px-12">
                                     <Image 
                                         source={{ uri: item?.data?.image }}
                                         style={{
-                                            width: 50,
-                                            height: 50,
-                                            flex: 1
+                                            width: 96,
+                                            height: 72,
+                                            borderRadius: 4
                                         }}
-                                        resizeMode={"contain"}
+                                        resizeMode={"cover"}
                                     />
-                                    <View className="flex-[3] flex-row items-center justify-between min-w-[60%]">
-                                        <View className="max-w-[90%] pl-3">
-                                            <Text 
+                                    <View className="w-[100%] ml-[12px]">
+                                        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                                            <Text style={{ fontFamily: "Stem-Medium", fontSize: 13, color: "#F5F5F5" }}>Omo Ghetto</Text>
+                                            <Image 
+                                                source={images.More}
                                                 style={{
-                                                    fontFamily: "Stem-Medium",
-                                                    fontWeight: "500",
-                                                    fontSize: 16,
-                                                    lineHeight: 24
+                                                    width: 24,
+                                                    height: 24
                                                 }}
-                                                className="text-white">{item?.data?.title}</Text>
-                                                {/* <Text className="text-white leading-5">{item?.data?.description}</Text> */}
-                                        </View> 
-                                        <Image 
-                                            source={images.DownloadFilled}
-                                            style={{
-                                                width: 24,
-                                                height: 24,
-                                                // marginLeft: 20
-                                            }}
-                                            resizeMode={"contain"}
-                                        />
+                                            />
+                                        </View>
+                                        <View className="">
+                                            <Text style={{ color: "#545558", fontFamily: "Stem-Regular", fontSize: 8 }}>300mb/600mb</Text>
+                                            <View style={{}} className="w-full h-[3px] bg-[#1E1E1E] first-letter:rounded-[2px] mt-[4px]"></View>
+                                            <Text style={{ color: colors.companyGreen, fontSize: 9, fontFamily: "Stem-Regular" }}>Connecting...</Text>
+                                        </View>
                                     </View>
                                 </View>
                             </TouchableHighlight>
                         ))}
                     </ScrollView>
                 </SafeAreaView>
-                <Modal style={{
-                        backgroundColor: "#00000062"
-                    }} isOpen={modalVisible} onClose={setModalVisible} size={"xs"}>
-                    <Modal.Content style={{
-                        backgroundColor: lightModeEnabled ? colors.white : colors.darkMode
-                    }} maxH="212">
-                        <Modal.CloseButton />
-                            <Modal.Header style={{
-                                backgroundColor: lightModeEnabled ? colors.white : colors.darkMode,
-                            }}>
-                                <Text style={{ 
-                                    color: lightModeEnabled ? colors.black : colors.white,
-                                    fontFamily: "Stem-Medium"
-                                }}>Return Policy</Text></Modal.Header>
-                            <Modal.Body>
-                                <>
-                                <Text style={{
-                                    color: lightModeEnabled ? colors.black : colors.white,
-                                    fontFamily: "Stem-Medium"
-                                }}>
-                                {`Connection failed\nPlease connect to the internet and try again🙂🌎`}
-                                </Text>
-                                </>
-                            </Modal.Body>
-                            <Modal.Footer style={{
-                                backgroundColor: lightModeEnabled ? colors.white : colors.darkMode
-                            }}>
-                                <Button.Group space={2}>
-                                <Button variant="ghost" colorScheme="blueGray" onPress={() => {
-                                setModalVisible(false);
-                                }}>
-                                    <Text style={{
-                                        color: lightModeEnabled ? colors.black : colors.white,
-                                        fontFamily: "Stem-Medium"
-                                    }}>Close</Text>
-                                </Button>
-                                </Button.Group>
-                            </Modal.Footer>
-                        </Modal.Content>
-                </Modal>
-
-                <Modal style={{
-                        backgroundColor: "#00000062"
-                    }} isOpen={loadingModal} onClose={setLoadingModal} size={"xs"}>
-                    <Modal.Content style={{
-                        backgroundColor: lightModeEnabled ? colors.white : colors.darkMode
-                    }} maxH="212">
-                            <Modal.CloseButton />
-                            <Modal.Body>
-                                <Spinner size={"lg"} accessibilityLabel="Loading download links" />
-                            </Modal.Body>
-                        </Modal.Content>
-                </Modal>
-
-                <Center>
-                        <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="lg">
-                            <Modal.Content maxWidth="350">
-                            <Modal.CloseButton />
-                            <Modal.Header>DownLoad Video</Modal.Header>
-                            <Modal.Body>
-                                <View className="w-full">
-                                    <Text className="text-black">Video: {"Movie Title"}</Text>
-                                    <Text>Duration: {`${"2:04"}`}</Text>
-                                </View>
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button flex="1" onPress={() => {
-                                setShowModal3(true);
-                            }}>
-                                Select video quality
-                                </Button>
-                            </Modal.Footer>
-                            </Modal.Content>
-                        </Modal>
-
-                        <Modal isOpen={showModal3} size="lg" onClose={() => setShowModal3(false)}>
-                            <Modal.Content maxWidth="350">
-                            <Modal.CloseButton />
-                            <Modal.Header>Video Qualities</Modal.Header>
-                            <Modal.Body>
-                                <Radio.Group name="payment" size="sm">
-                                <VStack space={3}>
-                                    <Radio alignItems="flex-start" _text={{
-                                        mt: "-1",
-                                        ml: "2",
-                                        fontSize: "sm"
-                                }} value="payment1">
-                                        {"Video Link"}
-                                    </Radio>
-                                    <Radio alignItems="flex-start" _text={{
-                                    mt: "-1",
-                                    ml: "2",
-                                    fontSize: "sm"
-                                }} value="payment2">
-                                    Credit/ Debit/ ATM Card
-                                    </Radio>
-                                    <Radio alignItems="flex-start" _text={{
-                                    mt: "-1",
-                                    ml: "2",
-                                    fontSize: "sm"
-                                }} value="payment3">
-                                    UPI
-                                    </Radio>
-                                </VStack>
-                                </Radio.Group>
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button flex="1" onPress={() => {
-                                setShowModal(false);
-                                setShowModal3(false);
-                            }}>
-                                Download
-                                </Button>
-                            </Modal.Footer>
-                            </Modal.Content>
-                        </Modal>
-                    </Center>
             </>
         )
     }

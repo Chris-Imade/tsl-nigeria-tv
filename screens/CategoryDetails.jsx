@@ -1,20 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View, Platform, Image, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Animated, SafeAreaView, TouchableHighlight, ImageBackground, Dimensions } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { AnimatedScroll, MobileNav } from "../../components";
-import { colors, ScreenHeight, ScreenWidth } from "../../components/shared";
+import { AnimatedScroll, MobileNav } from "./";
 import { useNavigation } from "@react-navigation/native";
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { images } from "../../assets/images";
-import { getData } from "../../components/fetchVideos";
-import { setCategories, setVideoId } from "../../Redux/Slice/AppSlice";
+import { images } from "../assets/images";
+import { setCategoryDetailsPage, setVideoId } from "../Redux/Slice/AppSlice";
+import CatDetAnimScroll from "./CatDetAnimScroll";
+import { ScreenWidth, colors, ScreenHeight } from "../components/shared";
 
-const Home = () => {
+const CategoryDetails = () => {
     const [errorResponseData, setErrorResponseData] = useState("");
     const [responseData, setResponseData] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     
-    const [loaded, setLoaded] =  useState(false);    
     
     const navigation = useNavigation();
     
@@ -23,10 +22,13 @@ const Home = () => {
 
 
     const lightModeEnabled = useSelector((state) => state?.data?.lightModeEnabled);
-    const categories = useSelector((state) => state?.data?.categories);
+    const categories = useSelector((state) => state?.data?.cateogries);
+    const videoId = useSelector((state) => state?.data?.videoId);
     
     const animateValue = useRef(new Animated.Value(0)).current;
     
+    
+
     const dispatch = useDispatch();
     
     // Animated Heights
@@ -49,10 +51,29 @@ const Home = () => {
     
 
     useEffect(() => {
-        getData(`https://web-production-93c3.up.railway.app/api/categories`)
+        
+        const getData = async(url = '') => {
+            // Default options are marked with *
+            const response = await fetch(url, {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    Authorization: 'Token 818fbb131c82e940cb22b8b348dc430af391d4d7'
+                }// body data type must match "Content-Type" header
+                });
+                
+                
+            return response.json(); // parses JSON response into native JavaScript objects
+        
+            // console.log("Happy Coding --->!");
+        }
+
+        getData(`https://web-production-93c3.up.railway.app/api/categories/${videoId}`)
         .then((data) => {
             // console.log(data);
-            dispatch(setCategories(data));
+            dispatch(setCategoryDetailsPage(data));
                 
                 if(data) {
                     setIsLoading(false);
@@ -66,7 +87,7 @@ const Home = () => {
             setIsLoading("false");
             setErrorResponseData(error.message);
         });
-    }, [])
+    }, [videoId])
 
 
     return (
@@ -142,16 +163,16 @@ const Home = () => {
                     <View
                         className="flex-row justify-around w-full mb-5"
                     >
-                        <TouchableWithoutFeedback onPress={() => setShowDetailedMenu(true)}>
-                            <Text style={styles.menuTxt} className="text-white">TV Shows</Text>
+                        <TouchableWithoutFeedback>
+                            <Text style={styles.menuTxt} className="text-white"></Text>
                         </TouchableWithoutFeedback>
 
-                        <TouchableWithoutFeedback onPress={() => setShowDetailedMenu(true)}>
-                            <Text style={styles.menuTxt} className="text-white">Categories</Text>
+                        <TouchableWithoutFeedback>
+                            <Text style={styles.menuTxt} className="text-white"></Text>
                         </TouchableWithoutFeedback>
 
-                        <TouchableWithoutFeedback onPress={() => setShowDetailedMenu(true)}>
-                            <Text style={styles.menuTxt} className="text-white">My List</Text>
+                        <TouchableWithoutFeedback>
+                            <Text style={styles.menuTxt} className="text-white"></Text>
                         </TouchableWithoutFeedback>
                     </View>
                 </View>
@@ -160,7 +181,7 @@ const Home = () => {
 
             {/* <DynamicHeader animatedValue={scrollOffsetY} /> */}
             {/* Main navbar */}
-            <AnimatedScroll 
+            <CatDetAnimScroll 
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
                 animateValue={animateValue} 
@@ -230,4 +251,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Home;
+export default CategoryDetails;

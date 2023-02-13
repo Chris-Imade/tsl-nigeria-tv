@@ -281,6 +281,7 @@ const Login = () => {
                         disabled={ !emailValid || !passValid || isLoading === "true" || email === "" || password === "" }
                         onPress={() => {
                             loginAlready();
+                            // dispatch(setAccessToken("818fbb131c82e940cb22b8b348dc430af391d4d7"))
                         }}
                     >
                         <Text style={styles.signInTxt}>{isLoading === "true" ? (<ActivityIndicator size={"small"} color="white" />) :"Sign In"}</Text>

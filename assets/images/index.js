@@ -41,6 +41,7 @@ import OnboardOne from "./slide-1.png";
 import OnboardTwo from "./slide-2.png";
 import OnboardThree from "./slide-3.png";
 import RightArrTest from "./right-arrow-icon.png";
+import More from "./more_vert.png";
 
 export const images = {
     Banner,
@@ -83,5 +84,6 @@ export const images = {
     OnboardOne,
     OnboardTwo,
     OnboardThree,
-    RightArrTest
+    RightArrTest,
+    More
 }

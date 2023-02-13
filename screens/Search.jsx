@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, KeyboardAvoidingView, Platform, SafeAreaView, SafeAreaViewBase, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
@@ -14,18 +14,61 @@ const truncTxt = (txt) => {
 
 const Search = () => {
 
+    const [videoList, setVideoList] = useState([]);
+
+    const [isLoading, setIsLoading] = useState(true);
+
     const navigation = useNavigation();
     const searchQuery = useSelector((state) => state.data.searchQuery);
     const dispatch = useDispatch();
     // const movies = useSelector((state) => state.data.movies);
-    console.log(searchQuery);
+    // console.log(searchQuery);
     const lightModeEnabled = useSelector((state) => state?.data?.lightModeEnabled);
 
-    const filteredList = movies?.filter((item) => {
+    const filteredList = videoList?.filter((item) => {
         return Object.values(item).join('').toLowerCase()?.includes(searchQuery?.toLowerCase());
     })
 
     // console.log(filteredList)
+
+    useEffect(() => {
+        
+        const getData = async(url = '') => {
+            // Default options are marked with *
+            const response = await fetch(url, {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    Authorization: 'Token 818fbb131c82e940cb22b8b348dc430af391d4d7'
+                }// body data type must match "Content-Type" header
+                });
+                
+                
+            return response.json(); // parses JSON response into native JavaScript objects
+        
+            // console.log("Happy Coding --->!");
+        }
+
+        getData(`https://web-production-93c3.up.railway.app/api/videos`)
+        .then((data) => {
+            // console.log(data);
+            setVideoList(data);
+                
+                if(data) {
+                    setIsLoading(false);
+                    // console.log("<------------ Data is returned ----------------->");
+                } else {
+                    // console.log("What could go wrong?")
+                }
+
+            // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
+        }).catch((error) => {
+            setIsLoading(false);
+            setErrorResponseData(error.message);
+        });
+    }, [videoList])
 
     return (
         <SafeAreaView style={[styles.container, { 
@@ -75,7 +118,7 @@ const Search = () => {
                 {filteredList?.map((item, index) => (
                     <TouchableHighlight
                     key={index}
-                    onPress={() => navigation.navigate("video-screen", { data: item.trailer })}
+                    onPress={() => navigation.navigate("video-screen", { data: item.video_link })}
                     >
                         <View 
                         style={{
@@ -89,7 +132,7 @@ const Search = () => {
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
                                 <Image
                                     source={{
-                                        uri: item.image
+                                        uri: item.mobile_thumbnail
                                     }}
                                     style={{
                                         width: 124,

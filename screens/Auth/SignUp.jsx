@@ -79,7 +79,7 @@ const SignUp = () => {
             postData(`https://web-production-93c3.up.railway.app/auth/users/`, userCredentials)
             .then((data) => {
                 data.error && setErrorResponseData(data.error.message);
-                // console.log(data);
+                console.log(data);
                     if(!data.error) {
                         setResponseData(data);
                     }

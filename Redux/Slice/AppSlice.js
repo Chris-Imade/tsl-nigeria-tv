@@ -13,6 +13,9 @@ const initialState = {
     downloadDetails: {},
     accessToken: "",
     refreshToken: "",
+    videoId: 1,
+    categoryDetailsPage: {},
+    videoList: []
 }
 
 // export const getMovies = createAsyncThunk('data/getMovies', () => {
@@ -57,6 +60,15 @@ export const appSlice = createSlice({
     setRefreshToken: (state, action) => {
       state.refreshToken = action.payload;
     },
+    setVideoId: (state, action) => {
+      state.videoId = action.payload;
+    },
+    setCategoryDetailsPage: (state, action) => {
+      state.categoryDetailsPage = action.payload;
+    },
+    setVideoList: (state, action) => {
+      state.videoList = action.payload;
+    }
 
     // extraReducers: (builder) => {
     //   // Add reducers for additional action types here, and handle loading state as needed
@@ -80,6 +92,8 @@ export const {
     setDownloadDetails,
     setAccessToken,
     setRefreshToken,
+    setVideoId,
+    setCategoryDetailsPage
  } = appSlice.actions
 
 export default appSlice.reducer;
