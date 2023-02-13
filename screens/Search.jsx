@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { ScreenHeight, colors } from "../components/shared";
 import { updateSearchQuery } from '../Redux/Slice/AppSlice';
-import movies from "../firebase/Raw/vid_data.json";
 
 
 const truncTxt = (txt) => {
@@ -15,6 +14,8 @@ const truncTxt = (txt) => {
 const Search = () => {
 
     const [videoList, setVideoList] = useState([]);
+
+    const [errorResponseData, setErrorResponseData] = useState("");
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -68,7 +69,7 @@ const Search = () => {
             setIsLoading(false);
             setErrorResponseData(error.message);
         });
-    }, [videoList])
+    }, [])
 
     return (
         <SafeAreaView style={[styles.container, { 

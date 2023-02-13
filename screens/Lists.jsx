@@ -37,7 +37,7 @@ const Lists = () => {
                         {filteredList ? 
                         filteredList.map((item, index) => (
                             <View key={index}>
-                                <Image 
+                                <Image
                                     source={{ uri: item.image }}
                                     className="my-[6px] mx-[6px] h-[176px] w-[124px] rounded-[8px]"
                                     resizeMode="contain"
