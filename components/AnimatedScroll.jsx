@@ -1,6 +1,6 @@
 import { Skeleton, View, VStack } from "native-base";
 import React, { useState } from "react";
-import { Animated, Image, ScrollView, Text, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { Animated, Image, ImageBackground, ScrollView, Text, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback, ToastAndroid } from "react-native";
 import { images } from "../assets/images";
 import { Actionsheet, Box, useDisclose, Center } from "native-base";
 import { StyleSheet } from "react-native";
@@ -40,31 +40,45 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
             <>
                     <View style={{ flex: 1 }}>
                         {/* <MobileNav /> */}
-                        <Image 
-                            source={{ uri: categories[2].videos[0].mobile_banner }}
+                        <ImageBackground 
+                            source={{ uri: categories[2]?.videos[0]?.mobile_banner }}
                             resizeMode={"cover"}
                             style={{
                                 width: "100%",
                                 height: 550,
                                 elevation: -1,
-                                marginTop: -50
+                                marginTop: -50,
+                                position: "relative"
                             }}
-                        />
+                        >
+                            <Image 
+                                source={images.BottomShadow}
+                                style={{
+                                    position: "absolute",
+                                    bottom: 0,
+                                    height: 108,
+                                    width: "100%"
+                                }}
+                            />
+                        </ImageBackground>
                     <View className="w-full items-center justify-center">
                         <View className="w-[79%] mt-[-50px] items-center flex-row justify-around mx-[18px] space-x-1">
-                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categories[2].videos[0].mood[0]}</Text>
+                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categories[2]?.videos[0]?.mood[0]}</Text>
                             <Text style={styles.menuTxt} className="w-1 h-1 rounded-full bg-white"></Text>
-                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categories[2].videos[0].mood[1]}</Text>
+                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categories[2]?.videos[0]?.mood[1]}</Text>
                             <Text style={styles.menuTxt} className="w-1 h-1 rounded-full bg-white"></Text>
-                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categories[2].videos[0].genres[0]}</Text>
+                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categories[2]?.videos[0]?.genres[0]}</Text>
                             <Text style={styles.menuTxt} className="w-1 h-1 rounded-full bg-white"></Text>
-                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categories[2].videos[0].genres[1]}</Text>
+                            <Text style={styles.menuTxt} className="text-[9px] text-[#D6D6D7]">{categories[2]?.videos[0]?.genres[1]}</Text>
                         </View>
                     </View>
                     </View>
                     <View style={{ flex: 1, alignItems: "center" }}>
                         <View className="flex-row justify-around mb-[47px] mt-[24px] w-[79%]">
-                            <View className="items-center">
+                            <TouchableOpacity onPress={() => {
+                                dispatch(setVideoList(categories[2]?.videos[0]));
+                                ToastAndroid.show('Video has been added to List!', ToastAndroid.SHORT);
+                            }} className="items-center">
                                 {/* My List icon */}
                                 <Image
                                     source={images.AddRound}
@@ -72,9 +86,9 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                                     resizeMode="contain"
                                 />
                                 <Text style={styles.menuTxt} className="text-white text-[9px] pt-[8px]">My List</Text>
-                            </View>
+                            </TouchableOpacity>
                             <TouchableOpacity 
-                            onPress={() => navigation.navigate("video-screen", { data: categories[2].videos[0].video_link })}
+                            onPress={() => navigation.navigate("video-screen", { data: categories[2]?.videos[0]?.video_link })}
                             className="rounded-[4px] justify-center items-center bg-slate-50 w-[108px] h-[42px] flex-row">
                                 {/* Play Icon */}
                                 <Image 
@@ -87,7 +101,7 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                             <TouchableOpacity
                             onPress={() => {
                                 onOpen();
-                                setInfo(categories[2].videos[0]);
+                                setInfo(categories[2]?.videos[0]);
                             }} className="items-center">
                                 <Image
                                     source={images.InfoMain}
@@ -107,7 +121,7 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                     </View>
                 ) : null}
 
-                {!isLoading ? categories.map((item, index) => (
+                {!isLoading ? categories?.map((item, index) => (
                         <View className="" key={index}>
                             <View className="my-[8px] ml-2">
                                 <Text style={{
@@ -230,7 +244,8 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                                             </View>
                                         </TouchableWithoutFeedback>
                                         <TouchableWithoutFeedback onPress={() => {
-                                            dispatch(setVideoList(info))
+                                            dispatch(setVideoList(info));
+                                            ToastAndroid.show('Video has been added to List!', ToastAndroid.SHORT);
                                         }}>
                                             <View className="justify-center items-center opacity-[0.5]">
                                                 <Image 

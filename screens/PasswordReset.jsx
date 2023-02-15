@@ -57,15 +57,17 @@ const PasswordReset = () => {
                 // console.log("Happy Coding --->!");
             }
         
-            getData(`https://web-production-93c3.up.railway.app/auth/`, userCredentials)
+            getData(`https://web-production-93c3.up.railway.app/users/reset_password/`, userCredentials)
             .then((data) => {
                 // console.log(data);
-                    navigation.navigate("Login");    
-                    if(data) {
+                    if(!data.error) {
                         setIsLoading(false);
+                        navigation.navigate("Login"); 
+                        ToastAndroid.show('Video has been added to List!', ToastAndroid.SHORT);
                         // console.log("<------------ Data is returned ----------------->");
                     } else {
                         // console.log("What could go wrong?")
+                        setIsLoading(false);
                     }
         
                 // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);

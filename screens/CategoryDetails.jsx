@@ -33,7 +33,7 @@ const CategoryDetails = () => {
     
     // Animated Heights
     const MIN_HEIGHT = 75;
-    const MAX_HEIGHT = 130;
+    const MAX_HEIGHT = 75;
     const SCROLL_VALUE = MAX_HEIGHT - MIN_HEIGHT;
 
     const animatedHeight = animateValue.interpolate({
@@ -45,7 +45,7 @@ const CategoryDetails = () => {
     // Animated Background color
     const animatedBackground = animateValue.interpolate({
         inputRange: [0, SCROLL_VALUE],
-        outputRange: ["#00000012", "#00000088"],
+        outputRange: ["#00000041", "#000000b6"],
         extrapolate: "clamp"
     })
     
@@ -116,9 +116,8 @@ const CategoryDetails = () => {
                 elevation: 1
             }}>
                 <View 
-                    className="flex-row justify-between items-center h-[75px]">
+                    className="text-[#000000b6] flex-row justify-between items-center h-[75px]">
                         <View
-                            // colors={[colors.black, colors.firstGradientShade]}
                             style={{
                                 justifyContent: "space-between",
                                 flexDirection: "row",
@@ -129,7 +128,14 @@ const CategoryDetails = () => {
                             className="ml-5"
                         >
                         {/* Logo */}
-                    <View className={`w-[48px] h-[48px] bg-slate-100`}></View>
+                        <Image 
+                            source={images.TSLFullLogo}
+                            style={{
+                                width: 114,
+                                height: 38
+                            }}
+                            resizeMode={"contain"}
+                        />
                     {/* Search and profile icons */}
                         <View
                             className="flex-row">

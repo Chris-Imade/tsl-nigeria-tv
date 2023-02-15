@@ -44,7 +44,7 @@ const Home = () => {
     // Animated Background color
     const animatedBackground = animateValue.interpolate({
         inputRange: [0, SCROLL_VALUE],
-        outputRange: ["#00000012", "#00000088"],
+        outputRange: ["#00000041", "#000000b6"],
         extrapolate: "clamp"
     })
     
@@ -79,7 +79,7 @@ const Home = () => {
                     // console.log("What could go wrong?")
                 }
 
-            // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
+            // console.log("<------------ ErrorResponseD            ata ----------------->", errorResponseData);
         }).catch((error) => {
             setIsLoading("false");
             setErrorResponseData(error.message);
@@ -115,7 +115,6 @@ const Home = () => {
                 <View 
                     className="flex-row justify-between items-center h-[75px]">
                         <View
-                            // colors={[colors.black, colors.firstGradientShade]}
                             style={{
                                 justifyContent: "space-between",
                                 flexDirection: "row",
@@ -126,7 +125,14 @@ const Home = () => {
                             className="ml-5"
                         >
                         {/* Logo */}
-                    <View className={`w-[48px] h-[48px] bg-slate-100`}></View>
+                        <Image 
+                            source={images.TSLFullLogo}
+                            style={{
+                                width: 114,
+                                height: 38
+                            }}
+                            resizeMode={"contain"}
+                        />
                     {/* Search and profile icons */}
                         <View
                             className="flex-row">
@@ -168,7 +174,7 @@ const Home = () => {
                             <Text style={styles.menuTxt} className="text-white">Categories</Text>
                         </TouchableWithoutFeedback>
 
-                        <TouchableWithoutFeedback onPress={() => setShowDetailedMenu(true)}>
+                        <TouchableWithoutFeedback onPress={() => navigation.navigate("lists-screen")}>
                             <Text style={styles.menuTxt} className="text-white">My List</Text>
                         </TouchableWithoutFeedback>
                     </View>
@@ -212,6 +218,7 @@ const Home = () => {
                             {categories.map((item, index) => (
                                 <TouchableOpacity key={index} onPress={() => {
                                     dispatch(setVideoId(item.id));
+                                    setShowDetailedMenu(false);
                                     navigation.navigate("category-details")
                                 }} className="mt-[33px]"><Text style={{ color: lightModeEnabled ? colors?.black : "#98999B", fontFamily: "Stem-Medium", fontSize: 16 }}>{item.name}</Text></TouchableOpacity>
                             ))}

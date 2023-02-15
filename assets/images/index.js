@@ -54,6 +54,7 @@ import SettingR from "./setting-r.png";
 import SignOut from "./sign-out.png";
 
 import AccountMain from "./account_main.png";
+import BottomShadow from "./bottomShadow.png";
 
 export const images = {
     Banner,
@@ -107,5 +108,6 @@ export const images = {
     CardMembership,
     SettingR,
     SignOut,
-    AccountMain
+    AccountMain,
+    BottomShadow
 }

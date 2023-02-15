@@ -124,11 +124,12 @@ const HomeStack = () => {
                 )
             }} name='notification-screen' component={Notification} />
             <RootStack.Screen options={{
-                headerStyle: {
-                    backgroundColor: lightModeEnabled ? colors.white : colors.black
-                },
-                headerTintColor: lightModeEnabled ? colors.black : colors.white,
-                headerTitle: ""
+                // headerStyle: {
+                //     backgroundColor: lightModeEnabled ? colors.white : colors.black
+                // },
+                // headerTintColor: lightModeEnabled ? colors.black : colors.white,
+                // headerTitle: ""
+                headerShown: false
             }} name='category-details' component={CategoryDetails} />
             <RootStack.Screen 
             options={{
