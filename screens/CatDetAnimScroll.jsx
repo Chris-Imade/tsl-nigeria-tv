@@ -24,7 +24,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
 
     const navigation = useNavigation();
 
-    const videoList = useSelector((state) => state.data?.videoList);
+    const videoList = useSelector((state) => state?.data?.videoList);
 
     const categoryDetailsPage = useSelector((state) => state.data?.categoryDetailsPage);
     
@@ -67,7 +67,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                     </View>
                     <View style={{ flex: 1, alignItems: "center" }}>
                         <View className="flex-row justify-around mb-[47px] mt-[24px] w-[79%]">
-                            <View className="items-center">
+                            <TouchableOpacity onPress={() => dispatch(setVideoList(info))} className="items-center">
                                 {/* My List icon */}
                                 <Image
                                     source={images.AddRound}
@@ -75,7 +75,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                                     resizeMode="contain"
                                 />
                                 <Text style={styles.menuTxt} className="text-white text-[9px] pt-[8px]">My List</Text>
-                            </View>
+                            </TouchableOpacity>
                             <TouchableOpacity 
                             onPress={() => navigation.navigate("video-screen", { data: categoryDetailsPage.videos[0].video_link })}
                             className="rounded-[4px] justify-center items-center bg-slate-50 w-[108px] h-[42px] flex-row">

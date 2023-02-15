@@ -6,7 +6,6 @@ import { colors, ScreenHeight, ScreenWidth } from "../../components/shared";
 import { useNavigation } from "@react-navigation/native";
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { images } from "../../assets/images";
-import { getData } from "../../components/fetchVideos";
 import { setCategories, setVideoId } from "../../Redux/Slice/AppSlice";
 
 const Home = () => {
@@ -24,6 +23,8 @@ const Home = () => {
 
     const lightModeEnabled = useSelector((state) => state?.data?.lightModeEnabled);
     const categories = useSelector((state) => state?.data?.categories);
+
+    const accessToken = useSelector((state) => state.data.accessToken);
     
     const animateValue = useRef(new Animated.Value(0)).current;
     
@@ -47,6 +48,23 @@ const Home = () => {
         extrapolate: "clamp"
     })
     
+    const getData = async(url = '') => {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                Authorization: `Token ${accessToken}`
+            }// body data type must match "Content-Type" header
+            });
+            
+            
+        return response.json(); // parses JSON response into native JavaScript objects
+    
+        // console.log("Happy Coding --->!");
+    }
 
     useEffect(() => {
         getData(`https://web-production-93c3.up.railway.app/api/categories`)

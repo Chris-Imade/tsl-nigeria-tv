@@ -15,7 +15,7 @@ import {
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['user', 'lightModeEnabled', 'accessToken', 'videoDownloadData']
+  whitelist: ['user', 'lightModeEnabled', 'accessToken', 'videoList']
 };
 
 const rootReducer = combineReducers({

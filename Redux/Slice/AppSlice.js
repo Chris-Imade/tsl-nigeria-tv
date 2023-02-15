@@ -11,7 +11,7 @@ const initialState = {
     videoIdForDownload: "",
     videoDownloadData: [],
     downloadDetails: {},
-    accessToken: "",
+    accessToken: "818fbb131c82e940cb22b8b348dc430af391d4d7",
     refreshToken: "",
     videoId: 1,
     categoryDetailsPage: {},
@@ -67,7 +67,7 @@ export const appSlice = createSlice({
       state.categoryDetailsPage = action.payload;
     },
     setVideoList: (state, action) => {
-      state.videoList = action.payload;
+      state.videoList = [...state.videoList, action.payload];
     }
 
     // extraReducers: (builder) => {
@@ -93,7 +93,8 @@ export const {
     setAccessToken,
     setRefreshToken,
     setVideoId,
-    setCategoryDetailsPage
+    setCategoryDetailsPage,
+    setVideoList
  } = appSlice.actions
 
 export default appSlice.reducer;

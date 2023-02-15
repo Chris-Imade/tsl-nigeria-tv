@@ -22,6 +22,7 @@ const News = () => {
   const [isLoading, setIsLoading] = useState(true);
   // Videos that are not approved are the coming soon...
   const lightModeEnabled = useSelector((state) => state?.data?.lightModeEnabled);
+  const accessToken = useSelector((state) => state.data.accessToken);
   
   const categories = useSelector((state) => state?.data?.categories);
   
@@ -43,7 +44,7 @@ const News = () => {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                Authorization: 'Token 818fbb131c82e940cb22b8b348dc430af391d4d7'
+                Authorization: `Token ${accessToken}`
             }// body data type must match "Content-Type" header
             });
             
@@ -122,7 +123,7 @@ const News = () => {
           }}
           className="text-[16px]"
         >
-          {categories[currentIndx].name}
+          {categories[currentIndx]?.name}
         </Text>
       </View>
       <View className="w-full h-[1px] bg-[#323337] mb-6"></View>

@@ -142,7 +142,7 @@ const Downloads = (props) => {
     // }, [videoIdForDownload])
 
 
-    if(videoDownloadData.length === 0) {
+    if(!videoDownloadData.length === 0) {
         return (
             <SafeAreaView style={{
                 paddingTop: Platform.OS === "android" ? 30 : null, 

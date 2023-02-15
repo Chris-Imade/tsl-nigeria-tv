@@ -43,6 +43,18 @@ import OnboardThree from "./slide-3.png";
 import RightArrTest from "./right-arrow-icon.png";
 import More from "./more_vert.png";
 
+import PlayMainArr from "./play-main-arrow.png";
+import PlayMainDet from "./play-main.png";
+import DownloadDetails from "./download.png";
+import Share from "./share.png";
+import Star from "./star_rate.png";
+import TSLFullLogo  from "./tsl_full.png";
+import CardMembership from "./card_membership.png";
+import SettingR from "./setting-r.png";
+import SignOut from "./sign-out.png";
+
+import AccountMain from "./account_main.png";
+
 export const images = {
     Banner,
     PlaySearch,
@@ -85,5 +97,15 @@ export const images = {
     OnboardTwo,
     OnboardThree,
     RightArrTest,
-    More
+    More,
+    PlayMainArr,
+    PlayMainDet,
+    DownloadDetails,
+    Share,
+    Star,
+    TSLFullLogo,
+    CardMembership,
+    SettingR,
+    SignOut,
+    AccountMain
 }

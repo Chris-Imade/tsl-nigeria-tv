@@ -7,7 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from '../components/shared';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from "react-redux";
-import { ChangeCredentials, Downloads, Home, Lists, Login, News, Notification, PasswordReset, Profile, SignUp, VideoScreen, Welcome } from '../screens';
+import { AccountSettings, ActorsProfile, ChangeCredentials, Downloads, Home, Lists, Login, News, Notification, PasswordReset, Profile, SignUp, VideoEnlongated, VideoScreen, Welcome } from '../screens';
 import Search from '../screens/Search';
 import { TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native';
 import { Image } from 'react-native';
@@ -130,6 +130,107 @@ const HomeStack = () => {
                 headerTintColor: lightModeEnabled ? colors.black : colors.white,
                 headerTitle: ""
             }} name='category-details' component={CategoryDetails} />
+            <RootStack.Screen 
+            options={{
+                headerRight: () => (
+                    <View
+                        className="flex-row">
+                            <TouchableOpacity 
+                            onPress={() => navigation.navigate("search-screen")}
+                            className="mr-[26px] w-[28px] h-[28px]">
+                                <Image
+                                    source={images.SearchSmall}
+                                    style={{
+                                        width: 24,
+                                        height: 24,
+                                    }}
+                                />
+                            </TouchableOpacity>
+
+                            <TouchableWithoutFeedback onPress={() => navigation.navigate("profile-screen")}>
+                                <Image 
+                                    source={images.MaleProfile}
+                                    resizeMode="contain"
+                                    className="w-[28px] h-[28px] mr-[26px]"
+                                />
+                            </TouchableWithoutFeedback>
+                        </View>
+                ),
+                headerTintColor: lightModeEnabled ? colors.black : colors.white,
+                headerStyle: {
+                    backgroundColor: lightModeEnabled ? colors.white : colors.black
+                },
+                headerTitle: ""
+            }}
+            name='video-elongated' component={VideoEnlongated} />
+            <RootStack.Screen 
+            options={{
+                headerRight: () => (
+                    <View
+                        className="flex-row">
+                            <TouchableOpacity 
+                            onPress={() => navigation.navigate("search-screen")}
+                            className="mr-[26px] w-[28px] h-[28px]">
+                                <Image
+                                    source={images.SearchSmall}
+                                    style={{
+                                        width: 24,
+                                        height: 24,
+                                    }}
+                                />
+                            </TouchableOpacity>
+
+                            <TouchableWithoutFeedback onPress={() => navigation.navigate("profile-screen")}>
+                                <Image 
+                                    source={images.MaleProfile}
+                                    resizeMode="contain"
+                                    className="w-[28px] h-[28px] mr-[26px]"
+                                />
+                            </TouchableWithoutFeedback>
+                        </View>
+                ),
+                headerTintColor: lightModeEnabled ? colors.black : colors.white,
+                headerStyle: {
+                    backgroundColor: lightModeEnabled ? colors.white : colors.black
+                },
+                headerTitle: "Biography",
+                headerTitleAlign: "left"
+            }}
+            name='actors-profile' component={ActorsProfile} />
+            <RootStack.Screen 
+            options={{
+                headerRight: () => (
+                    <View
+                        className="flex-row">
+                            <TouchableOpacity 
+                            onPress={() => navigation.navigate("search-screen")}
+                            className="mr-[26px] w-[28px] h-[28px]">
+                                <Image
+                                    source={images.SearchSmall}
+                                    style={{
+                                        width: 24,
+                                        height: 24,
+                                    }}
+                                />
+                            </TouchableOpacity>
+
+                            <TouchableWithoutFeedback onPress={() => navigation.navigate("profile-screen")}>
+                                <Image 
+                                    source={images.MaleProfile}
+                                    resizeMode="contain"
+                                    className="w-[28px] h-[28px] mr-[26px]"
+                                />
+                            </TouchableWithoutFeedback>
+                        </View>
+                ),
+                headerTintColor: lightModeEnabled ? colors.black : colors.white,
+                headerStyle: {
+                    backgroundColor: lightModeEnabled ? colors.white : colors.black
+                },
+                headerTitle: "Account",
+                headerTitleAlign: "left"
+            }}
+        name='account-settings' component={AccountSettings} />
         </RootStack.Navigator>
   )
 }

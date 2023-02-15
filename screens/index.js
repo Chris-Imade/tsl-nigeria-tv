@@ -10,3 +10,6 @@ export { default as Downloads } from "./Downloads";
 export { default as Welcome } from "./Onboard/Welcome";
 export { default as ChangeCredentials } from "./ChangeCredentials";
 export { default as PasswordReset } from "./PasswordReset";
+export { default as VideoEnlongated } from "./VideoEnlongated";
+export { default as ActorsProfile } from "./ActorsProfile";
+export { default as AccountSettings } from "./AccountSettings";

@@ -4,7 +4,7 @@ import { NativeBaseProvider } from "native-base";
 import { Provider } from "react-redux";
 import { useFonts } from 'expo-font';
 import AppRoot from "./navigation/AppRoot";
-import { News, Profile, VideoScreen, Welcome } from "./screens";
+import { AccountSettings, News, Profile, VideoEnlongated, VideoScreen, Welcome } from "./screens";
 import Search from "./screens/Search";
 import { store, persistor } from "./Redux/store";
 import { PersistGate } from 'redux-persist/integration/react';
@@ -32,7 +32,7 @@ import { PersistGate } from 'redux-persist/integration/react';
       <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <NativeBaseProvider>
-         <AppRoot />
+         <AccountSettings />
         </NativeBaseProvider>
       </PersistGate>
       </Provider>

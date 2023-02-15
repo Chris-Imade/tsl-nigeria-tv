@@ -97,7 +97,7 @@ const Profile = () => {
                     </TouchableHighlight>
 
                     {/* Settings */}
-                    <TouchableHighlight>
+                    <TouchableHighlight onPress={() => navigation.navigate("account-settings")}>
                         <View style={{
                             backgroundColor: "#1A1A1A",
                             borderRadius: 8,
@@ -110,11 +110,11 @@ const Profile = () => {
                         }}>
                             <View className="flex-row items-center justify-between">
                                 <Image 
-                                    source={images.Settings}
+                                    source={images.AccountMain}
                                     resizeMode="contain"
                                     className="ml-[18px] w-[24px] h-[24px] mr-[8px]"
                                 />
-                                <Text className="text-white text-[13.8px]">App Settings</Text>
+                                <Text className="text-white text-[13.8px]">Account</Text>
                             </View>
                                 <Image 
                                     source={images.ChevronRight}
@@ -125,7 +125,7 @@ const Profile = () => {
                     </TouchableHighlight>
 
                     {/* Help */}
-                    <TouchableHighlight>
+                    {/* <TouchableHighlight>
                         <View style={{
                             backgroundColor: "#1A1A1A",
                             borderRadius: 8,
@@ -150,7 +150,7 @@ const Profile = () => {
                                     className="w-[24px] h-[24px] mr-[18px]"
                                 />
                         </View>
-                    </TouchableHighlight>
+                    </TouchableHighlight> */}
                 </View>
 
                 {/* Logout */}

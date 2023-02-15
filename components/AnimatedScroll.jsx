@@ -1,6 +1,6 @@
 import { Skeleton, View, VStack } from "native-base";
 import React, { useState } from "react";
-import { Animated, Image, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { Animated, Image, ScrollView, Text, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { images } from "../assets/images";
 import { Actionsheet, Box, useDisclose, Center } from "native-base";
 import { StyleSheet } from "react-native";
@@ -167,38 +167,41 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                     <Actionsheet isOpen={isOpen} onClose={onClose}>
                         <Actionsheet.Content style={{backgroundColor: colors.darkMode}}>
                             <View className="w-full p-5 items-center justify-center">
-                                <View className="w-full items-center justify-start flex-row">
-                                    <Image
-                                        source={{ uri: info.mobile_thumbnail }}
-                                        className="w-[100px] h-[139px] rounded-md"
-                                        resizeMode={"contain"}
-                                    />
-                                    {/* <View className="w-[100px] h-[139px] bg-slate-200 rounded-md"></View> */}
-                                    <View className="ml-5 justify-start h-full w-full">
-                                        <Text 
-                                        style={{
-                                            fontFamily: "Stem-Medium"
-                                        }}
-                                        className="text-[17px] font-semibold text-white">{truncTxt(info?.title)}</Text>
-                                        <View className="flex-row my-1">
-                                            <Text
-                                            style={{ fontFamily: "Stem-Medium" }}
-                                            className="text-[#98999B] text-[11px] mx-1">{info.year}</Text>
-                                            <Text
-                                            style={{ fontFamily: "Stem-Medium" }}
-                                            className="text-[#98999B] text-[11px] mx-1">{info.rating}</Text>
-                                            {/* <Text
-                                            style={{ fontFamily: "Stem-Medium" }}
-                                            className="text-[#98999B] text-[11px] mx-1">{info.director}</Text> */}
-                                        </View>
+                                <TouchableOpacity 
+                                    onPress={() => navigation.navigate("video-elongated", { data: info.id })}
+                                    className="w-full items-center justify-start flex-row"
+                                >
+                                <Image
+                                    source={{ uri: info.mobile_thumbnail }}
+                                    className="w-[100px] h-[139px] rounded-md"
+                                    resizeMode={"contain"}
+                                />
+                                {/* <View className="w-[100px] h-[139px] bg-slate-200 rounded-md"></View> */}
+                                <View className="ml-5 justify-start h-full w-full">
+                                    <Text 
+                                    style={{
+                                        fontFamily: "Stem-Medium"
+                                    }}
+                                    className="text-[17px] font-semibold text-white">{truncTxt(info?.title)}</Text>
+                                    <View className="flex-row my-1">
+                                        <Text
+                                        style={{ fontFamily: "Stem-Medium" }}
+                                        className="text-[#98999B] text-[11px] mx-1">{info.year}</Text>
+                                        <Text
+                                        style={{ fontFamily: "Stem-Medium" }}
+                                        className="text-[#98999B] text-[11px] mx-1">{info.rating}</Text>
+                                        {/* <Text
+                                        style={{ fontFamily: "Stem-Medium" }}
+                                        className="text-[#98999B] text-[11px] mx-1">{info.director}</Text> */}
+                                    </View>
                                         <Text
                                         style={{ fontFamily: "Stem-Medium" }}
                                         className="leading-4 w-[70%] text-white text-[11px]">{info.description}</Text>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
                                 <View>
                                     <View className="w-full py-[12px] flex-row justify-around items-center">
-                                        <TouchableWithoutFeedback onPress={() => navigation.navigate("video-screen", { data: info.video_link })}>
+                                        <TouchableWithoutFeedback onPress={() => navigation.navigate("video-elongated", { data: info.id })}>
                                             <View className="justify-center items-center">
                                                 <Image 
                                                     source={images.PlayRound}
@@ -213,7 +216,6 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                                         <TouchableWithoutFeedback onPress={() => {
                                             navigation.navigate("Downloads");
                                             dispatch(setVideoDownloadData(info));
-                                            // dispatch(setVideoIdForDownload("BkL9l7qovsE"))
                                         }}>
                                             <View className="justify-center items-center opacity-[0.5]">
                                                 <Image 

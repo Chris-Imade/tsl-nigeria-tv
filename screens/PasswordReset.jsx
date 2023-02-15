@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { KeyboardAvoidingView, Text, View } from "react-native";
 import { useSelector } from "react-redux";
@@ -10,7 +10,10 @@ const PasswordReset = () => {
     const [email, setEmail] = useState("");
     const [emailValid, setEmailValid] = useState(true);
     const [emailFocus, setEmailFocus] = useState("no");
-    const [isLoading, setIsLoading] = useState("false");
+    const [errorResponseData, setErrorResponseData] = useState("");
+    const [responseData, setResponseData] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+    const accessToken = useSelector((state) => state.data.accessToken);
 
     const lightModeEnabled = useSelector((state) => state?.data?.lightModeEnabled);
 
@@ -31,6 +34,45 @@ const PasswordReset = () => {
             setTimeout(() => {
                 navigation.navigate("change-credential");
             }, 5000)
+
+
+
+            setIsLoading(true);
+            const getData = async(url = '', data) => {
+                // Default options are marked with *
+                const response = await fetch(url, {
+                    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        Authorization: `Token ${accessToken}`
+                    },// body data type must match "Content-Type" header
+                    body: JSON.parse(data)
+                    });
+                    
+                    
+                return response.json(); // parses JSON response into native JavaScript objects
+            
+                // console.log("Happy Coding --->!");
+            }
+        
+            getData(`https://web-production-93c3.up.railway.app/auth/`, userCredentials)
+            .then((data) => {
+                // console.log(data);
+                    navigation.navigate("Login");    
+                    if(data) {
+                        setIsLoading(false);
+                        // console.log("<------------ Data is returned ----------------->");
+                    } else {
+                        // console.log("What could go wrong?")
+                    }
+        
+                // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
+            }).catch((error) => {
+                setIsLoading(false);
+                setErrorResponseData(error.message);
+            });
     }
 
     const isEmail = (emailAdress) => {
@@ -43,6 +85,8 @@ const PasswordReset = () => {
        else 
         return false; 
     }
+
+
 
 
     return (
@@ -108,8 +152,6 @@ const PasswordReset = () => {
                 {isLoading === "true" ? (
                     <TouchableOpacity
                         style={styles.signInBtn}
-                        onPress={() => onReset()}
-                        disabled={ !emailValid || isLoading === "true" || email === "" }
                     >
                         <ActivityIndicator size={"small"} color="white" />
                     </TouchableOpacity>

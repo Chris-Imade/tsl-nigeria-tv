@@ -10,8 +10,9 @@ const Lists = () => {
     const [searchQuery, setSearchQuery] = useState("")
 
     const searchList = useSelector((state) => state.data.searchList);
+    const videoList = useSelector((state) => state.data.videoList);
 
-    const filteredList = movies?.filter((item) => {
+    const filteredList = videoList?.filter((item) => {
         return Object.values(item).join('').toLowerCase()?.includes(searchQuery?.toLowerCase());
     })
     
@@ -19,7 +20,7 @@ const Lists = () => {
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.black, justifyContent: "center", alignItems: "center", paddingTop: Platform.OS == "android" ? 30 : 30 }}>
             {searchList && (
                 <View className="flex-row w-full mx-[20px] items-center my-7">
-                    <Image 
+                    <Image
                         source={images.SearchSmall}
                         resizeMode="contain"
                         className="w-[24px] h-[24px] ml-3"
@@ -38,7 +39,7 @@ const Lists = () => {
                         filteredList.map((item, index) => (
                             <View key={index}>
                                 <Image
-                                    source={{ uri: item.image }}
+                                    source={{ uri: item.mobile_thumbnail }}
                                     className="my-[6px] mx-[6px] h-[176px] w-[124px] rounded-[8px]"
                                     resizeMode="contain"
                                 />
