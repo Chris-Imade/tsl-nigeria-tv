@@ -55,6 +55,7 @@ import SignOut from "./sign-out.png";
 
 import AccountMain from "./account_main.png";
 import BottomShadow from "./bottomShadow.png";
+import NoNetwork from "./no-network.png";
 
 export const images = {
     Banner,
@@ -109,5 +110,6 @@ export const images = {
     SettingR,
     SignOut,
     AccountMain,
-    BottomShadow
+    BottomShadow,
+    NoNetwork
 }

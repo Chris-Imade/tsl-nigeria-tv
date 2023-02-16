@@ -1,7 +1,7 @@
 // jwt/verify
 
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
     KeyboardAvoidingView, 
     StyleSheet, 
@@ -18,11 +18,15 @@ import {
 import { useSelector } from "react-redux";
 import { images } from "../../assets/images";
 import { baseUrl, colors } from "../../components/shared";
+import NetInfo from "@react-native-community/netinfo";
+import { Center, Modal, useDisclose } from "native-base";
+
 
 // const verifyEndpoint = "https://web-production-c1bd.up.railway.app/auth/jwt/verify/"
 // const refreshEndpoint = "https://web-production-c1bd.up.railway.app/auth/jwt/refresh/"
 
 const SignUp = () => {
+    const { isOpen, onOpen, onClose } = useDisclose();
     const [firstIntBg, setFirstIntBg] = useState("");
     const [secondIntBg, setSecondIntBg] = useState("");
     const [thirdIntBg, setThirdIntBg] = useState("");
@@ -37,7 +41,9 @@ const SignUp = () => {
     const [hideTxt, setHideTxt] = useState(true);
     const [responseData, setResponseData] = useState("");
     const [errorResponseData, setErrorResponseData] = useState("");
-    const [isLoading, setIsLoading] = useState("false");
+    const [isLoading, setIsLoading] = useState(false);
+    const [passwordError, setPasswordError] = useState("");
+    const [emailError, setEmailError] = useState("");
 
     // console.log(emailValid);
 
@@ -58,7 +64,7 @@ const SignUp = () => {
                 re_password: confirmPassword
             }
 
-            setIsLoading("true");
+            setIsLoading(true);
 
             const postData = async(url = '', data) => {
                 // Default options are marked with *
@@ -76,16 +82,19 @@ const SignUp = () => {
                 return response.json(); // parses JSON response into native JavaScript objects
               }
               
-            postData(`https://web-production-93c3.up.railway.app/auth/users/`, userCredentials)
+            postData(`https://web-production-de75.up.railway.app/auth/users/`, userCredentials)
             .then((data) => {
-                data.error && setErrorResponseData(data.error.message);
-                console.log(data);
+                // data.error && setErrorResponseData(data.error.message);
+                const { password, email } = data.error.details;
+                password && setPasswordError(password[0]);
+                email && setEmailError(email[0]);
+                // console.log(data);
                     if(!data.error) {
                         setResponseData(data);
                     }
                     
                     if(data) {
-                        setIsLoading("false");
+                        setIsLoading(false);
                         // console.log("<------------ Data is returned ----------------->");
                     } else {
                         // console.log("What could go wrong?")
@@ -93,7 +102,7 @@ const SignUp = () => {
 
                 // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
             }).catch((error) => {
-                setIsLoading("false");
+                setIsLoading(false);
                 setErrorResponseData(error.message);
             });
     }
@@ -107,24 +116,25 @@ const SignUp = () => {
         return true; 
     
        else 
-        return false; 
+        return false;
     }
 
     const isPassword = (passValue) => {
-        // validation that password is not lessthan 8 character and must contain 1 letter, 1 number, and 1 spercial  character
-        let regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,20}/;
 
-        if(passValue.match(regex))
-        return true;
-
-        else
-        return false;
-    }
+        if (passValue.length >= 4) return true;
+        else return false;
+    };
 
     responseData && setTimeout(() => {
         navigation.navigate("Login");
     }, 5000)
 
+
+    useEffect(() => {
+        NetInfo.fetch().then(state => {
+          !state.isConnected ? onOpen() : null
+        });
+    }, [])
 
     return (
         <ScrollView 
@@ -153,43 +163,9 @@ const SignUp = () => {
                         Sign up
                     </Text>
 
-                    {/* Error value */}
-                    {errorResponseData && (
-                        <View style={{
-                            width: "100%",
-                            bottom: 15,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}>
-                            <Text className="opacity-30" style={{
-                                color: "red",
-                                textAlign: "center",
-                                fontFamily: "Stem-Regular"
-                            }}>
-                                {errorResponseData}
-                            </Text>
-                        </View>
-                    )}
                     
-                    {/* Response value */}
-                    {responseData && (
-                        <View style={{
-                            width: "100%",
-                            bottom: 15,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}>
-                            <Text style={{
-                                color: "#80D200",
-                                textAlign: "center",
-                                fontFamily: "Stem-Regular"
-                            }}>
-                                Please check your mail to activate your account
-                            </Text>
-                        </View>
-                    )}
                     <TextInput 
-                        style={[styles.txtInput, { backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a", marginBottom: !emailValid ? 5 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: !emailValid ? "red" : emailFocus === "yes" ? "#80D200" : null }]}
+                        style={[styles.txtInput, { backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a", marginBottom: !emailValid || emailError ? 5 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: !emailValid ? "red" : emailFocus === "yes" ? "#80D200" : null }]}
                         placeholder="Enter your email"
                         placeholderTextColor={"#545558"}
                         onBlur={() => {
@@ -216,6 +192,40 @@ const SignUp = () => {
                                 textAlign: "center"
                             }}>
                                 Invalid email! please enter a valid email
+                            </Text>
+                        </View>
+                    )}
+                    {/* Error value */}
+                    {emailError && (
+                        <View style={{
+                            width: "100%",
+                            bottom: 15,
+                            justifyContent: "flex-start",
+                            alignItems: "flex-start",
+                        }}>
+                            <Text className="opacity-30" style={{
+                                color: "red",
+                                fontFamily: "Stem-Regular"
+                            }}>
+                                {emailError}
+                            </Text>
+                        </View>
+                    )}
+                    
+                    {/* Response value */}
+                    {responseData && (
+                        <View style={{
+                            width: "100%",
+                            bottom: 15,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}>
+                            <Text style={{
+                                color: "#80D200",
+                                textAlign: "center",
+                                fontFamily: "Stem-Regular"
+                            }}>
+                                Kindly check your mail to activate your account😊
                             </Text>
                         </View>
                     )}
@@ -250,7 +260,7 @@ const SignUp = () => {
                                     height: 24,
                                     position: "absolute",
                                     right: 20,
-                                    top: 20
+                                    top: 23
                                 }}
                             />
                         </TouchableWithoutFeedback>
@@ -258,7 +268,7 @@ const SignUp = () => {
                     
                     <View style={{ width: "100%", position: "relative" }}>
                         <TextInput 
-                            style={[styles.txtInput, { backgroundColor: thirdIntBg ? thirdIntBg : "#1a1a1a", marginBottom: !passValid ? 5 : 40, borderWidth: 0.5, borderStyle: "solid", borderColor: !passValid ? "red" : confirmPasswordFocus === "yes" ? "#80D200" : null }]}
+                            style={[styles.txtInput, { backgroundColor: thirdIntBg ? thirdIntBg : "#1a1a1a", marginBottom: !passValid || passwordError ? 15 : 40, borderWidth: 0.5, borderStyle: "solid", borderColor: !passValid ? "red" : confirmPasswordFocus === "yes" ? "#80D200" : null }]}
                             placeholder="Confirm Password"
                             placeholderTextColor={"#545558"}
                             onBlur={() => {
@@ -281,7 +291,7 @@ const SignUp = () => {
                                     height: 24,
                                     position: "absolute",
                                     right: 20,
-                                    top: 20
+                                    top: 23
                                 }}
                             />
                         </TouchableWithoutFeedback>
@@ -294,31 +304,70 @@ const SignUp = () => {
                                 paddingVertical: 1,
                         }}>
                             <Text className="text-red-600 opacity-30" style={{
-                                textAlign: "center",
                                 fontFamily: "Stem-Regular"
                             }}>
                                 Not less than 8 char + Atleast 1 letter, 1 number, and 1 special character
                             </Text>
                     </View>
                     )}
+                    
+                    {/* Password network errors */}
+                    {passwordError && (
+                        <View style={{
+                            width: "100%",
+                            bottom: 15,
+                            justifyContent: "flex-start",
+                            alignItems: "flex-start",
+                        }}>
+                            <Text className="text-red-600 opacity-30" style={{
+                                fontFamily: "Stem-Regular"
+                            }}>
+                                {passwordError}
+                            </Text>
+                        </View>
+                    )}
                 </KeyboardAvoidingView>
 
                 <View style={{ justifyContent: "center", alignItems: "center", marginTop: 40, marginHorizontal: 20 }}>
-                {isLoading === "true" ? (
+                {isLoading === true ? (
                     <TouchableOpacity
-                        style={styles.signInBtn}
-                        onPress={() => onSignUp()}
-                        disabled={ password !== confirmPassword || !emailValid || !passValid || isLoading === "true" || email === "" || password === "" || confirmPassword === "" }
+                        style={{
+                            width: "100%",
+                            paddingVertical: 17,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: 12,
+                            borderWidth: password.length > 4 ? null : 1.5,
+                            borderStyle: password.length > 4 ? null : "solid",
+                            borderColor: password.length > 4 ? null : colors.grayMedium,
+                            height: 65,
+                            backgroundColor: password.length > 4 ? colors.companyGreen : null
+                        }}
                     >
-                        <ActivityIndicator size={"small"} color="white" />
+                        <ActivityIndicator size={"small"} color="black" />
                     </TouchableOpacity>
                 ) : (
                     <TouchableOpacity
-                        style={styles.signInBtn}
-                        onPress={() => onSignUp()}
-                        disabled={ password !== confirmPassword || !emailValid || !passValid || isLoading === "true" || email === "" || password === "" || confirmPassword === "" }
+                        style={{
+                            width: "100%",
+                            paddingVertical: 17,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: 12,
+                            borderWidth: confirmPassword.length > 4 ? null : 1.5,
+                            borderStyle: confirmPassword.length > 4 ? null : "solid",
+                            borderColor: confirmPassword.length > 4 ? null : colors.grayMedium,
+                            height: 65,
+                            backgroundColor: confirmPassword.length > 4 ? colors.companyGreen : null
+                        }}
+                        onPress={() => {
+                            onSignUp();
+                            setPasswordError("");
+                            setEmailError("");
+                        }}
+                        disabled={ password !== confirmPassword || !emailValid || !passValid || isLoading === true || email === "" || password === "" || confirmPassword === "" }
                     >
-                        <Text style={styles.signInTxt}>Sign Up</Text>
+                        <Text style={[styles.signInTxt, { color: confirmPassword.length > 4 ? colors.black : "#D6D6D7" }]}>Sign Up</Text>
                     </TouchableOpacity>
                 )}
                 </View>
@@ -371,6 +420,77 @@ const SignUp = () => {
                     </View>
                 </View>
             </View>
+
+            {/* Signout Modal */}
+            <Center>
+                <Modal isOpen={isOpen} onClose={onClose}>
+                <Modal.Content
+                    className="shadow-md"
+                    style={{
+                    backgroundColor: lightModeEnabled ? colors.white : "#0A0A0B",
+                    borderRadius: 8,
+                    padding: 20,
+                    }}
+                    maxWidth="400px"
+                >
+                    <Modal.Body>
+                    <View>
+                        <View>
+                        <View style={{ alignItems: "center" }}>
+                            <Image
+                            source={images.NoNetwork}
+                            style={{
+                                width: 40,
+                                height: 36,
+                            }}
+                            />
+                            <Text
+                            style={{
+                                fontSize: 17,
+                                fontFamily: "Stem-Medium",
+                                color: colors.trueWhite,
+                                marginTop: 16,
+                                marginBottom: 8,
+                                textAlign: "center",
+                            }}
+                            >
+                            No Network
+                            </Text>
+                            <Text style={{ color: "#98999B", textAlign: "center" }}>
+                            We cannot detect a network connection on this device. Please check your device settings.
+                            </Text>
+
+                            {/* Button to cancel signout */}
+                            <TouchableHighlight
+                            onPress={() => onClose()}
+                            style={{
+                                backgroundColor: colors.black,
+                                width: "100%",
+                                marginTop: 8,
+                                borderRadius: 8,
+                                borderWidth: 3,
+                                borderStyle: "solid",
+                                borderColor: "#323337",
+                            }}
+                            className="justify-center items-center"
+                            >
+                            <Text
+                                style={{
+                                color: "#191A1C",
+                                fontFamily: "Stem-Medium",
+                                paddingVertical: 12,
+                                }}
+                            >
+                                Ok
+                            </Text>
+                            </TouchableHighlight>
+                        </View>
+                        </View>
+                    </View>
+                    </Modal.Body>
+                </Modal.Content>
+                </Modal>
+            </Center>
         </ScrollView>
     )
 }

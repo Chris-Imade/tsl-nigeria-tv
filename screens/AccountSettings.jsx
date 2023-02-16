@@ -1,6 +1,12 @@
 import { Center, Modal } from "native-base";
 import React, { useState } from "react";
-import { Platform, Text, TextInput, TouchableHighlight, TouchableWithoutFeedback } from "react-native";
+import {
+  Platform,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { SafeAreaView } from "react-native";
 import { ActivityIndicator } from "react-native";
 import { ScrollView, View, Image } from "react-native";
@@ -10,69 +16,65 @@ import { colors } from "../components/shared";
 import { setAccessToken } from "../Redux/Slice/AppSlice";
 
 const AccountSettings = () => {
-    const [showModal, setShowModal] = useState(false);
-    
-    const [deleteUser, setDeleteUser] = useState();
+  const [showModal, setShowModal] = useState(false);
 
-    const [signOut, setSignOut] = useState(false);
+  const [deleteUser, setDeleteUser] = useState();
 
-    const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
+  const [signOut, setSignOut] = useState(false);
 
-    const [changePassword, setChangePassword] = useState(false);
+  const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
 
-    const [currentPassword, setCurrentPassword] = useState("");
+  const [changePassword, setChangePassword] = useState(false);
 
-    const [newPassword, setNewPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
 
-    const [secondIntBg, setSecondIntBg] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
-    const [passwordFocus, setPasswordFocus] = useState("no");
+  const [secondIntBg, setSecondIntBg] = useState("");
 
-    const [firstBg, setFirstBg] = useState("");
+  const [passwordFocus, setPasswordFocus] = useState("no");
 
-    const [newPasswordFocus, setNewPasswordFocus] = useState("");
+  const [firstBg, setFirstBg] = useState("");
 
-    const [passValid, setPassValid] = useState(true);
+  const [newPasswordFocus, setNewPasswordFocus] = useState("");
 
+  const [passValid, setPassValid] = useState(true);
 
-    const [newPassValid, setNewPassValid] = useState(true);
+  const [newPassValid, setNewPassValid] = useState(true);
 
-    const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
+  const isPassword = (passValue) => {
+    // validation that password is not lessthan 8 character and must contain 1 letter, 1 number, and 1 spercial  character
+    let regex =
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,20}/;
 
-    const isPassword = (passValue) => {
-        // validation that password is not lessthan 8 character and must contain 1 letter, 1 number, and 1 spercial  character
-        let regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,20}/;
+    if (passValue.match(regex)) return true;
+    else return false;
+  };
 
-        if(passValue.match(regex))
-        return true;
+  const submitChangedPassword = () => {
+    setIsLoading(true);
+    const validPass = isPassword(currentPassword);
+    const validNewPass = isPassword(newPassword);
 
-        else
-        return false;
-    }
+    validPass ? setPassValid(true) : setPassValid(false);
+    validNewPass ? setNewPassValid(true) : setNewPassValid(false);
 
-    const submitChangedPassword = () => {
-        setIsLoading(true);
-        const validPass = isPassword(currentPassword);
-        const validNewPass = isPassword(newPassword);
+    const userCredentials = {
+      currentPassword,
+      newPassword,
+    };
 
-        validPass ? setPassValid(true) : setPassValid(false);
-        validNewPass ? setNewPassValid(true) : setNewPassValid(false);
-
-        const userCredentials = {
-            currentPassword,
-            newPassword
-        }
-
-        const updatePassword = () => {
-            setIsLoading(false);
-        }
-        setTimeout(() => {
-            updatePassword();
-        }, 5000)
-    }
+    const updatePassword = () => {
+      setIsLoading(false);
+    };
+    setTimeout(() => {
+      updatePassword();
+    }, 5000);
+  };
 
   return (
     <SafeAreaView
@@ -107,8 +109,6 @@ const AccountSettings = () => {
             Member since April 2021
           </Text>
         </View>
-
-
 
         <View style={{ marginHorizontal: 20 }}>
           <Text
@@ -165,9 +165,7 @@ const AccountSettings = () => {
           >
             PRIVACY & SECURITY
           </Text>
-          <TouchableWithoutFeedback
-            onPress={() => setSignOut(true)}
-          >
+          <TouchableWithoutFeedback onPress={() => setSignOut(true)}>
             <View
               className="bg-[#121212]"
               style={{
@@ -245,141 +243,196 @@ const AccountSettings = () => {
         </View> */}
       </ScrollView>
 
-
-    {/* Change password */}
+      {/* Change password */}
       <Center>
-        <Modal size={"full"} isOpen={changePassword} onClose={() => setChangePassword(false)}>
-          <Modal.Content className="shadow-md" style={{ backgroundColor: lightModeEnabled ? colors.white : "#0A0A0B", borderRadius: 8, padding: 20 }}  maxWidth="400px">
+        <Modal
+          size={"full"}
+          isOpen={changePassword}
+          onClose={() => setChangePassword(false)}
+        >
+          <Modal.Content
+            className="shadow-md"
+            style={{
+              backgroundColor: lightModeEnabled ? colors.white : "#0A0A0B",
+              borderRadius: 8,
+              padding: 20,
+            }}
+            maxWidth="400px"
+          >
             <Modal.Body>
               <View>
                 <View>
-                    <View style={{ alignItems: "center" }}>
-                        <Image 
-                            source={images.SignOut}
-                            style={{
-                                width: 40,
-                                height: 36
-                            }}
-                        />
-                        <Text style={{ fontSize: 17, fontFamily: "Stem-Medium", color: colors.trueWhite, marginTop: 16, marginBottom: 8, textAlign: "center" }}>Sign Out</Text>
-                        <Text style={{ color: "#98999B" }}>Are you sure you want to sign out?</Text>
+                  <View style={{ alignItems: "center" }}>
+                    <Image
+                      source={images.SignOut}
+                      style={{
+                        width: 40,
+                        height: 36,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        fontFamily: "Stem-Medium",
+                        color: colors.trueWhite,
+                        marginTop: 16,
+                        marginBottom: 8,
+                        textAlign: "center",
+                      }}
+                    >
+                      Sign Out
+                    </Text>
+                    <Text style={{ color: "#98999B" }}>
+                      Are you sure you want to sign out?
+                    </Text>
 
-                        {/*  Current password input */}
-                        <TextInput style={{
-                            backgroundColor: secondIntBg ? secondIntBg : "#1a1a1a",
-                            width: "100%",
-                            borderRadius: 8,
-                            borderWidth: 3,
-                            borderStyle: "solid",
-                            borderColor: !passValid ? "red" : passwordFocus === "yes" ? "#80D200" : "#323337",
-                            marginTop: 32,
-                            marginBottom: 8,
-                            color: "#98999B",
+                    {/*  Current password input */}
+                    <TextInput
+                      style={{
+                        backgroundColor: secondIntBg ? secondIntBg : "#1a1a1a",
+                        width: "100%",
+                        borderRadius: 8,
+                        borderWidth: 3,
+                        borderStyle: "solid",
+                        borderColor: !passValid
+                          ? "red"
+                          : passwordFocus === "yes"
+                          ? "#80D200"
+                          : "#323337",
+                        marginTop: 32,
+                        marginBottom: 8,
+                        color: "#98999B",
+                        fontFamily: "Stem-Medium",
+                        paddingVertical: 12,
+                        paddingHorizontal: 16,
+                      }}
+                      placeholder="Current Password"
+                      placeholderTextColor={"#98999B"}
+                      selectionColor={"white"}
+                      onChangeText={(text) => setCurrentPassword(text)}
+                      onBlur={() => {
+                        setSecondIntBg(colors.darkMode);
+                        setPasswordFocus("no");
+                      }}
+                      onFocus={() => {
+                        setSecondIntBg(colors.firstGradientShade);
+                        setPasswordFocus("yes");
+                      }}
+                      secureTextEntry={true}
+                    />
+
+                    <TextInput
+                      style={{
+                        backgroundColor: firstBg ? firstBg : "#1a1a1a",
+                        width: "100%",
+                        borderRadius: 8,
+                        borderWidth: 3,
+                        borderStyle: "solid",
+                        borderColor: !newPassValid
+                          ? "red"
+                          : newPasswordFocus === "yes"
+                          ? "#80D200"
+                          : "#323337",
+                        marginTop: 8,
+                        marginBottom: 16,
+                        color: "#98999B",
+                        fontFamily: "Stem-Medium",
+                        paddingVertical: 12,
+                        paddingHorizontal: 16,
+                      }}
+                      placeholder="New Password"
+                      placeholderTextColor={"#98999B"}
+                      selectionColor={"white"}
+                      onChangeText={(text) => setNewPassword(text)}
+                      onBlur={() => {
+                        setFirstBg(colors.darkMode);
+                        setNewPasswordFocus("no");
+                      }}
+                      onFocus={() => {
+                        setFirstBg(colors.firstGradientShade);
+                        setNewPasswordFocus("yes");
+                      }}
+                      secureTextEntry={true}
+                    />
+
+                    {/* Button confirms Signout */}
+                    {isLoading ? (
+                      <TouchableHighlight
+                        onPress={() => {
+                          // setChangePassword(false);
+                          submitChangedPassword();
+                          // Submit function here
+                        }}
+                        style={{
+                          backgroundColor: colors.companyGreen,
+                          width: "100%",
+                          borderRadius: 8,
+                        }}
+                        className="justify-center items-center"
+                      >
+                        <Text
+                          style={{
+                            color: "#191A1C",
                             fontFamily: "Stem-Medium",
                             paddingVertical: 12,
-                            paddingHorizontal: 16
+                          }}
+                        >
+                          <ActivityIndicator size={"small"} color="white" />
+                        </Text>
+                      </TouchableHighlight>
+                    ) : (
+                      <TouchableHighlight
+                        onPress={() => {
+                          // setChangePassword(false);
+                          submitChangedPassword();
+                          // Submit function here
                         }}
-                            placeholder="Current Password"
-                            placeholderTextColor={"#98999B"}
-                            selectionColor={"white"}
-                            onChangeText={(text) => setCurrentPassword(text)}
-                            onBlur={() => {
-                                setSecondIntBg(colors.darkMode);
-                                setPasswordFocus("no");
-                            }}
-                            onFocus={() => {
-                                setSecondIntBg(colors.firstGradientShade);
-                                setPasswordFocus("yes");
-                            }}
-                            secureTextEntry={true}
-                            />
-
-                        <TextInput style={{
-                            backgroundColor: firstBg ? firstBg : "#1a1a1a",
-                            width: "100%",
-                            borderRadius: 8,
-                            borderWidth: 3,
-                            borderStyle: "solid",
-                            borderColor: !newPassValid ? "red" : newPasswordFocus === "yes" ? "#80D200" : "#323337",
-                            marginTop: 8,
-                            marginBottom: 16,
-                            color: "#98999B",
+                        style={{
+                          backgroundColor: colors.companyGreen,
+                          width: "100%",
+                          borderRadius: 8,
+                        }}
+                        className="justify-center items-center"
+                      >
+                        <Text
+                          style={{
+                            color: "#191A1C",
                             fontFamily: "Stem-Medium",
                             paddingVertical: 12,
-                            paddingHorizontal: 16
+                          }}
+                        >
+                          Update password
+                        </Text>
+                      </TouchableHighlight>
+                    )}
+                    <TouchableHighlight
+                      onPress={() => {
+                        // setChangePassword(false);
+                        setChangePassword(false);
+                        // Submit function here
+                      }}
+                      style={{
+                        backgroundColor: colors.black,
+                        width: "100%",
+                        marginTop: 8,
+                        borderRadius: 8,
+                        borderWidth: 3,
+                        borderStyle: "solid",
+                        borderColor: "#323337",
+                      }}
+                      className="justify-center items-center"
+                    >
+                      <Text
+                        style={{
+                          color: "#191A1C",
+                          fontFamily: "Stem-Medium",
+                          paddingVertical: 12,
                         }}
-                            placeholder="New Password"
-                            placeholderTextColor={"#98999B"}
-                            selectionColor={"white"}
-                            onChangeText={(text) => setNewPassword(text)}
-                            onBlur={() => {
-                                setFirstBg(colors.darkMode);
-                                setNewPasswordFocus("no");
-                            }}
-                            onFocus={() => {
-                                setFirstBg(colors.firstGradientShade);
-                                setNewPasswordFocus("yes");
-                            }}
-                            secureTextEntry={true}
-                        />
-
-
-                        {/* Button confirms Signout */}
-                        {isLoading ? (
-                            <TouchableHighlight onPress={() => {
-                                // setChangePassword(false);
-                                submitChangedPassword();
-                                // Submit function here
-                            }} style={{
-                                backgroundColor: colors.companyGreen,
-                                width: "100%",
-                                borderRadius: 8
-                            }} className="justify-center items-center">
-                                <Text style={{
-                                    color: "#191A1C",
-                                    fontFamily: "Stem-Medium",
-                                    paddingVertical: 12
-                                }}>
-                                    <ActivityIndicator size={"small"} color="white" />
-                                </Text>
-                            </TouchableHighlight>
-                        ) : (
-                            <TouchableHighlight onPress={() => {
-                                // setChangePassword(false);
-                                submitChangedPassword();
-                                // Submit function here
-                            }} style={{
-                                backgroundColor: colors.companyGreen,
-                                width: "100%",
-                                borderRadius: 8
-                            }} className="justify-center items-center">
-                                <Text style={{
-                                    color: "#191A1C",
-                                    fontFamily: "Stem-Medium",
-                                    paddingVertical: 12
-                                }}>Update password</Text>
-                            </TouchableHighlight>
-                        )}
-                        <TouchableHighlight onPress={() => {
-                            // setChangePassword(false);
-                            setChangePassword(false);
-                            // Submit function here
-                            }} style={{
-                                backgroundColor: colors.black,
-                                width: "100%",
-                                marginTop: 8,
-                                borderRadius: 8,
-                                borderWidth: 3,
-                                borderStyle: "solid",
-                                borderColor: "#323337"
-                            }} className="justify-center items-center">
-                                <Text style={{
-                                color: "#191A1C",
-                                fontFamily: "Stem-Medium",
-                                paddingVertical: 12
-                            }}>Cancel</Text>
-                        </TouchableHighlight>
-                    </View>
+                      >
+                        Cancel
+                      </Text>
+                    </TouchableHighlight>
+                  </View>
                 </View>
               </View>
             </Modal.Body>
@@ -387,64 +440,98 @@ const AccountSettings = () => {
         </Modal>
       </Center>
 
-
-      
       {/* Signout Modal */}
       <Center>
         <Modal isOpen={signOut} onClose={() => setSignOut(false)}>
-          <Modal.Content className="shadow-md" style={{ backgroundColor: lightModeEnabled ? colors.white : "#0A0A0B", borderRadius: 8, padding: 20 }}  maxWidth="400px">
+          <Modal.Content
+            className="shadow-md"
+            style={{
+              backgroundColor: lightModeEnabled ? colors.white : "#0A0A0B",
+              borderRadius: 8,
+              padding: 20,
+            }}
+            maxWidth="400px"
+          >
             <Modal.Body>
               <View>
                 <View>
-                    <View style={{ alignItems: "center" }}>
-                        <Image 
-                            source={images.SignOut}
-                            style={{
-                                width: 40,
-                                height: 36
-                            }}
-                        />
-                        <Text style={{ fontSize: 17, fontFamily: "Stem-Medium", color: colors.trueWhite, marginTop: 16, marginBottom: 8, textAlign: "center" }}>Sign Out</Text>
-                        <Text style={{ color: "#98999B" }}>Are you sure you want to sign out?</Text>
+                  <View style={{ alignItems: "center" }}>
+                    <Image
+                      source={images.SignOut}
+                      style={{
+                        width: 40,
+                        height: 36,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        fontFamily: "Stem-Medium",
+                        color: colors.trueWhite,
+                        marginTop: 16,
+                        marginBottom: 8,
+                        textAlign: "center",
+                      }}
+                    >
+                      Sign Out
+                    </Text>
+                    <Text style={{ color: "#98999B" }}>
+                      Are you sure you want to sign out?
+                    </Text>
 
-                        {/* Button confirms Signout */}
-                        <TouchableHighlight onPress={() => dispatch(setAccessToken(null))} style={{
-                            backgroundColor: colors.companyGreen,
-                            width: "100%",
-                            marginTop: 32,
-                            borderRadius: 8
-                        }} className="justify-center items-center">
-                            <Text style={{
-                                color: "#191A1C",
-                                fontFamily: "Stem-Medium",
-                                paddingVertical: 12
-                            }}>Confirm</Text>
-                        </TouchableHighlight>
+                    {/* Button confirms Signout */}
+                    <TouchableHighlight
+                      onPress={() => dispatch(setAccessToken(null))}
+                      style={{
+                        backgroundColor: colors.companyGreen,
+                        width: "100%",
+                        marginTop: 32,
+                        borderRadius: 8,
+                      }}
+                      className="justify-center items-center"
+                    >
+                      <Text
+                        style={{
+                          color: "#191A1C",
+                          fontFamily: "Stem-Medium",
+                          paddingVertical: 12,
+                        }}
+                      >
+                        Confirm
+                      </Text>
+                    </TouchableHighlight>
 
-                        {/* Button to cancel signout */}
-                        <TouchableHighlight onPress={() => setSignOut(false)} style={{
-                            backgroundColor: colors.black,
-                            width: "100%",
-                            marginTop: 8,
-                            borderRadius: 8,
-                            borderWidth: 3,
-                            borderStyle: "solid",
-                            borderColor: "#323337"
-                        }} className="justify-center items-center">
-                            <Text style={{
-                                color: "#191A1C",
-                                fontFamily: "Stem-Medium",
-                                paddingVertical: 12
-                            }}>Cancel</Text>
-                        </TouchableHighlight>
-                    </View>
+                    {/* Button to cancel signout */}
+                    <TouchableHighlight
+                      onPress={() => setSignOut(false)}
+                      style={{
+                        backgroundColor: colors.black,
+                        width: "100%",
+                        marginTop: 8,
+                        borderRadius: 8,
+                        borderWidth: 3,
+                        borderStyle: "solid",
+                        borderColor: "#323337",
+                      }}
+                      className="justify-center items-center"
+                    >
+                      <Text
+                        style={{
+                          color: "#191A1C",
+                          fontFamily: "Stem-Medium",
+                          paddingVertical: 12,
+                        }}
+                      >
+                        Cancel
+                      </Text>
+                    </TouchableHighlight>
+                  </View>
                 </View>
               </View>
             </Modal.Body>
           </Modal.Content>
         </Modal>
       </Center>
-
     </SafeAreaView>
   );
 };
