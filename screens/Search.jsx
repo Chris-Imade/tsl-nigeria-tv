@@ -158,7 +158,7 @@ const Search = () => {
           <TouchableHighlight
             key={index}
             onPress={() =>
-              navigation.navigate("video-screen", { data: item.video_link })
+              navigation.navigate("video-elongated", { data: item.id })
             }
           >
             <View

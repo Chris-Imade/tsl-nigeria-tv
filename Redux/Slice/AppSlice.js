@@ -48,8 +48,7 @@ export const appSlice = createSlice({
       state.videoIdForDownload = action.payload;
     },
     setVideoDownloadData: (state, action) => {
-      const duplicates = state.videoDownloadData.filter((item) => item.title !== action.payload.title);
-      duplicates.length === 0 ? state.videoDownloadData = [...state.videoDownloadData, action.payload] : [...state.videoDownloadData];
+      state.videoDownloadData = [...state.videoDownloadData, action.payload];
     },
     setDownloadDetails: (state, action) => {
       action.payload === null || undefined ? state.downloadDetails = {} :  state.downloadDetails = action.payload;

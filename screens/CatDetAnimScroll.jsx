@@ -21,8 +21,11 @@ import {
 } from "../Redux/Slice/AppSlice";
 import { images } from "../assets/images";
 import { colors } from "../components/shared";
+import * as Clipboard from 'expo-clipboard';
 
 const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
+  const [copiedText, setCopiedText] = React.useState('');
+
   const [info, setInfo] = useState({});
 
   const { isOpen, onOpen, onClose } = useDisclose();
@@ -41,6 +44,9 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
     (state) => state.data?.categoryDetailsPage
   );
 
+  const copyToClipboard = async (link) => {
+    await Clipboard.setStringAsync(link);
+  };
   // console.log(categoryDetailsPage);
 
   return (
@@ -81,7 +87,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
               <View className="w-[79%] mt-[-50px] items-center flex-row justify-around mx-[18px] space-x-1">
                 <Text
                   style={styles.menuTxt}
-                  className="text-[9px] text-[#D6D6D7]"
+                  className="text-[11px] text-[#D6D6D7]"
                 >
                   {categoryDetailsPage?.videos[0]?.mood[0]}
                 </Text>
@@ -91,7 +97,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                 ></Text>
                 <Text
                   style={styles.menuTxt}
-                  className="text-[9px] text-[#D6D6D7]"
+                  className="text-[11px] text-[#D6D6D7]"
                 >
                   {categoryDetailsPage?.videos[0]?.mood[1]}
                 </Text>
@@ -101,7 +107,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                 ></Text>
                 <Text
                   style={styles.menuTxt}
-                  className="text-[9px] text-[#D6D6D7]"
+                  className="text-[11px] text-[#D6D6D7]"
                 >
                   {categoryDetailsPage?.videos[0]?.genres[0]}
                 </Text>
@@ -111,7 +117,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                 ></Text>
                 <Text
                   style={styles.menuTxt}
-                  className="text-[9px] text-[#D6D6D7]"
+                  className="text-[11px] text-[#D6D6D7]"
                 >
                   {categoryDetailsPage?.videos[0]?.genres[1]}
                 </Text>
@@ -138,7 +144,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                 />
                 <Text
                   style={styles.menuTxt}
-                  className="text-white text-[9px] pt-[8px]"
+                  className="text-white text-[11px] pt-[8px]"
                 >
                   My List
                 </Text>
@@ -178,7 +184,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                 />
                 <Text
                   style={styles.menuTxt}
-                  className="text-white text-[9px] pt-[8px]"
+                  className="text-white text-[11px] pt-[8px]"
                 >
                   Info
                 </Text>
@@ -191,9 +197,9 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
           className="animate-pulse w-full justify-center items-center mt-14"
           style={{ marginTop: 200 }}
         >
-          <Skeleton className="rounded-sm bg-slate-900/60 h-[100px] w-[200px]"></Skeleton>
-          <Skeleton className="w-[300px] h-6 rounded-sm bg-slate-900/60 my-4"></Skeleton>
-          <Skeleton className="w-[250px] h-4 rounded-sm bg-slate-900/60 mb-12"></Skeleton>
+          <Skeleton className="rounded-md bg-slate-900/60 h-[100px] w-[200px]"></Skeleton>
+          <Skeleton className="w-[300px] h-6 rounded-md bg-slate-900/60 my-4"></Skeleton>
+          <Skeleton className="w-[250px] h-4 rounded-md bg-slate-900/60 mb-12"></Skeleton>
         </View>
       ) : null}
 
@@ -310,6 +316,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
               </View>
               <View>
                 <View className="w-full py-[12px] flex-row justify-around items-center">
+                  {/* Play video */}
                   <TouchableWithoutFeedback
                     onPress={() =>
                       navigation.navigate("video-screen", {
@@ -331,11 +338,16 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                       </Text>
                     </View>
                   </TouchableWithoutFeedback>
+                  {/* Copy video */}
                   <TouchableWithoutFeedback
                     onPress={() => {
-                      navigation.navigate("video-screen", {
-                        data: info?.video_link,
-                    })}}
+                      const baseUrl = "https://www.ssyoutube.com/watch?v="
+                      copyToClipboard(baseUrl+info.id);
+                      ToastAndroid.show(
+                        "Video link has been copied",
+                        ToastAndroid.SHORT
+                      );
+                    }}
                   >
                     <View className="justify-center items-center opacity-[0.5]">
                       <Image
@@ -347,7 +359,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                         style={{ fontFamily: "Stem-Medium" }}
                         className="text-white"
                       >
-                        Download
+                        Copy
                       </Text>
                     </View>
                   </TouchableWithoutFeedback>

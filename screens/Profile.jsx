@@ -12,13 +12,15 @@ import {
 import { colors } from "../components/shared";
 import { images } from "../assets/images";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAccessToken } from "../Redux/Slice/AppSlice";
 
 const Profile = () => {
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state?.data?.user);
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.black }}>
@@ -42,10 +44,10 @@ const Profile = () => {
               }}
             />
             <Text className="text-[13px] text-[#F5F5F5] mt-[12px]">
-              Imade Jephthah
+              {user.username}
             </Text>
           </View>
-          <TouchableOpacity className="justify-center  m-[48px] mt-[20px] flex-row items-center">
+          <TouchableOpacity onPress={() => navigation.navigate("account-settings")} className="justify-center  m-[48px] mt-[20px] flex-row items-center">
             <Image
               source={images.Edit}
               resizeMode="contain"

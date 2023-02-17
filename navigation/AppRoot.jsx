@@ -302,8 +302,99 @@ const ProfileStack = () => {
   const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
 
   return (
-    <StackProfile.Navigator>
+    <StackProfile.Navigator initialRouteName="Profile">
       {/* All the profile related screens */}
+      <RootStack.Screen
+        options={{
+          headerStyle: {
+            backgroundColor: colors.black,
+          },
+          headerTitle: "Profile",
+          headerTintColor: colors.white,
+        }}
+        name="profile-screen"
+        component={Profile}
+      />
+      <StackProfile.Screen
+        options={{
+          headerStyle: {
+            backgroundColor: colors.black,
+          },
+          headerTitle: "Notification",
+          headerTintColor: colors.white,
+          headerRight: () => (
+            <TouchableHighlight
+              onPress={() => dispatch(setSearchNotification())}
+            >
+              <Image
+                source={images.SearchSmall}
+                className="w-[24px] h-[24px]"
+                resizeMode="contain"
+              />
+            </TouchableHighlight>
+          ),
+        }}
+        name="notification-screen"
+        component={Notification}
+      />
+      <StackProfile.Screen
+        options={{
+          headerRight: () => (
+            <View className="flex-row">
+              <TouchableOpacity
+                onPress={() => navigation.navigate("search-screen")}
+                className="mr-[26px] w-[28px] h-[28px]"
+              >
+                <Image
+                  source={images.SearchSmall}
+                  style={{
+                    width: 24,
+                    height: 24,
+                  }}
+                />
+              </TouchableOpacity>
+
+              <TouchableWithoutFeedback
+                onPress={() => navigation.navigate("profile-screen")}
+              >
+                <Image
+                  source={images.MaleProfile}
+                  resizeMode="contain"
+                  className="w-[28px] h-[28px] mr-[26px]"
+                />
+              </TouchableWithoutFeedback>
+            </View>
+          ),
+          headerTintColor: lightModeEnabled ? colors.black : colors.white,
+          headerStyle: {
+            backgroundColor: lightModeEnabled ? colors.white : colors.black,
+          },
+          headerTitle: "Account",
+          headerTitleAlign: "left",
+        }}
+        name="account-settings"
+        component={AccountSettings}
+      />
+      <StackProfile.Screen
+        options={{
+          headerStyle: {
+            backgroundColor: colors.black,
+          },
+          headerTitle: "Lists",
+          headerTintColor: colors.white,
+          headerRight: () => (
+            <TouchableHighlight onPress={() => dispatch(setSearchList())}>
+              <Image
+                source={images.SearchSmall}
+                className="w-[24px] h-[24px]"
+                resizeMode="contain"
+              />
+            </TouchableHighlight>
+          ),
+        }}
+        name="lists-screen"
+        component={Lists}
+      />
     </StackProfile.Navigator>
   );
 };
@@ -392,7 +483,7 @@ const HomeApp = () => {
                 source={images.videoOutline}
               />
             );
-          } else if (route.name === "Downloads") {
+          } else if (route.name === "My Account") {
             return focused ? (
               <Image
                 style={{
@@ -439,42 +530,14 @@ const HomeApp = () => {
       <Tab.Screen name="Hot & Spicy" component={News} />
       <Tab.Screen
         options={{
-          headerShown: true,
           headerStyle: {
-            backgroundColor: lightModeEnabled ? colors.white : colors.black,
+            backgroundColor: colors.black,
           },
-          headerTitleStyle: {
-            color: lightModeEnabled ? colors.black : colors.white,
-          },
-          headerRight: () => (
-            <View className="flex-row">
-              <TouchableOpacity
-                onPress={() => {}}
-                className="mr-[26px] w-[28px] h-[28px]"
-              >
-                <Image
-                  source={images.SearchSmall}
-                  style={{
-                    width: 24,
-                    height: 24,
-                  }}
-                />
-              </TouchableOpacity>
-
-              <TouchableWithoutFeedback
-                onPress={() => navigation.navigate("profile-screen")}
-              >
-                <Image
-                  source={images.MaleProfile}
-                  resizeMode="contain"
-                  className="w-[28px] h-[28px] mr-[26px]"
-                />
-              </TouchableWithoutFeedback>
-            </View>
-          ),
+          headerTitle: "Profile",
+          headerTintColor: colors.white,
         }}
-        name="Downloads"
-        component={Downloads}
+        name="My Account"
+        component={ProfileStack}
       />
     </Tab.Navigator>
   );

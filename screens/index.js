@@ -6,7 +6,6 @@ export { default as Profile } from "./Profile";
 export { default as Lists } from "./Lists";
 export { default as Notification } from "./Notification";
 export { default as News } from "./News";
-export { default as Downloads } from "./Downloads";
 export { default as Welcome } from "./Onboard/Welcome";
 export { default as ChangeCredentials } from "./ChangeCredentials";
 export { default as PasswordReset } from "./PasswordReset";

@@ -56,6 +56,13 @@ import SignOut from "./sign-out.png";
 import AccountMain from "./account_main.png";
 import BottomShadow from "./bottomShadow.png";
 import NoNetwork from "./no-network.png";
+import Username from "./username.png";
+import ChangePassword from "./change_password.png";
+import Upload from "./upload_file.png";
+import Image from "./image.png";
+import FileCopy from "./file_copy.png";
+import DeleteForever from "./delete_forever.png"
+
 
 export const images = {
     Banner,
@@ -102,6 +109,7 @@ export const images = {
     More,
     PlayMainArr,
     PlayMainDet,
+    
     DownloadDetails,
     Share,
     Star,
@@ -111,5 +119,11 @@ export const images = {
     SignOut,
     AccountMain,
     BottomShadow,
-    NoNetwork
+    NoNetwork,
+    Username,
+    ChangePassword,
+    Upload,
+    Image,
+    FileCopy,
+    DeleteForever
 }

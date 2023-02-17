@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useSelector } from "react-redux";
 import { images } from "../assets/images";
-import { colors } from "../components/shared";
+import { colors, ScreenWidth } from "../components/shared";
 import movies from "../firebase/Raw/vid_data.json";
 
 const Notification = () => {
@@ -24,7 +24,7 @@ const Notification = () => {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-black pt-5">
+    <SafeAreaView className="flex-1 bg-black pt-5 justify-center items-center">
       {searchNotification && (
         <View className="flex-row w-full mx-[20px] items-center">
           <Image
@@ -43,70 +43,30 @@ const Notification = () => {
           />
         </View>
       )}
-      <ScrollView>
-        {movies
-          ? movies.map((item, index) => (
-              <View key={index} className="mx-[20px] flex-row">
-                <Image
-                  source={{ uri: item.image }}
-                  className="h-[75px] w-[127px] rounded-[4px] mr-[16px] mb-[20px]"
-                  resizeMode="cover"
-                />
-                <View>
-                  <View className="flex-row items-center">
-                    <Image
-                      source={images.BellIcon}
-                      style={{
-                        width: 24,
-                        height: 24,
-                        margin: 4,
-                      }}
-                      resizeMode={"contain"}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: "Stem-Medium",
-                        fontSize: 16,
-                        marginBottom: 4,
-                      }}
-                      className="text-[#fff]"
-                    >
-                      Reminder: New Arrival
-                    </Text>
-                  </View>
-                  <Text
-                    style={{
-                      fontFamily: "Stem-Medium",
-                      fontSize: 16,
-                      marginBottom: 4,
-                    }}
-                    className="text-[#fff]"
-                  >
-                    {truncTxt(item.title)}
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: "Stem-Medium",
-                      fontSize: 16,
-                      marginBottom: 4,
-                    }}
-                    className="text-[#fff]"
-                  >
-                    2:30pm
-                  </Text>
-                </View>
-              </View>
-            ))
-          : movies.map((item, index) => (
-              <View key={index} className="mx-[20px] flex-row">
-                <View className="bg-slate-900/60 h-[69px] w-[127px] rounded-[4px] mr-[16px] mb-[20px]"></View>
-                <View>
-                  <View className="bg-slate-900/60 w-48 h-4 mb-2"></View>
-                  <View className="bg-slate-900/60 w-32 h-4"></View>
-                </View>
-              </View>
-            ))}
-      </ScrollView>
+      <View
+          style={{
+            borderWidth: 2,
+            borderColor: "#545558",
+            borderStyle: "dashed",
+            marginHorizontal: 28,
+            paddingVertical: 23,
+            paddingHorizontal: 19,
+            width: ScreenWidth - 40,
+          }}
+        >
+          <Text
+            style={{
+              width: ScreenWidth - 80,
+              fontFamily: "Stem-Regular",
+              fontSize: 12,
+              lineHeight: 13,
+            }}
+            className="text-white"
+          >
+            You have no notifications right now. 
+            come back later.
+          </Text>
+        </View>
     </SafeAreaView>
   );
 };

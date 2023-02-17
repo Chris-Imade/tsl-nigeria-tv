@@ -70,7 +70,7 @@ const Home = () => {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${'818fbb131c82e940cb22b8b348dc430af391d4d7'}`,
+        Authorization: `Token ${accessToken}`,
       }, // body data type must match "Content-Type" header
     });
 
@@ -82,16 +82,16 @@ const Home = () => {
   useEffect(() => {
     getData(`https://web-production-de75.up.railway.app/api/categories`)
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if(!data.error) {
           dispatch(setCategories(data));
         }
 
         if (data) {
           setIsLoading(false);
-          console.log("<------------ Data is returned ----------------->");
+          // console.log("<------------ Data is returned ----------------->");
         } else {
-          console.log("What could go wrong?")
+          // console.log("What could go wrong?")
         }
 
         // console.log("<------------ ErrorResponseD            ata ----------------->", errorResponseData);
@@ -99,8 +99,8 @@ const Home = () => {
       .catch((error) => {
         setIsLoading(false);
         setErrorResponseData(error.message);
-        console.log("Some error down below");
-        console.log(error)
+        // console.log("Some error down below");
+        // console.log(error)
       });
   }, []);
 

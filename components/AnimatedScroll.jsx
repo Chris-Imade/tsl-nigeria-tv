@@ -22,11 +22,14 @@ import {
   setVideoIdForDownload,
   setVideoList,
 } from "../Redux/Slice/AppSlice";
+import * as Clipboard from 'expo-clipboard';
 
 const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
   const [info, setInfo] = useState({});
 
   const { isOpen, onOpen, onClose } = useDisclose();
+
+  const [copiedText, setCopiedText] = React.useState('');
 
   const truncTxt = (txt) => {
     return txt?.length > 21 ? `${txt.substr(0, 21)}...` : txt;
@@ -38,7 +41,13 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
 
   const categories = useSelector((state) => state?.data?.categories);
 
-  console.log(categories);
+  // console.log(categories);
+
+
+
+  const copyToClipboard = async (link) => {
+    await Clipboard.setStringAsync(link);
+  };
   
 
   // console.log(categories[2].videos}[0].video_link);
@@ -188,9 +197,9 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
         </>
       ) : isLoading ? (
         <View className="animate-pulse w-full justify-center items-center mt-14" style={{ marginTop: 200}}>
-            <View className="rounded-sm bg-slate-900/60 h-[100px] w-[200px]"></View>
-            <View className="w-[300px] h-6 rounded-sm bg-slate-900/60 my-4"></View>
-            <View className="w-[250px] h-4 rounded-sm bg-slate-900/60 mb-12"></View>
+            <View className="rounded-md bg-slate-900/60 h-[100px] w-[200px]"></View>
+            <View className="w-[300px] h-6 rounded-md bg-slate-900/60 my-4"></View>
+            <View className="w-[250px] h-4 rounded-md bg-slate-900/60 mb-12"></View>
         </View>
 
       ) : null}
@@ -302,8 +311,8 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                       {info.rating}
                     </Text>
                     {/* <Text
-                                        style={{ fontFamily: "Stem-Medium" }}
-                                        className="text-[#98999B] text-[11px] mx-1">{info.director}</Text> */}
+                      style={{ fontFamily: "Stem-Medium" }}
+                      className="text-[#98999B] text-[11px] mx-1">{info.director}</Text> */}
                   </View>
                   <Text
                     style={{ fontFamily: "Stem-Medium" }}
@@ -337,8 +346,12 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                   </TouchableWithoutFeedback>
                   <TouchableWithoutFeedback
                     onPress={() => {
-                      navigation.navigate("Downloads");
-                      dispatch(setVideoDownloadData(info));
+                      const baseUrl = "https://www.ssyoutube.com/watch?v="
+                      copyToClipboard(baseUrl+info.video_link);
+                      ToastAndroid.show(
+                        "Video link has been copied",
+                        ToastAndroid.SHORT
+                      );
                     }}
                   >
                     <View className="justify-center items-center opacity-[0.5]">
@@ -351,7 +364,7 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                         style={{ fontFamily: "Stem-Medium" }}
                         className="text-white"
                       >
-                        Download
+                        Copy
                       </Text>
                     </View>
                   </TouchableWithoutFeedback>

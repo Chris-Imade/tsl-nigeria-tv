@@ -7,14 +7,16 @@ import {
   Spinner,
   VStack,
 } from "native-base";
-import React, {useState } from "react";
+import React, {useRef, useState } from "react";
 import {
+  Animated,
   Image,
   Platform,
   SafeAreaView,
   ScrollView,
   Text,
   TouchableHighlight,
+  TouchableOpacity
 } from "react-native";
 import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,11 +31,16 @@ import * as FileSystem from "expo-file-system";
 
 const Downloads = (props) => {
   // Initials
+
+  const [mvProgress, setMvProgress] = useState();
+  const [ruminant, setRuminant] = useState();
+  const [complete, setComplete] = useState(null);
+
+
   const { StorageAccessFramework } = FileSystem;
   const [downloadProgress, setDownloadProgress] = React.useState();
-  const downloadPath =
-    FileSystem.documentDirectory + (Platform.OS == "android" ? "" : "");
-  console.log("DwnloadPath", downloadPath);
+  const downloadPath = FileSystem.documentDirectory + (Platform.OS == "android" ? "tslmedia" : "tslmedia"+"/");
+  // console.log("DwnloadPath", downloadPath);
 
   // Ensure path exists
   const ensureDirAsync = async (dir, intermediates = true) => {
@@ -47,13 +54,12 @@ const Downloads = (props) => {
 
   // show download progress
   const downloadCallback = (downloadProgress) => {
-    const progress =
-      downloadProgress.totalBytesWritten /
-      downloadProgress.totalBytesExpectedToWrite;
-    setDownloadProgress(progress);
+    const progress = downloadProgress?.totalBytesWritten / downloadProgress?.totalBytesExpectedToWrite;
+    setMvProgress(progress * 1e+6);
+    setRuminant(downloadProgress?.totalBytesExpectedToWrite);
   };
-
-  console.log("DownloadProgress", downloadProgress);
+  // downloadCallback()
+  // console.log("DownloadProgress: ", downloadProgress);
 
   // Initial download for  android/Ios
   const downloadFile = async (fileUrl) => {
@@ -61,7 +67,7 @@ const Downloads = (props) => {
       const dir = ensureDirAsync(downloadPath);
     }
 
-    let fileName = fileUrl.split("Reports/")[1];
+    let fileName = fileUrl.split("Tsl-Shows/")[1];
     //alert(fileName)
     const downloadResumable = FileSystem.createDownloadResumable(
       fileUrl,
@@ -95,13 +101,14 @@ const Downloads = (props) => {
         await StorageAccessFramework.createFileAsync(
           permissions.directoryUri,
           fileName,
-          "application/pdf"
+          "video/mp4"
         )
           .then(async (uri) => {
             await FileSystem.writeAsStringAsync(uri, fileString, {
               encoding: FileSystem.EncodingType.Base64,
             });
-            alert("Report Downloaded Successfully");
+            setComplete("Download completed");
+            alert("We are glad to know you enjoyed the Show...😉");
           })
           .catch((e) => {});
       } catch (e) {
@@ -126,32 +133,30 @@ const Downloads = (props) => {
   const videoIdForDownload = useSelector(
     (state) => state.data.videoIdForDownload
   );
-  const videoDownloadData = useSelector(
-    (state) => state.data.videoDownloadData
-  );
+  const videoDownloadData = useSelector((state) => state.data.videoDownloadData);
   const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
   const downloadDetails = useSelector((state) => state.data.downloadDetails);
 
-  console.log(videoDownloadData);
+  // console.log("Video Download Data: " + videoDownloadData);
 
-  const getVideoDownloadURL = (id) => {
-    const options = {
-      method: "GET",
-      mode: "no-cors",
-      headers: {
-        "X-RapidAPI-Key": "c0557c4efamshcd93e3522c4f925p1500b0jsn50f58dc496f0",
-        "X-RapidAPI-Host": "youtube-dl4.p.rapidapi.com",
-      },
-    };
+  // const getVideoDownloadURL = (id) => {
+  //   const options = {
+  //     method: "GET",
+  //     mode: "no-cors",
+  //     headers: {
+  //       "X-RapidAPI-Key": "c0557c4efamshcd93e3522c4f925p1500b0jsn50f58dc496f0",
+  //       "X-RapidAPI-Host": "youtube-dl4.p.rapidapi.com",
+  //     },
+  //   };
 
-    fetch(
-      `https://youtube-dl4.p.rapidapi.com/fc8c5416b9cfd8fc?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D${id}`,
-      options
-    )
-      .then((response) => response.json())
-      .then((response) => console.log(downloadFile(response.formats[3].url)))
-      .catch((err) => console.error(err));
-  };
+  //   fetch(
+  //     `https://youtube-dl4.p.rapidapi.com/fc8c5416b9cfd8fc?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D${id}`,
+  //     options
+  //   )
+  //     .then((response) => response.json())
+  //     .then((response) => console.log(response))
+  //     .catch((err) => console.error(err));
+  // };
 
   // useEffect(() => {
   // }, [videoIdForDownload])
@@ -202,12 +207,8 @@ const Downloads = (props) => {
             flex: 1,
             backgroundColor: colors.black,
             justifyContent: "center",
-            // alignItems: "center"
           }}
         >
-          {/* <Image 
-                        source={""}
-                    /> */}
 
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -215,8 +216,8 @@ const Downloads = (props) => {
             contentContainerStyle={{ width: ScreenWidth, alignItems: "center" }}
           >
             {videoDownloadData?.map((item, index) => (
-              <TouchableHighlight
-                onPress={() => getVideoDownloadURL("BkL9l7qovsE")}
+              <TouchableOpacity
+                onPress={() => downloadFile("https://rr4---sn-aigzrn7d.googlevideo.com/videoplayback?expire=1676580849&ei=kUPuY9rKAoHONsCKqTg&ip=198.181.163.49&id=o-APB-gou7fhmj3EeNZ4AqPrGLI5HxJynwbR_KVF0HhxqT&itag=22&source=youtube&requiressl=yes&spc=H3gIhrjAbgaqS_aBXuyBBbnKs7QOuWs&vprv=1&mime=video%2Fmp4&ns=qJVNA0jxt6Lmx6i6lorFGPAL&cnr=14&ratebypass=yes&dur=596.520&lmt=1673490877734859&fexp=24007246&c=WEB&txp=5432434&n=p9CIrzM3_tvl5A&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cspc%2Cvprv%2Cmime%2Cns%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRQIhAOAzE2mlN0po3ytg7Yt9Cr4kDgadQjHNQp7TVnDlMeOoAiAejDuF1NpfsZdObOFnANB8Z4Nw2c8ONm-P41vPdFCn3A%3D%3D&title=Funny%20CGI%203D%20Animated%20Short%20Film%20**%20BIG%20BUCK%20BUNNY%20**%20Cute%20Animation%20Kids%20Cartoon%20by%20Blender&rm=sn-p5qe777s&req_id=3508136abb7ca3ee&ipbypass=yes&redirect_counter=2&cm2rm=sn-huoob-5c8e7l&cms_redirect=yes&cmsv=e&mh=KO&mip=102.91.49.144&mm=29&mn=sn-aigzrn7d&ms=rdu&mt=1676559203&mv=m&mvi=4&pl=24&lsparams=ipbypass,mh,mip,mm,mn,ms,mv,mvi,pl&lsig=AG3C_xAwRQIhAO_lcNK4YJhhbisXXJsJUGMLAignrSc_hKpzYKp_a5SQAiAWlggIQ6u-KLqd0COBwO-07Qb2IIQt0tq3rJ1jaW8hWQ%3D%3D")}
                 key={index}
                 className="w-[90%] mb-[21px]"
               >
@@ -228,8 +229,9 @@ const Downloads = (props) => {
                   }}
                   className="px-12"
                 >
+                  {/* {console.log(item)} */}
                   <Image
-                    source={{ uri: item?.data?.image }}
+                    source={{ uri: item?.mobile_thumbnail }}
                     style={{
                       width: 96,
                       height: 72,
@@ -252,7 +254,7 @@ const Downloads = (props) => {
                           color: "#F5F5F5",
                         }}
                       >
-                        Omo Ghetto
+                        {item.title}
                       </Text>
                       <Image
                         source={images.More}
@@ -270,12 +272,20 @@ const Downloads = (props) => {
                           fontSize: 8,
                         }}
                       >
-                        300mb/600mb
+                        {mvProgress+"mb"}/{ruminant+"mb"}
                       </Text>
                       <View
                         style={{}}
                         className="w-full h-[3px] bg-[#1E1E1E] first-letter:rounded-[2px] mt-[4px]"
-                      ></View>
+                      >
+                        {mvProgress && (
+                          <Animated.View style={{
+                            width: "50%",
+                            backgroundColor: colors.companyGreen,
+                            height: 3
+                          }}></Animated.View>
+                        )}
+                      </View>
                       <Text
                         style={{
                           color: colors.companyGreen,
@@ -283,12 +293,13 @@ const Downloads = (props) => {
                           fontFamily: "Stem-Regular",
                         }}
                       >
-                        Connecting...
+                        {mvProgress ? "Downloading..." : complete ? complete : "Connecting..."}
+                        
                       </Text>
                     </View>
                   </View>
                 </View>
-              </TouchableHighlight>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </SafeAreaView>

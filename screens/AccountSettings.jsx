@@ -1,19 +1,25 @@
 import { Center, Modal } from "native-base";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Platform,
   Text,
   TextInput,
   TouchableHighlight,
   TouchableWithoutFeedback,
+  ToastAndroid,
+  ActivityIndicator,
+  SafeAreaView,
+  ScrollView, 
+  View, 
+  Image,
+  TouchableOpacity,
+  ImageBackground
 } from "react-native";
-import { SafeAreaView } from "react-native";
-import { ActivityIndicator } from "react-native";
-import { ScrollView, View, Image } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { colors } from "../components/shared";
-import { setAccessToken } from "../Redux/Slice/AppSlice";
+import { setAccessToken, setUser } from "../Redux/Slice/AppSlice";
+import * as ImagePicker from 'expo-image-picker';
 
 const AccountSettings = () => {
   const [showModal, setShowModal] = useState(false);
@@ -44,7 +50,27 @@ const AccountSettings = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [showUpdateUsername, setShowUpdateUsername] = useState(false);
+
+  const [newUsername, setNewUsername] = useState("");
+
+  const [usernameBg, setUsernameBg] = useState("");
+
+  const [newUsernameFocus, setNewUsernameFocus] = useState("no");
+
+  const [userId, setUserId] = useState(0); 
+
+  const [showUpdatePhoto, setShowUpdatePhoto] = useState(false);
+
+  console.log(userId);
+
   const dispatch = useDispatch();
+
+  const accessToken = useSelector((state) => state?.data?.accessToken);
+
+  const user = useSelector((state) => state?.data?.user);
+
+  const [image, setImage] = useState(null);
 
   const isPassword = (passValue) => {
     // validation that password is not lessthan 8 character and must contain 1 letter, 1 number, and 1 spercial  character
@@ -57,24 +83,165 @@ const AccountSettings = () => {
 
   const submitChangedPassword = () => {
     setIsLoading(true);
-    const validPass = isPassword(currentPassword);
-    const validNewPass = isPassword(newPassword);
+    
 
-    validPass ? setPassValid(true) : setPassValid(false);
-    validNewPass ? setNewPassValid(true) : setNewPassValid(false);
+    // const updateUsername = async (url = "", data) => {
+    //   // Default options are marked with *
+    //   const response = await fetch(url, {
+    //     method: "POST", // *GET, POST, PUT, DELETE, etc.
+    //     mode: "no-cors",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Accept: "application/json",
+    //     },
+    //     body: JSON.stringify(data), // body data type must match "Content-Type" header
+    //   });
 
-    const userCredentials = {
-      currentPassword,
-      newPassword,
-    };
+    //   return response.json(); // parses JSON response into native JavaScript objects
+    // };
 
-    const updatePassword = () => {
-      setIsLoading(false);
-    };
-    setTimeout(() => {
-      updatePassword();
-    }, 5000);
+    // updateUsername(
+    //   `https://web-production-de75.up.railway.app/auth/token/login/`,
+    //   userCredentials
+    // )
+    //   .then((data) => {
+    //     console.log(data);
+    //     // const { password, new_password } = data.error.details;
+    //     // password && setPasswordError(password[0]);
+    //     // email && setEmailError(email[0]);
+    //     // non_field_errors && setOverawErr(non_field_errors[0]);
+        
+    //     if (!data.error) {
+    //       setChangePassword(false);
+    //     }
+    //     // console.log(data);
+
+    //     if (data) {
+    //       setIsLoading(false);
+    //       // console.log("<------------ Data is returned ----------------->");
+    //     } else {
+    //       // console.log("What could go wrong?")
+    //       console.log(data);
+    //     }
+
+    //     // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
+    //   })
+    //   .catch((error) => {
+    //     setIsLoading(false);
+    //     console.log(error);
+    //   });
+    
   };
+
+  
+  const submitUpdateUsername = () => {
+    setIsLoading(true);
+    if(userId !== 0) {
+        // Default options are marked with *
+        const options = {
+          method: 'PUT',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Token 818fbb131c82e940cb22b8b348dc430af391d4d7',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({username: newUsername})
+        };
+        
+        fetch(`https://web-production-de75.up.railway.app/api/profiles/${userId}/`, options)
+          .then(response => response.json())
+          .then(response => {
+            dispatch(setUser(response));
+            // console.log(response);
+            setIsLoading(false);
+            setShowUpdateUsername(false);
+            ToastAndroid.show(
+              "Username Updated Successfully",
+              ToastAndroid.SHORT
+            );
+          })
+          .catch(err => {
+            // console.error(err);
+            setIsLoading(false);
+            setShowUpdateUsername(false);
+          });
+    
+        // parses JSON response into native JavaScript objects
+    
+        // console.log("Happy Coding --->!");
+    }
+  }
+      
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    // console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const getUserId = async (url = "") => {
+    // Default options are marked with *
+    const response = await fetch(url, {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${"818fbb131c82e940cb22b8b348dc430af391d4d7"}`,
+      }, // body data type must match "Content-Type" header
+    });
+
+    return response.json(); // parses JSON response into native JavaScript objects
+
+    // console.log("Happy Coding --->!");
+  };
+
+  console.log(isLoading);
+
+  useEffect(() => {
+    getUserId(`https://web-production-de75.up.railway.app/auth/users/me`)
+      .then((data) => {
+        // console.log("<------------ Data is returned ----------------->");
+        // console.log(data);
+        if(!data.error) {
+          setUserId(data.id);
+        }
+
+        if (data) {
+          setIsLoading(false);
+        } else {
+          // console.log("What could go wrong?")
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  // const createFormData = (uri) => {
+  //   const fileName = uri.split('/').pop();
+  //   const fileType = fileName.split('.').pop();
+  //   const formData = new FormData();
+  //   formData.append('file', { 
+  //     uri, 
+  //     name: fileName, 
+  //     type: `image/${fileType}` 
+  //   });
+    
+  //   return formData;
+  // }
+
+
 
   return (
     <SafeAreaView
@@ -110,6 +277,7 @@ const AccountSettings = () => {
           </Text>
         </View>
 
+        {/* Membership */}
         <View style={{ marginHorizontal: 20 }}>
           <Text
             style={{
@@ -138,7 +306,73 @@ const AccountSettings = () => {
                 >
                   Change password
                 </Text>
-                <Text style={{ color: "#98999B", fontSize: 9 }}>User3452m</Text>
+                <Text style={{ color: "#98999B", fontSize: 11 }}>User3452m</Text>
+              </View>
+              <Image
+                source={images.SettingR}
+                style={{
+                  width: 24,
+                  height: 24,
+                  position: "absolute",
+                  right: 20,
+                }}
+                resizeMode={"contain"}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+          <View className="h-5"></View>
+          {/* Username Update */}
+          <TouchableWithoutFeedback onPress={() => setShowUpdateUsername(true)}>
+            <View
+              className="bg-[#121212]"
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                borderRadius: 8,
+                position: "relative",
+              }}
+            >
+              <View style={{ padding: 15 }}>
+                <Text
+                  style={{ fontFamily: "Stem-Medium", fontSize: 16 }}
+                  className="text-[#F5F5F5]"
+                >
+                  Update Username
+                </Text>
+                <Text style={{ color: "#98999B", fontSize: 11 }}>{user?.username}</Text>
+              </View>
+              <Image
+                source={images.SettingR}
+                style={{
+                  width: 24,
+                  height: 24,
+                  position: "absolute",
+                  right: 20,
+                }}
+                resizeMode={"contain"}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+          <View className="h-5"></View>
+          {/* PHoto Upload */}
+          <TouchableWithoutFeedback onPress={() => setShowUpdatePhoto(true)}>
+            <View
+              className="bg-[#121212]"
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                borderRadius: 8,
+                position: "relative",
+              }}
+            >
+              <View style={{ padding: 15 }}>
+                <Text
+                  style={{ fontFamily: "Stem-Medium", fontSize: 16 }}
+                  className="text-[#F5F5F5]"
+                >
+                  Upload Image
+                </Text>
+                <Text style={{ color: "#98999B", fontSize: 11 }}>{"type/image"}</Text>
               </View>
               <Image
                 source={images.SettingR}
@@ -153,6 +387,7 @@ const AccountSettings = () => {
             </View>
           </TouchableWithoutFeedback>
         </View>
+
 
         <View style={{ marginHorizontal: 20, marginTop: 40 }}>
           <Text
@@ -182,7 +417,7 @@ const AccountSettings = () => {
                 >
                   Sign out of device
                 </Text>
-                <Text style={{ color: "#98999B", fontSize: 9 }}>User3452m</Text>
+                <Text style={{ color: "#98999B", fontSize: 11 }}>User3452m</Text>
               </View>
               <Image
                 source={images.SettingR}
@@ -197,6 +432,8 @@ const AccountSettings = () => {
             </View>
           </TouchableWithoutFeedback>
         </View>
+
+       
 
         {/* <View style={{ marginHorizontal: 20, marginTop: 40 }}>
           <Text
@@ -264,7 +501,7 @@ const AccountSettings = () => {
                 <View>
                   <View style={{ alignItems: "center" }}>
                     <Image
-                      source={images.SignOut}
+                      source={images.ChangePassword}
                       style={{
                         width: 40,
                         height: 36,
@@ -280,10 +517,10 @@ const AccountSettings = () => {
                         textAlign: "center",
                       }}
                     >
-                      Sign Out
+                      Change Password
                     </Text>
                     <Text style={{ color: "#98999B" }}>
-                      Are you sure you want to sign out?
+                      Are you sure you want to update your password?
                     </Text>
 
                     {/*  Current password input */}
@@ -439,6 +676,321 @@ const AccountSettings = () => {
           </Modal.Content>
         </Modal>
       </Center>
+
+      {/* Change Username */}
+      <Center>
+        <Modal
+          size={"full"}
+          isOpen={showUpdateUsername}
+          onClose={() => setShowUpdateUsername(false)}
+        >
+          <Modal.Content
+            className="shadow-md"
+            style={{
+              backgroundColor: lightModeEnabled ? colors.white : "#0A0A0B",
+              borderRadius: 8,
+              padding: 20,
+            }}
+            maxWidth="400px"
+          >
+            <Modal.Body>
+              <View>
+                <View>
+                  <View style={{ alignItems: "center" }}>
+                    <Image
+                      source={images.Username}
+                      style={{
+                        width: 40,
+                        height: 36,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        fontFamily: "Stem-Medium",
+                        color: colors.trueWhite,
+                        marginTop: 16,
+                        marginBottom: 8,
+                        textAlign: "center",
+                      }}
+                    >
+                     Update Username
+                    </Text>
+                    <Text style={{ color: "#98999B" }}>
+                      Do you want to change your username?
+                    </Text>
+
+                    <TextInput
+                      style={{
+                        backgroundColor: firstBg ? firstBg : "#1a1a1a",
+                        width: "100%",
+                        borderRadius: 8,
+                        borderWidth: 3,
+                        borderStyle: "solid",
+                        borderColor: !newPassValid
+                          ? "red"
+                          : newPasswordFocus === "yes"
+                          ? "#80D200"
+                          : "#323337",
+                        marginTop: 8,
+                        marginBottom: 16,
+                        color: "#98999B",
+                        fontFamily: "Stem-Medium",
+                        paddingVertical: 12,
+                        paddingHorizontal: 16,
+                      }}
+                      placeholder="Change username"
+                      placeholderTextColor={"#98999B"}
+                      selectionColor={"white"}
+                      onChangeText={(text) => setNewUsername(text)}
+                      onBlur={() => {
+                        setUsernameBg(colors.darkMode);
+                        setNewUsernameFocus("no");
+                      }}
+                      onFocus={() => {
+                        setUsernameBg(colors.firstGradientShade);
+                        setNewUsernameFocus("yes");
+                      }}
+                    />
+
+                    {/* Button confirms change username */}
+                    {isLoading === true ? (
+                      <TouchableHighlight
+                        style={{
+                          backgroundColor: colors.companyGreen,
+                          width: "100%",
+                          borderRadius: 8,
+                          paddingVertical: 12,
+                        }}
+                        className="justify-center items-center"
+                      >
+                          <ActivityIndicator size={"small"} color="white" />
+                      </TouchableHighlight>
+                    ) : isLoading === false ? (
+                      <TouchableHighlight
+                        onPress={() => {
+                          // setChangePassword(false);
+                          submitUpdateUsername();
+                          // Submit function here
+                        }}
+                        style={{
+                          backgroundColor: colors.companyGreen,
+                          width: "100%",
+                          borderRadius: 8,
+                        }}
+                        className="justify-center items-center"
+                      >
+                        <Text
+                          style={{
+                            color: "#191A1C",
+                            fontFamily: "Stem-Medium",
+                            paddingVertical: 12,
+                          }}
+                        >
+                          Update Username
+                        </Text>
+                      </TouchableHighlight>
+                    ) : null}
+                    <TouchableHighlight
+                      onPress={() => {
+                        // setChangePassword(false);
+                        setShowUpdateUsername(false);
+                        // Submit function here
+                      }}
+                      style={{
+                        backgroundColor: colors.black,
+                        width: "100%",
+                        marginTop: 8,
+                        borderRadius: 8,
+                        borderWidth: 3,
+                        borderStyle: "solid",
+                        borderColor: "#323337",
+                      }}
+                      className="justify-center items-center"
+                    >
+                      <Text
+                        style={{
+                          color: "#191A1C",
+                          fontFamily: "Stem-Medium",
+                          paddingVertical: 12,
+                        }}
+                      >
+                        Cancel
+                      </Text>
+                    </TouchableHighlight>
+                  </View>
+                </View>
+              </View>
+            </Modal.Body>
+          </Modal.Content>
+        </Modal>
+      </Center>
+
+      {/* Upload Photo */}
+      <Center>
+          <Modal
+            size={"full"}
+            isOpen={showUpdatePhoto}
+            onClose={() => setShowUpdatePhoto(false)}
+          >
+            <Modal.Content
+              className="shadow-md"
+              style={{
+                backgroundColor: lightModeEnabled ? colors.white : "#0A0A0B",
+                borderRadius: 8,
+                padding: 20,
+              }}
+              maxWidth="400px"
+            >
+              <Modal.Body>
+                <View>
+                  <View>
+                    <View style={{ alignItems: "center" }}>
+                      <Image
+                        source={images.Image}
+                        style={{
+                          width: 40,
+                          height: 36,
+                        }}
+                      />
+                      <Text
+                        style={{
+                          fontSize: 17,
+                          fontFamily: "Stem-Medium",
+                          color: colors.trueWhite,
+                          marginTop: 16,
+                          marginBottom: 8,
+                          textAlign: "center",
+                        }}
+                      >
+                        Profile Image
+                      </Text>
+                      <Text style={{ color: "#98999B" }}>
+                        Select any image of your choice
+                      </Text>
+
+                        {image === null ? (
+                          <TouchableHighlight 
+                          onPress={() => pickImage()}
+                          style={{
+                            width: "100%",
+                            height: 150,
+                            borderRadius: 8,
+                            borderWidth: 3,
+                            borderStyle: "solid",
+                            borderColor: "#80D200",
+                            marginTop: 8,
+                            marginBottom: 16,
+                            fontFamily: "Stem-Medium",
+                            paddingVertical: 12,
+                            paddingHorizontal: 16,
+                            justifyContent: "center",
+                            alignItems: "center"
+                          }}>
+                              <View>
+                                  <Image 
+                                    source={images.Upload}
+                                    style={{
+                                      width: 48,
+                                      height: 48
+                                    }}
+                                    resizeMode={"contain"}
+                                  />
+                                  <Text className="text-[#98999B] mt-1">Upload</Text>
+                                </View>
+                          </TouchableHighlight>
+                        ) : (
+                          <ImageBackground 
+                              source={{ uri: image }}
+                              style={{
+                                width: "100%",
+                                height: 162,
+                                borderRadius: 8,
+                                borderWidth: 3,
+                                borderStyle: "solid",
+                                borderColor: "#80D200",
+                                marginTop: 8,
+                                marginBottom: 16,
+                                position: "relative",
+                                overflow: "hidden"
+                              }}
+                              resizeMode={"contain"}
+                          >
+                            <TouchableWithoutFeedback onPress={() => setImage(null)}>
+                              <View style={{ backgroundColor: colors.companyGreen, position: "absolute", right: 0, top: 0, zIndex: 10 }} className="rounded-tr-[3px] p-2 justify-center items-center w-8 h-8">
+                                <Image 
+                                  source={
+                                    images.DeleteForever
+                                  } 
+                                  style={{
+                                    width: 24,
+                                    height: 24
+                                  }}
+                                  resizeMode={"contain"}
+                                />
+                              </View>
+                            </TouchableWithoutFeedback>
+                          </ImageBackground>
+                        )}
+
+                      {/* Button confirms change username */}
+                      <TouchableOpacity
+                          style={{
+                              width: "100%",
+                              paddingVertical: 12,
+                              justifyContent: "center",
+                              alignItems: "center",
+                              borderRadius: 8,
+                              backgroundColor: colors.companyGreen
+                          }}
+                          onPress={() => {}}
+                        >
+                          <Text style={[{ 
+                              color: colors.black,
+                              fontFamily: "Stem-Medium",
+                              fontSize: 17,
+                          }]}>
+                            {isLoading === true ? (
+                              <ActivityIndicator size={"small"} color="black" />
+                            ) : (
+                              "Upload"
+                            )}
+                          </Text>
+                        </TouchableOpacity>
+                      <TouchableHighlight
+                        onPress={() => {
+                          // setChangePassword(false);
+                          setShowUpdatePhoto(false);
+                          // Submit function here
+                        }}
+                        style={{
+                          backgroundColor: colors.black,
+                          width: "100%",
+                          marginTop: 8,
+                          borderRadius: 8,
+                          borderWidth: 3,
+                          borderStyle: "solid",
+                          borderColor: "#323337",
+                        }}
+                        className="justify-center items-center"
+                      >
+                        <Text
+                          style={{
+                            color: "#323337",
+                            fontFamily: "Stem-Medium",
+                            paddingVertical: 12,
+                          }}
+                        >
+                          Cancel
+                        </Text>
+                      </TouchableHighlight>
+                    </View>
+                  </View>
+                </View>
+              </Modal.Body>
+            </Modal.Content>
+          </Modal>
+        </Center>
 
       {/* Signout Modal */}
       <Center>
