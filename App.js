@@ -7,6 +7,7 @@ import AppRoot from "./navigation/AppRoot";
 import { store, persistor } from "./Redux/store";
 import { PersistGate } from 'redux-persist/integration/react';
 import registerNNPushToken from 'native-notify';
+import Test from "./screens/Test";
 
   const App = () => {
     registerNNPushToken(6402, 's5Kll6DDHMPWMOiXEe4IdZ');
@@ -32,7 +33,8 @@ import registerNNPushToken from 'native-notify';
       <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <NativeBaseProvider>
-         <AppRoot />
+         {/* <AppRoot /> */}
+         <Test />
         </NativeBaseProvider>
       </PersistGate>
       </Provider>
