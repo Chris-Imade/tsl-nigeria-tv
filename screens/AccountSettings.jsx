@@ -18,7 +18,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { colors } from "../components/shared";
-import { setAccessToken, setUser } from "../Redux/Slice/AppSlice";
+import { setAccessToken, setProfilePhoto, setUser } from "../Redux/Slice/AppSlice";
 import * as ImagePicker from 'expo-image-picker';
 
 const AccountSettings = () => {
@@ -60,9 +60,7 @@ const AccountSettings = () => {
 
   const [userId, setUserId] = useState(0); 
 
-  const [showUpdatePhoto, setShowUpdatePhoto] = useState(false);
-
-  console.log(userId);
+  // console.log(userId);
 
   const dispatch = useDispatch();
 
@@ -143,7 +141,7 @@ const AccountSettings = () => {
           mode: 'no-cors',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: 'Token 818fbb131c82e940cb22b8b348dc430af391d4d7',
+            Authorization: `Token ${accessToken}`,
             'Accept': 'application/json'
           },
           body: JSON.stringify({username: newUsername})
@@ -172,22 +170,9 @@ const AccountSettings = () => {
         // console.log("Happy Coding --->!");
     }
   }
-      
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
 
-    // console.log(result);
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
+
 
   const getUserId = async (url = "") => {
     // Default options are marked with *
@@ -197,7 +182,7 @@ const AccountSettings = () => {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${"818fbb131c82e940cb22b8b348dc430af391d4d7"}`,
+        Authorization: `Token ${accessToken}`,
       }, // body data type must match "Content-Type" header
     });
 
@@ -206,7 +191,7 @@ const AccountSettings = () => {
     // console.log("Happy Coding --->!");
   };
 
-  console.log(isLoading);
+  // console.log(isLoading);
 
   useEffect(() => {
     getUserId(`https://web-production-de75.up.railway.app/auth/users/me`)
@@ -227,20 +212,6 @@ const AccountSettings = () => {
         setIsLoading(false);
       });
   }, []);
-
-  // const createFormData = (uri) => {
-  //   const fileName = uri.split('/').pop();
-  //   const fileType = fileName.split('.').pop();
-  //   const formData = new FormData();
-  //   formData.append('file', { 
-  //     uri, 
-  //     name: fileName, 
-  //     type: `image/${fileType}` 
-  //   });
-    
-  //   return formData;
-  // }
-
 
 
   return (
@@ -355,7 +326,7 @@ const AccountSettings = () => {
           </TouchableWithoutFeedback>
           <View className="h-5"></View>
           {/* PHoto Upload */}
-          <TouchableWithoutFeedback onPress={() => setShowUpdatePhoto(true)}>
+          {/* <TouchableWithoutFeedback>
             <View
               className="bg-[#121212]"
               style={{
@@ -385,7 +356,7 @@ const AccountSettings = () => {
                 resizeMode={"contain"}
               />
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback> */}
         </View>
 
 
@@ -506,6 +477,7 @@ const AccountSettings = () => {
                         width: 40,
                         height: 36,
                       }}
+                      className="-rotate-90"
                     />
                     <Text
                       style={{
@@ -825,172 +797,6 @@ const AccountSettings = () => {
           </Modal.Content>
         </Modal>
       </Center>
-
-      {/* Upload Photo */}
-      <Center>
-          <Modal
-            size={"full"}
-            isOpen={showUpdatePhoto}
-            onClose={() => setShowUpdatePhoto(false)}
-          >
-            <Modal.Content
-              className="shadow-md"
-              style={{
-                backgroundColor: lightModeEnabled ? colors.white : "#0A0A0B",
-                borderRadius: 8,
-                padding: 20,
-              }}
-              maxWidth="400px"
-            >
-              <Modal.Body>
-                <View>
-                  <View>
-                    <View style={{ alignItems: "center" }}>
-                      <Image
-                        source={images.Image}
-                        style={{
-                          width: 40,
-                          height: 36,
-                        }}
-                      />
-                      <Text
-                        style={{
-                          fontSize: 17,
-                          fontFamily: "Stem-Medium",
-                          color: colors.trueWhite,
-                          marginTop: 16,
-                          marginBottom: 8,
-                          textAlign: "center",
-                        }}
-                      >
-                        Profile Image
-                      </Text>
-                      <Text style={{ color: "#98999B" }}>
-                        Select any image of your choice
-                      </Text>
-
-                        {image === null ? (
-                          <TouchableHighlight 
-                          onPress={() => pickImage()}
-                          style={{
-                            width: "100%",
-                            height: 150,
-                            borderRadius: 8,
-                            borderWidth: 3,
-                            borderStyle: "solid",
-                            borderColor: "#80D200",
-                            marginTop: 8,
-                            marginBottom: 16,
-                            fontFamily: "Stem-Medium",
-                            paddingVertical: 12,
-                            paddingHorizontal: 16,
-                            justifyContent: "center",
-                            alignItems: "center"
-                          }}>
-                              <View>
-                                  <Image 
-                                    source={images.Upload}
-                                    style={{
-                                      width: 48,
-                                      height: 48
-                                    }}
-                                    resizeMode={"contain"}
-                                  />
-                                  <Text className="text-[#98999B] mt-1">Upload</Text>
-                                </View>
-                          </TouchableHighlight>
-                        ) : (
-                          <ImageBackground 
-                              source={{ uri: image }}
-                              style={{
-                                width: "100%",
-                                height: 162,
-                                borderRadius: 8,
-                                borderWidth: 3,
-                                borderStyle: "solid",
-                                borderColor: "#80D200",
-                                marginTop: 8,
-                                marginBottom: 16,
-                                position: "relative",
-                                overflow: "hidden"
-                              }}
-                              resizeMode={"contain"}
-                          >
-                            <TouchableWithoutFeedback onPress={() => setImage(null)}>
-                              <View style={{ backgroundColor: colors.companyGreen, position: "absolute", right: 0, top: 0, zIndex: 10 }} className="rounded-tr-[3px] p-2 justify-center items-center w-8 h-8">
-                                <Image 
-                                  source={
-                                    images.DeleteForever
-                                  } 
-                                  style={{
-                                    width: 24,
-                                    height: 24
-                                  }}
-                                  resizeMode={"contain"}
-                                />
-                              </View>
-                            </TouchableWithoutFeedback>
-                          </ImageBackground>
-                        )}
-
-                      {/* Button confirms change username */}
-                      <TouchableOpacity
-                          style={{
-                              width: "100%",
-                              paddingVertical: 12,
-                              justifyContent: "center",
-                              alignItems: "center",
-                              borderRadius: 8,
-                              backgroundColor: colors.companyGreen
-                          }}
-                          onPress={() => {}}
-                        >
-                          <Text style={[{ 
-                              color: colors.black,
-                              fontFamily: "Stem-Medium",
-                              fontSize: 17,
-                          }]}>
-                            {isLoading === true ? (
-                              <ActivityIndicator size={"small"} color="black" />
-                            ) : (
-                              "Upload"
-                            )}
-                          </Text>
-                        </TouchableOpacity>
-                      <TouchableHighlight
-                        onPress={() => {
-                          // setChangePassword(false);
-                          setShowUpdatePhoto(false);
-                          // Submit function here
-                        }}
-                        style={{
-                          backgroundColor: colors.black,
-                          width: "100%",
-                          marginTop: 8,
-                          borderRadius: 8,
-                          borderWidth: 3,
-                          borderStyle: "solid",
-                          borderColor: "#323337",
-                        }}
-                        className="justify-center items-center"
-                      >
-                        <Text
-                          style={{
-                            color: "#323337",
-                            fontFamily: "Stem-Medium",
-                            paddingVertical: 12,
-                          }}
-                        >
-                          Cancel
-                        </Text>
-                      </TouchableHighlight>
-                    </View>
-                  </View>
-                </View>
-              </Modal.Body>
-            </Modal.Content>
-          </Modal>
-        </Center>
 
       {/* Signout Modal */}
       <Center>

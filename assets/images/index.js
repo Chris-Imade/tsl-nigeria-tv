@@ -61,7 +61,9 @@ import ChangePassword from "./change_password.png";
 import Upload from "./upload_file.png";
 import Image from "./image.png";
 import FileCopy from "./file_copy.png";
-import DeleteForever from "./delete_forever.png"
+import DeleteForever from "./delete_forever.png";
+import AccountCirle from "./account_circle.png";
+import AccountFilled from "./account_filled.png";
 
 
 export const images = {
@@ -125,5 +127,7 @@ export const images = {
     Upload,
     Image,
     FileCopy,
-    DeleteForever
+    DeleteForever,
+    AccountCirle,
+    AccountFilled
 }

@@ -10,12 +10,14 @@ import {
   Text,
   TouchableWithoutFeedback,
   View,
+  ToastAndroid
 } from "react-native";
 import WebView from "react-native-webview";
 import { useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { colors, ScreenHeight, ScreenWidth } from "../components/shared";
 import { setVideoList } from "../Redux/Slice/AppSlice";
+import * as Clipboard from 'expo-clipboard';
 
 const VideoEnlongated = (props) => {
   const [errorResponseData, setErrorResponseData] = useState("");
@@ -25,6 +27,7 @@ const VideoEnlongated = (props) => {
   const [localData, setLocalData] = useState({});
   const [showDetailedMenu, setShowDetailedMenu] = useState(false);
   const [id, setId] = useState(data);
+  const [copiedText, setCopiedText] = React.useState('');
   // console.log(localData);
 
   const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
@@ -33,6 +36,11 @@ const VideoEnlongated = (props) => {
   const navigation = useNavigation();
 
   const embedURI = `https://www.youtube.com/embed/${localData.video_link}`;
+
+  const copyToClipboard = async (link) => {
+    await Clipboard.setStringAsync(link);
+  };
+
 
   const getData = async (url = "") => {
     // Default options are marked with *
@@ -50,7 +58,8 @@ const VideoEnlongated = (props) => {
 
     // console.log("Happy Coding --->!");
   };
-``
+
+ 
 
   useEffect(() => {
     getData(`https://web-production-de75.up.railway.app/api/videos/${id}`)
@@ -188,7 +197,14 @@ const VideoEnlongated = (props) => {
                   />
                 </View>
               </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={() => {
+                  const baseUrl = "https://www.ssyoutube.com/watch?v="
+                  copyToClipboard(baseUrl+localData.video_link);
+                  ToastAndroid.show(
+                    "Video link has been copied",
+                    ToastAndroid.SHORT
+                  );
+                }}>
                 <View
                   style={{
                     width: "95%",
@@ -203,7 +219,7 @@ const VideoEnlongated = (props) => {
                   className="flex-row justify-center items-center bg-[#191A1C]"
                 >
                   <Image
-                    source={images.DownloadDetails}
+                    source={images.FileCopy}
                     style={{
                       width: 24,
                       height: 24,
@@ -218,7 +234,7 @@ const VideoEnlongated = (props) => {
                       fontSize: 17,
                     }}
                   >
-                    Download
+                    COpy
                   </Text>
                 </View>
               </TouchableWithoutFeedback>

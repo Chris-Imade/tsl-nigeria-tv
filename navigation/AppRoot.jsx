@@ -11,7 +11,7 @@ import {
   AccountSettings,
   ActorsProfile,
   ChangeCredentials,
-  Downloads,
+  // Downloads,
   Home,
   Lists,
   Login,
@@ -59,6 +59,8 @@ const HomeStack = () => {
   const navigation = useNavigation();
 
   const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
+  const profilePhoto = useSelector((state) => state?.data?.profilePhoto);
+
 
   const dispatch = useDispatch();
 
@@ -95,15 +97,28 @@ const HomeStack = () => {
             <TouchableHighlight
               onPress={() => navigation.navigate("profile-screen")}
             >
-              <Image
-                source={images.MaleProfile}
-                style={{
-                  width: 24,
-                  height: 24,
-                  marginRight: 20,
-                }}
-                resizeMode={"contain"}
-              />
+              {profilePhoto ? (
+                <Image
+                  source={{ uri: profilePhoto }}
+                  style={{
+                    width: 24,
+                    height: 24,
+                    marginRight: 20,
+                  }}
+                  resizeMode={"contain"}
+                />
+              ) : (
+                <Image
+                  source={images.MaleProfile}
+                  style={{
+                    width: 24,
+                    height: 24,
+                    marginRight: 20,
+                  }}
+                  resizeMode={"contain"}
+                />
+              )}
+              
             </TouchableHighlight>
           ),
           headerStyle: {
@@ -199,11 +214,27 @@ const HomeStack = () => {
               <TouchableWithoutFeedback
                 onPress={() => navigation.navigate("profile-screen")}
               >
-                <Image
-                  source={images.MaleProfile}
-                  resizeMode="contain"
-                  className="w-[28px] h-[28px] mr-[26px]"
-                />
+                 {profilePhoto ? (
+                  <Image
+                    source={{ uri: profilePhoto }}
+                    style={{
+                      width: 24,
+                      height: 24,
+                      marginRight: 20,
+                    }}
+                    resizeMode={"contain"}
+                  />
+                ) : (
+                  <Image
+                    source={images.MaleProfile}
+                    style={{
+                      width: 24,
+                      height: 24,
+                      marginRight: 20,
+                    }}
+                    resizeMode={"contain"}
+                  />
+                )}
               </TouchableWithoutFeedback>
             </View>
           ),
@@ -236,11 +267,27 @@ const HomeStack = () => {
               <TouchableWithoutFeedback
                 onPress={() => navigation.navigate("profile-screen")}
               >
-                <Image
-                  source={images.MaleProfile}
-                  resizeMode="contain"
-                  className="w-[28px] h-[28px] mr-[26px]"
-                />
+                 {profilePhoto ? (
+                    <Image
+                      source={{ uri: profilePhoto }}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        marginRight: 20,
+                      }}
+                      resizeMode={"contain"}
+                    />
+                  ) : (
+                    <Image
+                      source={images.MaleProfile}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        marginRight: 20,
+                      }}
+                      resizeMode={"contain"}
+                    />
+                  )}
               </TouchableWithoutFeedback>
             </View>
           ),
@@ -274,11 +321,27 @@ const HomeStack = () => {
               <TouchableWithoutFeedback
                 onPress={() => navigation.navigate("profile-screen")}
               >
-                <Image
-                  source={images.MaleProfile}
-                  resizeMode="contain"
-                  className="w-[28px] h-[28px] mr-[26px]"
-                />
+                 {profilePhoto ? (
+                    <Image
+                      source={{ uri: profilePhoto }}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        marginRight: 20,
+                      }}
+                      resizeMode={"contain"}
+                    />
+                  ) : (
+                    <Image
+                      source={images.MaleProfile}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        marginRight: 20,
+                      }}
+                      resizeMode={"contain"}
+                    />
+                  )}
               </TouchableWithoutFeedback>
             </View>
           ),
@@ -357,11 +420,27 @@ const ProfileStack = () => {
               <TouchableWithoutFeedback
                 onPress={() => navigation.navigate("profile-screen")}
               >
-                <Image
-                  source={images.MaleProfile}
-                  resizeMode="contain"
-                  className="w-[28px] h-[28px] mr-[26px]"
-                />
+                 {profilePhoto ? (
+                  <Image
+                    source={{ uri: profilePhoto }}
+                    style={{
+                      width: 24,
+                      height: 24,
+                      marginRight: 20,
+                    }}
+                    resizeMode={"contain"}
+                  />
+                ) : (
+                  <Image
+                    source={images.MaleProfile}
+                    style={{
+                      width: 24,
+                      height: 24,
+                      marginRight: 20,
+                    }}
+                    resizeMode={"contain"}
+                  />
+                )}
               </TouchableWithoutFeedback>
             </View>
           ),
@@ -491,7 +570,7 @@ const HomeApp = () => {
                   height: 24,
                 }}
                 resizeMode={"contain"}
-                source={images.DownloadFilled}
+                source={images.AccountFilled}
               />
             ) : (
               <Image
@@ -500,7 +579,7 @@ const HomeApp = () => {
                   height: 24,
                 }}
                 resizeMode={"contain"}
-                source={images.DownloadOutline}
+                source={images.AccountCirle}
               />
             );
           } else {

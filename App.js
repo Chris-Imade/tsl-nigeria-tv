@@ -4,12 +4,12 @@ import { NativeBaseProvider } from "native-base";
 import { Provider } from "react-redux";
 import { useFonts } from 'expo-font';
 import AppRoot from "./navigation/AppRoot";
-import { News, Profile, VideoEnlongated, VideoScreen, Welcome } from "./screens";
-import Search from "./screens/Search";
 import { store, persistor } from "./Redux/store";
 import { PersistGate } from 'redux-persist/integration/react';
+import registerNNPushToken from 'native-notify';
 
   const App = () => {
+    registerNNPushToken(6402, 's5Kll6DDHMPWMOiXEe4IdZ');
 
     const [fontsLoaded] = useFonts({
       'Stem-Bold': require('./assets/fonts/Stem-Bold.ttf'),

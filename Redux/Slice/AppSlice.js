@@ -15,7 +15,9 @@ const initialState = {
     refreshToken: "",
     videoId: 1,
     categoryDetailsPage: {},
-    videoList: []
+    videoList: [],
+    profilePhoto: "",
+    googleAuth: null
 }
 
 // export const getMovies = createAsyncThunk('data/getMovies', () => {
@@ -68,8 +70,13 @@ export const appSlice = createSlice({
     setVideoList: (state, action) => {
       state.videoList = [...state.videoList, action.payload];
       // state.videoList = [action.payload];
+    },
+    setProfilePhoto: (state, action) => {
+      state.profilePhoto = action.payload;
+    },
+    setGoogleAuth: (state, action) => {
+      state.googleAuth = action.payload;
     }
-
     // extraReducers: (builder) => {
     //   // Add reducers for additional action types here, and handle loading state as needed
     //   builder.addCase(fetchTvCategories.fulfilled, (state, action) => {
@@ -94,7 +101,9 @@ export const {
     setRefreshToken,
     setVideoId,
     setCategoryDetailsPage,
-    setVideoList
+    setVideoList,
+    setProfilePhoto,
+    setGoogleAuth
  } = appSlice.actions
 
 export default appSlice.reducer;

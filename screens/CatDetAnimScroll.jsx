@@ -15,7 +15,7 @@ import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setVideoDownloadData,
+  // setVideoDownloadData,
   setVideoList,
   setCategoryDetailsPage,
 } from "../Redux/Slice/AppSlice";
@@ -351,7 +351,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                   >
                     <View className="justify-center items-center opacity-[0.5]">
                       <Image
-                        source={images.DownloadRound}
+                        source={images.FileCopy}
                         className="w-[37px] h-[37px] mb-[8px]"
                         resizeMode="contain"
                       />

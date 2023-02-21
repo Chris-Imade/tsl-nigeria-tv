@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
 import {
@@ -12,6 +13,7 @@ import { useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { colors, ScreenWidth } from "../components/shared";
 import movies from "../firebase/Raw/vid_data.json";
+import { localArray } from "../videoList";
 
 const News = () => {
   const [videoList, setVideoList] = useState([]);
@@ -28,13 +30,22 @@ const News = () => {
   const categories = useSelector((state) => state?.data?.categories);
 
   // console.log(categories);
+  
+    // console.log(joinedCat)
+    // does not fetch by id until you click on the tab
+    const joinedCat = localArray.map((item) => item._category);
+    
+    const uniqueCat = _.uniqBy(joinedCat, item => item.id);
+    
+    const [currentCat, setCurrentCat] = useState(null);
+    const [currentIndx, setCurrentIndx] = useState(uniqueCat[0].id);
+    
+    console.log(currentIndx);
 
-  const [currentCat, setCurrentCat] = useState(null);
-  const [currentIndx, setCurrentIndx] = useState(0);
 
 
-  let newArr = categories.map(element => element.videos.map((item) => item.category));
-  console.log('<----------------------------------New Array---------------------------------->', newArr)
+  // let newArr = categories.map(element => element.videos.map((item) => item.category));
+  // console.log('<----------------------------------New Array---------------------------------->', newArr)
   
   // the goal is to loop through the videos and return the category object 
   // merge category objects in an array
@@ -84,7 +95,7 @@ const News = () => {
         console.log('error: ', error);
       });
   }, [currentIndx]);
-
+console.log(currentIndx)
   return (
     <SafeAreaView className="flex-1 justify-start bg-black pt-12">
       <ScrollView
@@ -92,42 +103,35 @@ const News = () => {
         className="h-fit"
         horizontal
       >
-        {/* {categories.map((item, index) => {
-          item.videos.map((sub, i) => {
-            sub.published === true && (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => setCurrentIndx(
-                    [index]?.id - 1)}
-                  style={{
-                    backgroundColor:
-                    item[index]?.id - 1 === currentIndx ? "#ffffff" : null,
-                  }}
-                  className="p-[11px] w-[148px] h-[40px] rounded-[30px] mx-[8px] mt-[24px] items-center justify-center"
-                >
-                  <View className="flex-row items-center">
-                    <Image
-                      source={images.Pop_corn}
-                      className="w-[24px] h-[24px] mr-3"
-                      resizeMode="contain"
-                    />
-                    <Text
-                      style={{
-                        color:
-                        item[index]?.id - 1 === currentIndx
-                            ? "#000000"
-                            : "#ffffff",
-                        fontFamily: "Stem-Medium",
-                      }}
-                      className="text-[14px]"
-                    >
-                      {item[index]?.name}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-            )
-          })
-        })} */}
+        {uniqueCat.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => setCurrentIndx(item?.id -1)}
+            style={{
+              backgroundColor: item.id -1 === currentIndx ? "#ffffff" : null,
+            }}
+            className="p-[11px] w-[148px] h-[40px] rounded-[30px] mx-[8px] mt-[24px] items-center justify-center"
+          >
+            <View className="flex-row items-center">
+              <Image
+                source={images.Pop_corn}
+                className="w-[24px] h-[24px] mr-3"
+                resizeMode="contain"
+              />
+              <Text
+                style={{
+                  color: item?.id -1 === currentIndx
+                      ? "#000000"
+                      : "#ffffff",
+                  fontFamily: "Stem-Medium",
+                }}
+                className="text-[14px]"
+              >
+                {item?.name}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
       {/* Page Title */}
       <View

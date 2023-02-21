@@ -15,11 +15,13 @@ import {
     TouchableWithoutFeedback,
     ActivityIndicator
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { images } from "../../assets/images";
 import { baseUrl, colors } from "../../components/shared";
 import NetInfo from "@react-native-community/netinfo";
 import { Center, Modal, useDisclose } from "native-base";
+import * as Google from 'expo-auth-session/providers/google';
+import { setGoogleAuth } from "../../Redux/Slice/AppSlice";
 
 
 // const verifyEndpoint = "https://web-production-c1bd.up.railway.app/auth/jwt/verify/"
@@ -44,10 +46,28 @@ const SignUp = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [passwordError, setPasswordError] = useState("");
     const [emailError, setEmailError] = useState("");
+    const [usernameError, setUsernameError] = useState("");
+    const [usernameBg, setUsernameBg] = useState("");
+    const [usernameFocus, setUsernameFocus] = useState("no");
+    const [username, setUsername] = useState("");
 
+    // Google authentication
+    const [userInfo, setUserInfo] = useState();
+    const [auth, setAuth] = useState();
+    const [requireRefresh, setRequireRefresh] = useState(false);
+
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        androidClientId: "437420737045-mat72m2tbd7t08j32rfq5944kdusepv4.apps.googleusercontent.com",
+        iosClientId: "437420737045-9hibdld6lirhfs62fjm8ugcie82dfo2p.apps.googleusercontent.com",
+        expoClientId: "437420737045-shk7q876jc3k27aa04vnva06kmqce09e.apps.googleusercontent.com"
+      });
+
+    
     // console.log(emailValid);
+    const dispatch = useDispatch();
 
     const lightModeEnabled = useSelector((state) => state?.data?.lightModeEnabled);
+    const googleAuth = useSelector((state) => state?.data?.googleAuth);
 
     const navigation = useNavigation();
 
@@ -61,7 +81,8 @@ const SignUp = () => {
             const userCredentials = {
                 email,
                 password,
-                re_password: confirmPassword
+                re_password: confirmPassword,
+                username
             }
 
             setIsLoading(true);
@@ -130,6 +151,67 @@ const SignUp = () => {
     }, 5000)
 
 
+
+    const signInWithGoogle = () => {
+
+    }
+
+    // Everything google sign in
+    useEffect(() => {
+        console.log(response);
+        if (response?.type === "success") {
+          setAuth(response.authentication);
+            console.log(response.authentication);
+            dispatch(setGoogleAuth(response.authentication));
+        }
+    }, [response]);
+
+    useEffect(() => {
+        const getPersistedAuth = async () => {
+          if (googleAuth != null) {
+            setAuth(googleAuth);
+            console.log(googleAuth);
+    
+            setRequireRefresh(!AuthSession.TokenResponse.isTokenFresh({
+              expiresIn: googleAuth.expiresIn,
+              issuedAt: googleAuth.issuedAt
+            }));
+          }
+        };
+        getPersistedAuth();
+    }, []);
+
+    const getClientId = () => {
+        if (Platform.OS === "ios") {
+          return "437420737045-9hibdld6lirhfs62fjm8ugcie82dfo2p.apps.googleusercontent.com";
+        } else if (Platform.OS === "android") {
+          return "437420737045-mat72m2tbd7t08j32rfq5944kdusepv4.apps.googleusercontent.com";
+        } else {
+          console.log("Invalid platform - not handled");
+        }
+      }
+
+      const refreshToken = async () => {
+        const clientId = getClientId();
+        console.log(auth);
+        const tokenResult = await AuthSession.refreshAsync({
+          clientId: clientId,
+          refreshToken: auth.refreshToken
+        }, {
+          tokenEndpoint: "https://www.googleapis.com/oauth2/v4/token"
+        });
+    
+        tokenResult.refreshToken = auth.refreshToken;
+    
+        setAuth(tokenResult);
+        await AsyncStorage.setItem("auth", JSON.stringify(tokenResult));
+        setRequireRefresh(false);
+      };
+
+      if (requireRefresh) {
+        console.log("Requires Refresh");
+      }
+
     useEffect(() => {
         NetInfo.fetch().then(state => {
           !state.isConnected ? onOpen() : null
@@ -163,7 +245,22 @@ const SignUp = () => {
                         Sign up
                     </Text>
 
-                    
+                    <TextInput 
+                        style={[styles.txtInput, { backgroundColor: firstIntBg ? usernameBg : "#1a1a1a", marginBottom: !emailValid || usernameError ? 5 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: usernameFocus === "yes" && "#80D200" }]}
+                        placeholder="Username"
+                        placeholderTextColor={"#545558"}
+                        onBlur={() => {
+                            setUsernameBg(colors.darkMode);
+                            setUsernameFocus("no");
+                        }}
+                        onFocus={() => {
+                            setUsernameBg(colors.firstGradientShade);
+                            setUsernameFocus("yes");
+                        }}
+                        onChangeText={(text) => setUsername(text)}
+                        keyboardType={"email-address"}
+                        selectionColor={"white"}
+                    />                    
                     <TextInput 
                         style={[styles.txtInput, { backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a", marginBottom: !emailValid || emailError ? 5 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: !emailValid ? "red" : emailFocus === "yes" ? "#80D200" : null }]}
                         placeholder="Enter your email"
@@ -378,7 +475,7 @@ const SignUp = () => {
                     justifyContent: "center",
                     alignItems: "center"
                 }}>
-                    <TouchableHighlight disabled onPress={() => {}}>
+                    <TouchableHighlight onPress={() => promptAsync({ useProxy: false, showInRecents: true })}>
                         <View className='items-center'>
                             <Image 
                                 source={images.GoogleIcon}

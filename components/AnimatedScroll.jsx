@@ -18,8 +18,8 @@ import { colors } from "./shared";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setVideoDownloadData,
-  setVideoIdForDownload,
+  // setVideoDownloadData,
+  // setVideoIdForDownload,
   setVideoList,
 } from "../Redux/Slice/AppSlice";
 import * as Clipboard from 'expo-clipboard';
@@ -356,7 +356,7 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                   >
                     <View className="justify-center items-center opacity-[0.5]">
                       <Image
-                        source={images.DownloadRound}
+                        source={images.FileCopy}
                         className="w-[37px] h-[37px] mb-[8px]"
                         resizeMode="contain"
                       />

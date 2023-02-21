@@ -11,11 +11,12 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
   View,
+  ToastAndroid
 } from "react-native";
 import { useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { colors, ScreenWidth } from "../components/shared";
-import movies from "../firebase/Raw/vid_data.json";
+import * as Clipboard from 'expo-clipboard';
 
 const Lists = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,6 +29,10 @@ const Lists = () => {
   const { isOpen, onOpen, onClose } = useDisclose();
 
   const navigation = useNavigation();
+
+  const copyToClipboard = async (link) => {
+    await Clipboard.setStringAsync(link);
+  };
 
   const truncTxt = (txt) => {
     return txt?.length > 21 ? `${txt.substr(0, 21)}...` : txt;
@@ -205,13 +210,17 @@ const Lists = () => {
                       </TouchableWithoutFeedback>
                       <TouchableWithoutFeedback
                         onPress={() => {
-                          navigation.navigate("Downloads");
-                          dispatch(setVideoDownloadData(info));
+                          const baseUrl = "https://www.ssyoutube.com/watch?v="
+                          copyToClipboard(baseUrl+info.video_link);
+                          ToastAndroid.show(
+                            "Video link has been copied",
+                            ToastAndroid.SHORT
+                          );
                         }}
                       >
                         <View className="justify-center items-center opacity-[0.5]">
                           <Image
-                            source={images.DownloadRound}
+                            source={images.FileCopy}
                             className="w-[37px] h-[37px] mb-[8px]"
                             resizeMode="contain"
                           />
@@ -219,7 +228,7 @@ const Lists = () => {
                             style={{ fontFamily: "Stem-Medium" }}
                             className="text-white"
                           >
-                            Download
+                            Copy
                           </Text>
                         </View>
                       </TouchableWithoutFeedback>

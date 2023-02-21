@@ -116,9 +116,9 @@ const Login = () => {
         email && setEmailError(email[0]);
         non_field_errors && setOverawErr(non_field_errors[0]);
         
-        dispatch(setAccessToken("818fbb131c82e940cb22b8b348dc430af391d4d7"));
+        // dispatch(setAccessToken("818fbb131c82e940cb22b8b348dc430af391d4d7"));
         if (!data.error) {
-          // dispatch(setAccessToken(data.auth_token));
+          dispatch(setAccessToken(data.auth_token));
         }
         // console.log(data);
 
