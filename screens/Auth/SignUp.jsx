@@ -59,7 +59,7 @@ const SignUp = () => {
     const [request, response, promptAsync] = Google.useAuthRequest({
         androidClientId: "437420737045-mat72m2tbd7t08j32rfq5944kdusepv4.apps.googleusercontent.com",
         iosClientId: "437420737045-9hibdld6lirhfs62fjm8ugcie82dfo2p.apps.googleusercontent.com",
-        expoClientId: "437420737045-shk7q876jc3k27aa04vnva06kmqce09e.apps.googleusercontent.com",
+        expoClientId: "437420737045-shk7q876jc3k27aa04vnva06kmqce09e.apps.googleusercontent.com"
       });
 
     
@@ -161,27 +161,25 @@ const SignUp = () => {
         console.log(response);
         if (response?.type === "success") {
         //   setAuth(response.authentication);
-            console.log("Response: ------->", response);
-            // console.log("Request: ------->", request);
-            // console.log("PromptAsync: ------->", promptAsync);
+            console.log("Response: ", response);
             // dispatch(setGoogleAuth(response.authentication));
         }
     }, [response]);
 
-    // useEffect(() => {
-    //     const getPersistedAuth = async () => {
-    //       if (googleAuth != null) {
-    //         setAuth(googleAuth);
-    //         console.log(googleAuth);
+    useEffect(() => {
+        const getPersistedAuth = async () => {
+          if (googleAuth != null) {
+            setAuth(googleAuth);
+            console.log(googleAuth);
     
-    //         setRequireRefresh(!AuthSession.TokenResponse.isTokenFresh({
-    //           expiresIn: googleAuth.expiresIn,
-    //           issuedAt: googleAuth.issuedAt
-    //         }));
-    //       }
-    //     };
-    //     getPersistedAuth();
-    // }, []);
+            setRequireRefresh(!AuthSession.TokenResponse.isTokenFresh({
+              expiresIn: googleAuth.expiresIn,
+              issuedAt: googleAuth.issuedAt
+            }));
+          }
+        };
+        getPersistedAuth();
+    }, []);
 
     const getClientId = () => {
         if (Platform.OS === "ios") {
@@ -193,26 +191,26 @@ const SignUp = () => {
         }
       }
 
-    //   const refreshToken = async () => {
-    //     const clientId = getClientId();
-    //     console.log(auth);
-    //     const tokenResult = await AuthSession.refreshAsync({
-    //       clientId: clientId,
-    //       refreshToken: auth.refreshToken
-    //     }, {
-    //       tokenEndpoint: "https://www.googleapis.com/oauth2/v4/token"
-    //     });
+      const refreshToken = async () => {
+        const clientId = getClientId();
+        console.log(auth);
+        const tokenResult = await AuthSession.refreshAsync({
+          clientId: clientId,
+          refreshToken: auth.refreshToken
+        }, {
+          tokenEndpoint: "https://www.googleapis.com/oauth2/v4/token"
+        });
     
-    //     tokenResult.refreshToken = auth.refreshToken;
+        tokenResult.refreshToken = auth.refreshToken;
     
-    //     setAuth(tokenResult);
-    //     await AsyncStorage.setItem("auth", JSON.stringify(tokenResult));
-    //     setRequireRefresh(false);
-    //   };
+        setAuth(tokenResult);
+        await AsyncStorage.setItem("auth", JSON.stringify(tokenResult));
+        setRequireRefresh(false);
+      };
 
-    //   if (requireRefresh) {
-    //     console.log("Requires Refresh");
-    //   }
+      if (requireRefresh) {
+        console.log("Requires Refresh");
+      }
 
     useEffect(() => {
         NetInfo.fetch().then(state => {
