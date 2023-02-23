@@ -58,7 +58,7 @@ const Login = () => {
 
   const [emailError, setEmailError] = useState("");
 
-  const [overawErr, setOverawErr] = useState("");
+  const [overawErr, setOverawErr] = useState("Unable to login with credentials provided");
 
   const dispatch = useDispatch();
 
@@ -111,37 +111,35 @@ const Login = () => {
     )
       .then((data) => {
         console.log(data);
-        const { password, email, non_field_errors } = data.error.details;
-        password && setPasswordError(password[0]);
-        email && setEmailError(email[0]);
-        non_field_errors && setOverawErr(non_field_errors[0]);
-        
-        // dispatch(setAccessToken("818fbb131c82e940cb22b8b348dc430af391d4d7"));
-        if (!data.error) {
-          dispatch(setAccessToken(data.auth_token));
-        }
-        // console.log(data);
 
+        dispatch(setAccessToken(data.auth_token));
+        if (!data.error) {
+          console.log("Hey! there's no error", data);
+        }
+
+        console.log("Am getting something!");
+        
         if (data) {
           setIsLoading(false);
-          // console.log("<------------ Data is returned ----------------->");
+          console.log("<------------ Data is returned ----------------->");
         } else {
-          // console.log("What could go wrong?")
-          console.log(data);
+          console.log("What could go wrong?")
+          
         }
 
         // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
       })
       .catch((error) => {
         setIsLoading(false);
-        console.log(error);
+        console.log("Hey there's an error here!", error);
       });
   };
 
   const isEmail = (emailAdress) => {
-    let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    let regex = "";
+    // let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-    if (emailAdress.match(regex)) return true;
+    if (emailAdress.length !== 0 || null) return true;
     else return false;
   };
 
@@ -160,15 +158,12 @@ const Login = () => {
   );
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={{ width: "100%", justifyContent: "center", flex: 1 }}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.container}>
+      <View style={{ width: "100%", justifyContent: "center" }}>
         <KeyboardAvoidingView
-          style={{
-            width: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-            paddingHorizontal: 20,
-          }}
+          style={{ width: "100%",  alignItems: "center", justifyContent: "center", paddingHorizontal: 20 }}
         >
           <Image
             source={images.TvLogo}
@@ -176,7 +171,7 @@ const Login = () => {
             style={{
               width: 152,
               height: 86,
-              marginBottom: 20,
+              paddingBottom: 20,
             }}
           />
 
@@ -196,7 +191,7 @@ const Login = () => {
               styles.txtInput,
               {
                 backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a",
-                marginBottom: !emailValid || emailError || overawErr ? 5 : 16,
+                marginBottom: !emailValid || emailError || overawErr ? 10 : 16,
                 borderWidth: 0.5,
                 borderStyle: "solid",
                 borderColor: !emailValid
@@ -206,21 +201,20 @@ const Login = () => {
                   : null,
               },
             ]}
-            placeholder="Enter your email"
-            placeholderTextColor={"#545558"}
-            onBlur={() => {
-              setFirstIntBg(colors.darkMode);
-              setEmailFocus("no");
-            }}
-            onFocus={() => {
-              setFirstIntBg(colors.firstGradientShade);
-              setEmailFocus("yes");
-            }}
-            onChangeText={(text) => setEmail(text)}
-            keyboardType={"email-address"}
-            selectionColor={"white"}
+              placeholder="Enter your email"
+              placeholderTextColor={"#545558"}
+              onBlur={() => {
+                setFirstIntBg(colors.darkMode);
+                setEmailFocus("no");
+              }}
+              onFocus={() => {
+                setFirstIntBg(colors.firstGradientShade);
+                setEmailFocus("yes");
+              }}
+              onChangeText={(text) => setEmail(text)}
+              keyboardType={"email-address"}
+              selectionColor={"white"}
           />
-
           {/* Error Toast */}
           {!emailValid && (
             <View
@@ -561,9 +555,11 @@ const Login = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 30,
     backgroundColor: colors.black,
     justifyContent: "center",
     alignItems: "center",
+    // paddingBottom: 30
   },
   txtInput: {
     width: "100%",

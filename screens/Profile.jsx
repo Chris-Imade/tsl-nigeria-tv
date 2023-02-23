@@ -20,6 +20,7 @@ import { setAccessToken } from "../Redux/Slice/AppSlice";
 import { Center, Modal } from "native-base";
 import { TouchableWithoutFeedback } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
+import { StatusBar } from "react-native";
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -140,6 +141,7 @@ const Profile = () => {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.black }}>
+      <StatusBar backgroundColor="#000" style="dark-content" />
       <View
         style={{
           flex: 1,
@@ -318,7 +320,7 @@ const Profile = () => {
         {/* Logout */}
         <TouchableOpacity
           onPress={() => dispatch(setAccessToken(null))}
-          className="flex-row mt-[73px]"
+          className="flex-row mt-[73px] mb-12"
         >
           <Image
             source={images.Logout}

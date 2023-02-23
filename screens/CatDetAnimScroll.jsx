@@ -22,6 +22,7 @@ import {
 import { images } from "../assets/images";
 import { colors } from "../components/shared";
 import * as Clipboard from 'expo-clipboard';
+import { StatusBar } from "react-native";
 
 const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
   const [copiedText, setCopiedText] = React.useState('');
@@ -58,6 +59,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
         { useNativeDriver: false }
       )}
     >
+      <StatusBar backgroundColor="#000" style="dark-content" />
       {!isLoading ? (
         <>
           <View style={{ flex: 1 }}>

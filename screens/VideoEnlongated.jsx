@@ -18,6 +18,7 @@ import { images } from "../assets/images";
 import { colors, ScreenHeight, ScreenWidth } from "../components/shared";
 import { setVideoList } from "../Redux/Slice/AppSlice";
 import * as Clipboard from 'expo-clipboard';
+import { StatusBar } from "react-native";
 
 const VideoEnlongated = (props) => {
   const [errorResponseData, setErrorResponseData] = useState("");
@@ -91,6 +92,7 @@ const VideoEnlongated = (props) => {
         }}
       >
         <SafeAreaView>
+        <StatusBar backgroundColor="#000" style="dark-content" />
           <View className="h-[220px]">
             {embedURI ? (
               <WebView

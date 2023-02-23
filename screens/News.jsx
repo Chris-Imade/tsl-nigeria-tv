@@ -1,5 +1,6 @@
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
+import { StatusBar } from "react-native";
 import { SafeAreaView } from "react-native";
 import {
   Text,
@@ -98,6 +99,7 @@ const News = () => {
 console.log(currentIndx)
   return (
     <SafeAreaView className="flex-1 justify-start bg-black pt-12">
+      <StatusBar backgroundColor="#000" style="dark-content" />
       <ScrollView
         showsHorizontalScrollIndicator={false}
         className="h-fit"

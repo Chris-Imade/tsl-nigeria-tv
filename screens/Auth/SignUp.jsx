@@ -21,7 +21,7 @@ import { baseUrl, colors } from "../../components/shared";
 import NetInfo from "@react-native-community/netinfo";
 import { Center, Modal, useDisclose } from "native-base";
 import * as Google from 'expo-auth-session/providers/google';
-import { setGoogleAuth } from "../../Redux/Slice/AppSlice";
+import { setAccessToken, setGoogleAuth, setProfilePhoto } from "../../Redux/Slice/AppSlice";
 
 
 // const verifyEndpoint = "https://web-production-c1bd.up.railway.app/auth/jwt/verify/"
@@ -32,9 +32,6 @@ const SignUp = () => {
     const [firstIntBg, setFirstIntBg] = useState("");
     const [secondIntBg, setSecondIntBg] = useState("");
     const [thirdIntBg, setThirdIntBg] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
     const [emailValid, setEmailValid] = useState(true);
     const [passValid, setPassValid] = useState(true);
     const [passwordFocus, setPasswordFocus] = useState("no");
@@ -50,6 +47,10 @@ const SignUp = () => {
     const [usernameBg, setUsernameBg] = useState("");
     const [usernameFocus, setUsernameFocus] = useState("no");
     const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [userCreated, setUserCreated] = useState(false);
 
     // Google authentication
     const [userInfo, setUserInfo] = useState();
@@ -59,7 +60,8 @@ const SignUp = () => {
     const [request, response, promptAsync] = Google.useAuthRequest({
         androidClientId: "437420737045-mat72m2tbd7t08j32rfq5944kdusepv4.apps.googleusercontent.com",
         iosClientId: "437420737045-9hibdld6lirhfs62fjm8ugcie82dfo2p.apps.googleusercontent.com",
-        expoClientId: "437420737045-shk7q876jc3k27aa04vnva06kmqce09e.apps.googleusercontent.com"
+        expoClientId: "437420737045-shk7q876jc3k27aa04vnva06kmqce09e.apps.googleusercontent.com",
+        // responseType: "id_token"
       });
 
     
@@ -79,10 +81,10 @@ const SignUp = () => {
         validMail ? setEmailValid(true) : setEmailValid(false);
         validPass ? setPassValid(true) : setPassValid(false);
             const userCredentials = {
+                username,
                 email,
                 password,
-                re_password: confirmPassword,
-                username
+                password2: confirmPassword,
             }
 
             setIsLoading(true);
@@ -99,34 +101,40 @@ const SignUp = () => {
                     body: JSON.stringify(data) // body data type must match "Content-Type" header
                   });
                   
-                  
+                
                 return response.json(); // parses JSON response into native JavaScript objects
               }
               
-            postData(`https://web-production-de75.up.railway.app/auth/users/`, userCredentials)
+            postData(`https://web-production-de75.up.railway.app/api/user/`, userCredentials)
             .then((data) => {
                 // data.error && setErrorResponseData(data.error.message);
-                const { password, email } = data.error.details;
-                password && setPasswordError(password[0]);
-                email && setEmailError(email[0]);
-                // console.log(data);
-                    if(!data.error) {
-                        setResponseData(data);
-                    }
+                // const { password, email, username } = data.error.details;
+                // password && setPasswordError(password[0]);
+                // email && setEmailError(email[0]);
+                // username && setUsernameError(username[0]);
+
+                if(!data.error) {
+                    setResponseData(data);
+                    navigation.navigate("Login");
+                    console.log(data);
+                }
+                    console.log(data);
                     
                     if(data) {
                         setIsLoading(false);
-                        // console.log("<------------ Data is returned ----------------->");
+                        console.log("<------------ Data is returned ----------------->");
                     } else {
-                        // console.log("What could go wrong?")
+                        console.log("What could go wrong?")
                     }
-
-                // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
-            }).catch((error) => {
-                setIsLoading(false);
-                setErrorResponseData(error.message);
-            });
-    }
+                    
+                }).catch((error) => {
+                    setIsLoading(false);
+                    setErrorResponseData(error.message);
+                });
+            }
+            console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
+            
+    responseData && navigation.navigate("Login");
 
 
     const isEmail = (emailAdress) => {
@@ -146,22 +154,14 @@ const SignUp = () => {
         else return false;
     };
 
-    responseData && setTimeout(() => {
-        navigation.navigate("Login");
-    }, 5000)
 
-
-
-    const signInWithGoogle = () => {
-
-    }
 
     // Everything google sign in
     useEffect(() => {
-        console.log(response);
+        // console.log(response);
         if (response?.type === "success") {
-        //   setAuth(response.authentication);
-            console.log("Response: ", response);
+          setAuth(response.authentication);
+            // console.log("Response: ", response);
             // dispatch(setGoogleAuth(response.authentication));
         }
     }, [response]);
@@ -170,7 +170,7 @@ const SignUp = () => {
         const getPersistedAuth = async () => {
           if (googleAuth != null) {
             setAuth(googleAuth);
-            console.log(googleAuth);
+            // console.log(googleAuth);
     
             setRequireRefresh(!AuthSession.TokenResponse.isTokenFresh({
               expiresIn: googleAuth.expiresIn,
@@ -179,6 +179,24 @@ const SignUp = () => {
           }
         };
         getPersistedAuth();
+        const getUser = async() => {
+            if(auth) {
+                let userInfoResponse = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+                    headers: { Authorization: `Bearer ${auth?.accessToken}` }
+                });
+            
+                userInfoResponse?.json().then(data => {
+                    setUserInfo(data);
+                    dispatch(setProfilePhoto(data?.picture));
+                      setUsername(data?.name);
+                      setEmail(data?.email);
+                      setPassword(data?.id+"TSL_Dynamic-user");
+                      setConfirmPassword(data?.id);
+                    console.log(data);
+                });
+            }
+        }
+        getUser();
     }, []);
 
     const getClientId = () => {
@@ -211,6 +229,99 @@ const SignUp = () => {
       if (requireRefresh) {
         console.log("Requires Refresh");
       }
+
+      const signInWithGoogle = async() => {
+        setIsLoading(true);
+            switch (userCreated) {
+                case userCreated === false:
+                    const postData = async(url = '', data) => {
+                        // Default options are marked with *
+                        const response = await fetch(url, {
+                            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                            mode: 'no-cors',
+                            headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                            },
+                            body: JSON.stringify(data) // body data type must match "Content-Type" header
+                        });
+                        
+                        
+                        return response.json(); // parses JSON response into native JavaScript objects
+                    }
+                    
+                    postData(`https://web-production-de75.up.railway.app/auth/user/`, { username, email, password, re_password: confirmPassword })
+                    .then((data) => {
+                        // data.error && setErrorResponseData(data.error.message);
+                        
+        
+                        // console.log(data);
+                            if(!data.error) {
+                                setUserCreated(true);
+                            }
+                            
+                            if(data) {
+                                setIsLoading(false);
+                                // console.log("<------------ Data is returned ----------------->");
+                            } else {
+                                // console.log("What could go wrong?")
+                            }
+        
+                        // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
+                    }).catch((error) => {
+                        setIsLoading(false);
+                        console.log(error);
+                    });
+                    break;
+                case userCreated === true:
+                    const login = async (url = "", data) => {
+                        // Default options are marked with *
+                        const response = await fetch(url, {
+                          method: "POST", // *GET, POST, PUT, DELETE, etc.
+                          mode: "no-cors",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                          },
+                          body: JSON.stringify(data), // body data type must match "Content-Type" header
+                        });
+                  
+                        return response.json(); // parses JSON response into native JavaScript objects
+                      };
+            
+                      login(
+                        `https://web-production-de75.up.railway.app/auth/token/login/`,
+                        { email, password }
+                      )
+                    .then((data) => {
+                        console.log("All is well!", data);
+                        
+                        // dispatch(setAccessToken("818fbb131c82e940cb22b8b348dc430af391d4d7"));
+                        if (!data.error) {
+                        dispatch(setAccessToken(data.auth_token));
+                            console.log("All is well!");
+                        }
+                        // console.log(data);
+                
+                        if (data) {
+                        setIsLoading(false);
+                        // console.log("<------------ Data is returned ----------------->");
+                        } else {
+                        // console.log("What could go wrong?")
+                        console.log(data);
+                        }
+                
+                        // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
+                    })
+                    .catch((error) => {
+                        setIsLoading(false);
+                        console.log("All is not well oh!");
+                    });
+                default:
+                    break;
+            }
+    }
+      
 
     useEffect(() => {
         NetInfo.fetch().then(state => {
@@ -246,7 +357,7 @@ const SignUp = () => {
                     </Text>
 
                     <TextInput 
-                        style={[styles.txtInput, { backgroundColor: firstIntBg ? usernameBg : "#1a1a1a", marginBottom: !emailValid || usernameError ? 5 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: usernameFocus === "yes" && "#80D200" }]}
+                        style={[styles.txtInput, { backgroundColor: firstIntBg ? usernameBg : "#1a1a1a", marginBottom: !emailValid || usernameError ? 10 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: usernameFocus === "yes" && "#80D200" }]}
                         placeholder="Username"
                         placeholderTextColor={"#545558"}
                         onBlur={() => {
@@ -262,7 +373,7 @@ const SignUp = () => {
                         selectionColor={"white"}
                     />                    
                     <TextInput 
-                        style={[styles.txtInput, { backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a", marginBottom: !emailValid || emailError ? 5 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: !emailValid ? "red" : emailFocus === "yes" ? "#80D200" : null }]}
+                        style={[styles.txtInput, { backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a", marginBottom: !emailValid || emailError ? 10 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: !emailValid ? "red" : emailFocus === "yes" ? "#80D200" : null }]}
                         placeholder="Enter your email"
                         placeholderTextColor={"#545558"}
                         onBlur={() => {
@@ -299,6 +410,7 @@ const SignUp = () => {
                             bottom: 15,
                             justifyContent: "flex-start",
                             alignItems: "flex-start",
+                            marginTop: 10
                         }}>
                             <Text className="opacity-30" style={{
                                 color: "red",
@@ -475,7 +587,10 @@ const SignUp = () => {
                     justifyContent: "center",
                     alignItems: "center"
                 }}>
-                    <TouchableHighlight onPress={() => promptAsync({ useProxy: true, showInRecents: true })}>
+                    <TouchableHighlight onPress={() => {
+                        promptAsync({ useProxy: true, showInRecents: true });
+                        // userInfo && signInWithGoogle();
+                    }}>
                         <View className='items-center'>
                             <Image 
                                 source={images.GoogleIcon}

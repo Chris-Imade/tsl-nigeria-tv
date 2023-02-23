@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { StatusBar } from "react-native";
 import {
   Image,
   KeyboardAvoidingView,
@@ -78,6 +79,7 @@ const ChangeCredentials = () => {
       }}
     >
       <View>
+        <StatusBar backgroundColor="#000" style="dark-content" />
         <KeyboardAvoidingView
           style={{
             width: "100%",

@@ -3,6 +3,7 @@ import { Actionsheet, Center, useDisclose, VStack } from "native-base";
 import React, { useEffect, useState } from "react";
 import { Image, TouchableHighlight, TouchableOpacity } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
+import { StatusBar } from "react-native";
 import { ScrollView } from "react-native";
 import { View, Text } from "react-native";
 import { useSelector } from "react-redux";
@@ -72,6 +73,7 @@ const ActorsProfile = (props) => {
             backgroundColor: lightModeEnabled ? colors.white : colors.black,
           }}
         >
+        <StatusBar backgroundColor="#000" style="dark-content" />
           <View style={{ flexDirection: "row", marginHorizontal: 20 }}>
             <View className="items-center text-center mr-[16px]">
               <Image

@@ -19,6 +19,7 @@ import { images } from "../assets/images";
 import { setCategoryDetailsPage, setVideoId } from "../Redux/Slice/AppSlice";
 import CatDetAnimScroll from "./CatDetAnimScroll";
 import { ScreenWidth, colors, ScreenHeight } from "../components/shared";
+import { StatusBar } from "react-native";
 
 const CategoryDetails = () => {
   const [errorResponseData, setErrorResponseData] = useState("");
@@ -108,6 +109,7 @@ const CategoryDetails = () => {
       ]}
       className=""
     >
+      <StatusBar backgroundColor="#000" style="dark-content" />
       {/* <View style={{
             width: "100%",
             height: 45,

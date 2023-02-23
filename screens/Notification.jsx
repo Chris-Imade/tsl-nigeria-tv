@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { StatusBar } from "react-native";
 import {
   Image,
   SafeAreaView,
@@ -25,6 +26,7 @@ const Notification = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-black pt-5 justify-center items-center">
+      <StatusBar backgroundColor="#000" style="dark-content" />
       {searchNotification && (
         <View className="flex-row w-full mx-[20px] items-center">
           <Image

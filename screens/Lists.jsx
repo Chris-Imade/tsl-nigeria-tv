@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { colors, ScreenWidth } from "../components/shared";
 import * as Clipboard from 'expo-clipboard';
+import { StatusBar } from "react-native";
 
 const Lists = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -59,6 +60,7 @@ const Lists = () => {
             paddingTop: Platform.OS == "android" ? 30 : 30,
           }}
         >
+        <StatusBar backgroundColor="#000" style="dark-content" />
           <View
           style={{
             borderWidth: 2,

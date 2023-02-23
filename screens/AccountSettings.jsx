@@ -20,6 +20,7 @@ import { images } from "../assets/images";
 import { colors } from "../components/shared";
 import { setAccessToken, setProfilePhoto, setUser } from "../Redux/Slice/AppSlice";
 import * as ImagePicker from 'expo-image-picker';
+import { StatusBar } from "react-native";
 
 const AccountSettings = () => {
   const [showModal, setShowModal] = useState(false);
@@ -222,6 +223,7 @@ const AccountSettings = () => {
         paddingTop: Platform.OS === "android" ? 50 : 40,
       }}
     >
+      <StatusBar backgroundColor="#000" style="dark-content" />
       <ScrollView>
         <View
           style={{

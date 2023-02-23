@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
+import { StatusBar } from "react-native";
 import {
   ActivityIndicator,
   Alert,
@@ -104,6 +105,7 @@ const PasswordReset = () => {
         backgroundColor: lightModeEnabled ? colors.white : colors.black,
       }}
     >
+      <StatusBar backgroundColor="#000" style="dark-content" />
       <View>
         <KeyboardAvoidingView
           style={{

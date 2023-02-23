@@ -234,7 +234,7 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                   }}
                 >
                   <Image
-                    source={{ uri: item.mobile_thumbnail }}
+                    source={{ uri: item?.mobile_thumbnail }}
                     resizeMode={"contain"}
                     style={{
                       width: 124,
@@ -283,7 +283,7 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                 className="w-full items-center justify-start flex-row"
               >
                 <Image
-                  source={{ uri: info.mobile_thumbnail }}
+                  source={{ uri: info?.mobile_thumbnail }}
                   className="w-[100px] h-[139px] rounded-md"
                   resizeMode={"contain"}
                 />

@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
+import { StatusBar } from "react-native";
 import {
   Image,
   KeyboardAvoidingView,
@@ -99,6 +100,7 @@ const Search = () => {
         },
       ]}
     >
+      <StatusBar backgroundColor="#000" style="dark-content" />
       <KeyboardAvoidingView
         style={{
           width: "100%",

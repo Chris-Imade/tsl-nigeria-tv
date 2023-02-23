@@ -496,7 +496,7 @@ const AuthStack = () => {
       })}
     >
       {/* All the auth related screens */}
-      <Auth.Screen name="Login" component={Login} />
+      <Auth.Screen options={{ headerShown: false }} name="Login" component={Login} />
       <Auth.Screen name="SignUp" component={SignUp} />
       <Auth.Screen name="change-credential" component={ChangeCredentials} />
       <Auth.Screen name="password-reset" component={PasswordReset} />
@@ -630,6 +630,8 @@ const AppRoot = () => {
   useEffect(() => {
     setUserToken(accessToken);
   }, [accessToken]);
+
+
 
   return (
     <AppStack.Navigator
