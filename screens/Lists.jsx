@@ -138,7 +138,7 @@ const Lists = () => {
             </View>
           )}
           <ScrollView className="w-full">
-            <View className="flex-wrap-reverse justify-start flex-row mx-[16px] w-full">
+            <View className="flex-wrap justify-start flex-row mx-[16px] w-full">
               {filteredList
                 ? filteredList?.map((item, index) => (
                     <TouchableNativeFeedback

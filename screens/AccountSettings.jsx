@@ -12,14 +12,11 @@ import {
   ScrollView, 
   View, 
   Image,
-  TouchableOpacity,
-  ImageBackground
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { colors } from "../components/shared";
-import { setAccessToken, setProfilePhoto, setUser } from "../Redux/Slice/AppSlice";
-import * as ImagePicker from 'expo-image-picker';
+import { setAccessToken, setUser } from "../Redux/Slice/AppSlice";
 import { StatusBar } from "react-native";
 
 const AccountSettings = () => {

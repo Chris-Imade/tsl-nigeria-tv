@@ -417,7 +417,10 @@ const HomeStack = () => {
 const StackProfile = createNativeStackNavigator();
 
 const ProfileStack = () => {
+  
   const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
+
+  const profilePhoto = useSelector((state) => state?.data?.profilePhoto);
 
   return (
     <StackProfile.Navigator initialRouteName="Profile">

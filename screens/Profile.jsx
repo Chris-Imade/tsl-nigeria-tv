@@ -385,35 +385,35 @@ const Profile = () => {
                       </Text>
                         {console.log(image)}
                         {profilePhoto === null ? (
-                          <TouchableHighlight 
-                          onPress={() => pickImage()}
-                          style={{
-                            width: "100%",
-                            height: 150,
-                            borderRadius: 8,
-                            borderWidth: 3,
-                            borderStyle: "solid",
-                            borderColor: "#80D200",
-                            marginTop: 8,
-                            marginBottom: 16,
-                            fontFamily: "Stem-Medium",
-                            paddingVertical: 12,
-                            paddingHorizontal: 16,
-                            justifyContent: "center",
-                            alignItems: "center"
-                          }}>
-                              <View>
-                                  <Image 
-                                    source={images.Upload}
-                                    style={{
-                                      width: 48,
-                                      height: 48
-                                    }}
-                                    resizeMode={"contain"}
-                                  />
-                                  <Text className="text-[#98999B] mt-1">Upload</Text>
-                                </View>
-                          </TouchableHighlight>
+                            <TouchableHighlight 
+                            onPress={() => pickImage()}
+                            style={{
+                              width: "100%",
+                              height: 150,
+                              borderRadius: 8,
+                              borderWidth: 3,
+                              borderStyle: "solid",
+                              borderColor: "#80D200",
+                              marginTop: 8,
+                              marginBottom: 16,
+                              fontFamily: "Stem-Medium",
+                              paddingVertical: 12,
+                              paddingHorizontal: 16,
+                              justifyContent: "center",
+                              alignItems: "center"
+                            }}>
+                                <View>
+                                    <Image 
+                                      source={images.Upload}
+                                      style={{
+                                        width: 48,
+                                        height: 48
+                                      }}
+                                      resizeMode={"contain"}
+                                    />
+                                    <Text className="text-[#98999B] mt-1">Upload</Text>
+                                  </View>
+                            </TouchableHighlight>
                         ) : (
                           <ImageBackground 
                               source={{ uri: profilePhoto }}
