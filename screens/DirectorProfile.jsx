@@ -10,10 +10,10 @@ import { useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { colors, ScreenWidth } from "../components/shared";
 
-const ActorsProfile = (props) => {
+const DirectorProfile = (props) => {
   const { data } = props?.route?.params;
 
-  const [actorsProfile, setActorsProfile] = useState();
+  const [directorProfile, setDirectorProfile] = useState();
   const accessToken = useSelector((state) => state.data.accessToken);
   const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
   const { isOpen, onOpen, onClose } = useDisclose();
@@ -42,10 +42,10 @@ const ActorsProfile = (props) => {
   };
 
   useEffect(() => {
-    getData(`https://web-production-de75.up.railway.app/api/actors/${data}`)
+    getData(`https://web-production-de75.up.railway.app/api/directors/${data}`)
       .then((data) => {
         // console.log(data);
-        setActorsProfile(data);
+        setDirectorProfile(data);
 
         if (data) {
           setIsLoading(false);
@@ -76,12 +76,12 @@ const ActorsProfile = (props) => {
           }}
         >
         <StatusBar backgroundColor="#000" style="dark-content" />
-          {actorsProfile ? (
+          {directorProfile ? (
             <>
               <View style={{ flexDirection: "row", marginHorizontal: 20 }}>
               <View className="items-center text-center mr-[16px]">
                 <Image
-                  source={{ uri: actorsProfile.image }}
+                  source={{ uri: directorProfile.image }}
                   style={{
                     width: 156,
                     height: 173,
@@ -96,7 +96,7 @@ const ActorsProfile = (props) => {
                       color: lightModeEnabled ? colors.black : colors.white,
                     }}
                   >
-                    {actorsProfile.name}
+                    {directorProfile.name}
                   </Text>
                 </View>
               </View>
@@ -118,7 +118,7 @@ const ActorsProfile = (props) => {
                     flexWrap: 'wrap'
                   }}
                 >
-                  {actorsProfile.bio}
+                  {directorProfile.bio}
                 </Text>
               </View>
             </View>
@@ -136,7 +136,7 @@ const ActorsProfile = (props) => {
                 Feature TVShows
               </Text>
               <View className="flex-wrap justify-start flex-row mx-[16px] w-full">
-                {actorsProfile?._videos?.map((item, index) => (
+                {directorProfile?._videos?.map((item, index) => (
                   <>
                     <TouchableHighlight
                       onPress={() => {
@@ -309,4 +309,4 @@ const ActorsProfile = (props) => {
   );
 };
 
-export default ActorsProfile;
+export default DirectorProfile;

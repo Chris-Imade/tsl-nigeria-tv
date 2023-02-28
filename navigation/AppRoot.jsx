@@ -11,6 +11,7 @@ import {
   AccountSettings,
   ActorsProfile,
   ChangeCredentials,
+  DirectorProfile,
   // Downloads,
   Home,
   Lists,
@@ -300,6 +301,60 @@ const HomeStack = () => {
         }}
         name="actors-profile"
         component={ActorsProfile}
+      />
+      <RootStack.Screen
+        options={{
+          headerRight: () => (
+            <View className="flex-row">
+              <TouchableOpacity
+                onPress={() => navigation.navigate("search-screen")}
+                className="mr-[26px] w-[28px] h-[28px]"
+              >
+                <Image
+                  source={images.SearchSmall}
+                  style={{
+                    width: 24,
+                    height: 24,
+                  }}
+                />
+              </TouchableOpacity>
+
+              <TouchableWithoutFeedback
+                onPress={() => navigation.navigate("profile-screen")}
+              >
+                 {profilePhoto ? (
+                    <Image
+                      source={{ uri: profilePhoto }}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        marginRight: 20,
+                      }}
+                      resizeMode={"contain"}
+                    />
+                  ) : (
+                    <Image
+                      source={images.MaleProfile}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        marginRight: 20,
+                      }}
+                      resizeMode={"contain"}
+                    />
+                  )}
+              </TouchableWithoutFeedback>
+            </View>
+          ),
+          headerTintColor: lightModeEnabled ? colors.black : colors.white,
+          headerStyle: {
+            backgroundColor: lightModeEnabled ? colors.white : colors.black,
+          },
+          headerTitle: "Biography",
+          headerTitleAlign: "left",
+        }}
+        name="director-profile"
+        component={DirectorProfile}
       />
       <RootStack.Screen
         options={{

@@ -12,3 +12,4 @@ export { default as PasswordReset } from "./PasswordReset";
 export { default as VideoEnlongated } from "./VideoEnlongated";
 export { default as ActorsProfile } from "./ActorsProfile";
 export { default as AccountSettings } from "./AccountSettings";
+export { default as DirectorProfile } from "./DirectorProfile";

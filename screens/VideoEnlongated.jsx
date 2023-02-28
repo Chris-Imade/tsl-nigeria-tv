@@ -20,6 +20,7 @@ import { setVideoList } from "../Redux/Slice/AppSlice";
 import * as Clipboard from 'expo-clipboard';
 import { StatusBar } from "react-native";
 import { Share } from "react-native";
+import { ViewsCount } from "../components";
 
 const VideoEnlongated = (props) => {
   const [errorResponseData, setErrorResponseData] = useState("");
@@ -116,7 +117,7 @@ const VideoEnlongated = (props) => {
   };
 
 
-// console.log(localData);
+// console.log(localData.video_link);
 
   return (
     <>
@@ -172,7 +173,7 @@ const VideoEnlongated = (props) => {
           </View>
           <View>
             <View
-              style={{ flexDirection: "row", marginLeft: 20, marginBottom: 8 }}
+              style={{ flexDirection: "row", marginLeft: 20, marginBottom: 8, alignItems: "center" }}
             >
               <Text
               className="text-white"
@@ -205,6 +206,16 @@ const VideoEnlongated = (props) => {
               >
                 {localData?.rating}
               </Text>
+              {/* Views Automatic and Manual Views rendered here */}
+              {localData?.has_manual_views === true ? (
+                <Text style={{
+                  color: colors.white,
+                  fontFamily: "Stem-Regular",
+                  marginLeft: 12,
+                }}>{localData?.manual_views} views</Text>
+              ) : (
+                <ViewsCount videoId={localData?.video_link} />
+              )}
             </View>
             <View className="justify-center items-center">
              
@@ -301,7 +312,8 @@ const VideoEnlongated = (props) => {
                   </Text>
                 </View>
               </TouchableWithoutFeedback>
-              <View style={{}}>
+              <TouchableWithoutFeedback
+              onPress={() => navigation.navigate("director-profile", { data: localData?.director?.id })}>
                 <Text
                   style={{
                     fontFamily: "Stem-Medium",
@@ -309,9 +321,9 @@ const VideoEnlongated = (props) => {
                     color: lightModeEnabled ? colors.black : colors.white,
                   }}
                 >
-                  Director: <Text>Kevwe Modupke</Text>
+                  Director: <Text>{localData?.director?.name}</Text>
                 </Text>
-              </View>
+              </TouchableWithoutFeedback>
             </View>
             <View
               className="mt-8"
