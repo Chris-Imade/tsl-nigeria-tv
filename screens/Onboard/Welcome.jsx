@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import { images } from "../../assets/images";
 import { useSelector } from "react-redux";
 import { colors } from "../../components/shared";
+import { StatusBar } from "react-native";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -88,6 +89,7 @@ const Welcome = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.black }}>
+      <StatusBar />
       <Animated.FlatList
         data={DATA}
         keyExtractor={(item) => item.id}

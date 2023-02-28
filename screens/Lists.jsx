@@ -11,7 +11,8 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
   View,
-  ToastAndroid
+  ToastAndroid,
+  Share
 } from "react-native";
 import { useSelector } from "react-redux";
 import { images } from "../assets/images";
@@ -34,6 +35,29 @@ const Lists = () => {
   const copyToClipboard = async (link) => {
     await Clipboard.setStringAsync(link);
   };
+
+
+  const baseUrl = "https://www.youtube.com/watch?v="
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: baseUrl+info?.video_link
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
 
   const truncTxt = (txt) => {
     return txt?.length > 21 ? `${txt.substr(0, 21)}...` : txt;
@@ -234,7 +258,9 @@ const Lists = () => {
                           </Text>
                         </View>
                       </TouchableWithoutFeedback>
-                      <View className="justify-center items-center opacity-[0.5]">
+                      <TouchableOpacity 
+                      onPress={() => onShare()}
+                      className="justify-center items-center opacity-[0.5]">
                         <Image
                           source={images.ShareRound}
                           className="w-[37px] h-[37px] mb-[8px]"
@@ -246,7 +272,7 @@ const Lists = () => {
                         >
                           Share
                         </Text>
-                      </View>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>

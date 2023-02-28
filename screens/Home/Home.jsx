@@ -9,16 +9,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Animated,
-  SafeAreaView,
   TouchableHighlight,
-  ImageBackground,
-  Dimensions,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { AnimatedScroll, MobileNav } from "../../components";
+import { AnimatedScroll } from "../../components";
 import { colors, ScreenHeight, ScreenWidth } from "../../components/shared";
 import { useNavigation } from "@react-navigation/native";
-import * as ScreenOrientation from "expo-screen-orientation";
 import { images } from "../../assets/images";
 import { setCategories, setVideoId } from "../../Redux/Slice/AppSlice";
 
@@ -37,6 +33,8 @@ const Home = () => {
     (state) => state?.data?.lightModeEnabled
   );
   const categories = useSelector((state) => state?.data?.categories);
+  
+  const profilePhoto = useSelector((state) => state?.data?.profilePhoto);
 
   const accessToken = useSelector((state) => state.data.accessToken);
 
@@ -82,13 +80,15 @@ const Home = () => {
   useEffect(() => {
     getData(`https://web-production-de75.up.railway.app/api/categories`)
       .then((data) => {
-        // console.log(data);
         if(!data.error) {
           dispatch(setCategories(data));
+          // console.log(data);
         }
 
         if (data) {
-          setIsLoading(false);
+          setTimeout(() => {
+            setIsLoading(false);
+          }), 2000
           // console.log("<------------ Data is returned ----------------->");
         } else {
           // console.log("What could go wrong?")
@@ -149,7 +149,7 @@ const Home = () => {
           >
             {/* Logo */}
             <Image
-              source={images.TSLFullLogo}
+              source={images.TvLogo}
               style={{
                 width: 114,
                 height: 38,
@@ -174,11 +174,19 @@ const Home = () => {
               <TouchableWithoutFeedback
                 onPress={() => navigation.navigate("profile-screen")}
               >
-                <Image
-                  source={images.MaleProfile}
-                  resizeMode="contain"
-                  className="w-[28px] h-[28px] mr-[26px]"
-                />
+                {profilePhoto ? (
+                   <Image
+                    source={{ uri: profilePhoto }}
+                    resizeMode="contain"
+                    className="w-[28px] h-[28px] mr-[26px]"
+                  />
+                ) : (
+                  <Image
+                    source={images.MaleProfile}
+                    resizeMode="contain"
+                    className="w-[28px] h-[28px] mr-[26px]"
+                  />
+                )}
               </TouchableWithoutFeedback>
             </View>
           </View>
@@ -223,73 +231,73 @@ const Home = () => {
       {/* Menu Selection Overlay/Modal */}
       {showDetailedMenu && (
         <View
-          className="bg-[#000000dc]"
+        className="bg-[#000000dc]"
+        style={{
+          position: "absolute",
+          width: ScreenWidth,
+          height: ScreenHeight - 100,
+          top: 0,
+          left: 0,
+          elevation: 50,
+          zIndex: 50,
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+      >
+        <Text
           style={{
-            position: "absolute",
-            width: ScreenWidth,
-            height: ScreenHeight - 100,
-            top: 0,
-            left: 0,
-            elevation: 50,
-            zIndex: 50,
-            justifyContent: "space-around",
-            alignItems: "center",
+            color: lightModeEnabled ? colors?.black : colors?.white,
+            marginTop: 100,
+            fontFamily: "Stem-Medium",
+            fontSize: 21,
           }}
         >
-          <Text
-            style={{
-              color: lightModeEnabled ? colors?.black : colors?.white,
-              marginTop: 100,
-              fontFamily: "Stem-Medium",
-              fontSize: 21,
+          All Categories
+        </Text>
+        <ScrollView
+          contentContainerStyle={{
+            alignItems: "center",
+            marginVertical: 20,
+          }}
+        >
+          {categories.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => {
+              dispatch(setVideoId(item?.id));
+              setShowDetailedMenu(false);
+              navigation.navigate("category-details");
             }}
+            className="mt-[33px]"
           >
-            All Categories
-          </Text>
-          <ScrollView
-            contentContainerStyle={{
-              alignItems: "center",
-              marginVertical: 20,
-            }}
-          >
-            {categories.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  dispatch(setVideoId(item.id));
-                  setShowDetailedMenu(false);
-                  navigation.navigate("category-details");
-                }}
-                className="mt-[33px]"
-              >
-                <Text
-                  style={{
-                    color: lightModeEnabled ? colors?.black : "#98999B",
-                    fontFamily: "Stem-Medium",
-                    fontSize: 16,
-                  }}
-                >
-                  {item.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-          <View>
-            <TouchableHighlight
-              className="flex justify-center items-center bg-white h-14 w-14 rounded-full"
-              onPress={() => setShowDetailedMenu(false)}
+            <Text
+              style={{
+                color: lightModeEnabled ? colors?.black : "#98999B",
+                fontFamily: "Stem-Medium",
+                fontSize: 16,
+              }}
             >
-              <Image
-                source={images.MainClose}
-                style={{
-                  width: 20,
-                  height: 20,
-                }}
-                resizeMode={"contain"}
-              />
-            </TouchableHighlight>
-          </View>
+              {item.name}
+            </Text>
+          </TouchableOpacity>
+        ))}
+        </ScrollView>
+        <View className="absolute" style={{ top: ScreenHeight - 300 }}>
+          <TouchableHighlight
+            className="flex justify-center items-center bg-white h-14 w-14 rounded-full"
+            onPress={() => setShowDetailedMenu(false)}
+          >
+            <Image
+              source={images.MainClose}
+              style={{
+                width: 20,
+                height: 20,
+              }}
+              resizeMode={"contain"}
+            />
+          </TouchableHighlight>
         </View>
+      </View>
       )}
     </View>
   );

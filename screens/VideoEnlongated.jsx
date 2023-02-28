@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { Skeleton } from "native-base";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, TouchableOpacity } from "react-native";
+import { ActivityIndicator, SafeAreaView, TouchableOpacity } from "react-native";
 import { TouchableHighlight } from "react-native";
 import {
   Image,
@@ -13,36 +13,41 @@ import {
   ToastAndroid
 } from "react-native";
 import WebView from "react-native-webview";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { colors, ScreenHeight, ScreenWidth } from "../components/shared";
 import { setVideoList } from "../Redux/Slice/AppSlice";
 import * as Clipboard from 'expo-clipboard';
 import { StatusBar } from "react-native";
+import { Share } from "react-native";
 
 const VideoEnlongated = (props) => {
   const [errorResponseData, setErrorResponseData] = useState("");
   const [responseData, setResponseData] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const { data } = props.route.params;
-  const [localData, setLocalData] = useState({});
+  const [localData, setLocalData] = useState();
   const [showDetailedMenu, setShowDetailedMenu] = useState(false);
   const [id, setId] = useState(data);
   const [copiedText, setCopiedText] = React.useState('');
+  const [showVideo, setShowVideo] = useState(false);
   // console.log(localData);
 
+  
   const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
   const accessToken = useSelector((state) => state.data.accessToken);
 
   const navigation = useNavigation();
 
-  const embedURI = `https://www.youtube.com/embed/${localData.video_link}`;
+  const embedURI = `https://www.youtube.com/embed/${localData?.video_link}`;
+
+  const dispatch = useDispatch();
 
   const copyToClipboard = async (link) => {
     await Clipboard.setStringAsync(link);
   };
-
-
+  
+  
   const getData = async (url = "") => {
     // Default options are marked with *
     const response = await fetch(url, {
@@ -54,19 +59,19 @@ const VideoEnlongated = (props) => {
         Authorization: `Token ${accessToken}`,
       }, // body data type must match "Content-Type" header
     });
-
+    
     return response.json(); // parses JSON response into native JavaScript objects
-
+    
     // console.log("Happy Coding --->!");
   };
-
- 
-
+  
   useEffect(() => {
     getData(`https://web-production-de75.up.railway.app/api/videos/${id}`)
-      .then((data) => {
-        // console.log(data);
+    .then((data) => {
+      // console.log(data);
+      if(!data.error) {
         setLocalData(data);
+      }
 
         if (data) {
           setIsLoading(false);
@@ -82,6 +87,36 @@ const VideoEnlongated = (props) => {
         setErrorResponseData(error.message);
       });
   }, [data, id]);
+  
+  
+  setTimeout(() => {
+    if(localData) {
+      setShowVideo(true);
+    }
+  }, 5000)
+  
+  const baseUrl = "https://www.youtube.com/watch?v="
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: baseUrl+localData?.video_link
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+
+// console.log(localData);
 
   return (
     <>
@@ -94,7 +129,7 @@ const VideoEnlongated = (props) => {
         <SafeAreaView>
         <StatusBar backgroundColor="#000" style="dark-content" />
           <View className="h-[220px]">
-            {embedURI ? (
+            {showVideo ? (
               <WebView
                 allowsFullscreenVideo={true}
                 javaScriptEnabled={true}
@@ -113,13 +148,18 @@ const VideoEnlongated = (props) => {
               />
             ) : (
               <View className="bg-slate-900/60" style={{
-                  width: ScreenWidth,
-                  height: "100%"
-                }}
-              ></View>
+                width: ScreenWidth,
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <ActivityIndicator size={"large"} color={"white"} />
+            </View>
             )}
+            
           </View>
-          <View style={{ marginLeft: 20, marginTop: 8, marginBottom: 32 }}>
+          <View style={{ marginLeft: 20, marginTop: 8, marginBottom: 12 }}>
             <Text
               style={{
                 fontFamily: "Stem-Medium",
@@ -127,7 +167,7 @@ const VideoEnlongated = (props) => {
                 color: lightModeEnabled ? colors.black : colors.trueWhite,
               }}
             >
-              {!localData?.title === undefined && localData?.title}
+              {localData?.title}
             </Text>
           </View>
           <View>
@@ -135,14 +175,16 @@ const VideoEnlongated = (props) => {
               style={{ flexDirection: "row", marginLeft: 20, marginBottom: 8 }}
             >
               <Text
+              className="text-white"
                 style={{
-                  color: lightModeEnabled ? colors.black : colors.white,
+                  // color: lightModeEnabled ? colors.black : colors.white,
                   fontSize: 11,
                   fontFamily: "Stem-Medium",
                   marginRight: 12,
+                  // justifyContent: ""
                 }}
               >
-                {isNaN(new Date(localData?.date_uploaded).getFullYear()) && new Date(localData?.date_uploaded).getFullYear()}
+               {!localData ? "Year" : new Date(localData?.date_uploaded).getFullYear()}
               </Text>
               <Text
                 style={{
@@ -152,7 +194,7 @@ const VideoEnlongated = (props) => {
                   marginRight: 12,
                 }}
               >
-                {new Date(localData?.date_uploaded).getDay() + "th"}
+                {!localData ? "Day" : new Date(localData?.date_uploaded).getDay() + "th"}
               </Text>
               <Text
                 style={{
@@ -161,47 +203,14 @@ const VideoEnlongated = (props) => {
                   fontFamily: "Stem-Medium",
                 }}
               >
-                {localData.rating}
+                {localData?.rating}
               </Text>
             </View>
             <View className="justify-center items-center">
-              <TouchableWithoutFeedback
-                onPress={() =>
-                  navigation.navigate("video-screen", {
-                    data: localData.video_link,
-                  })
-                }
-              >
-                <View
-                  style={{
-                    width: "95%",
-                    paddingVertical: 17,
-                    borderRadius: 12,
-                    height: 55,
-                  }}
-                  className="flex-row justify-center items-center bg-white"
-                >
-                  <Image
-                    source={images.PlayMainArr}
-                    style={{
-                      width: 24,
-                      height: 24,
-                    }}
-                    resizeMode={"contain"}
-                  />
-                  <Image
-                    source={images.PlayMainDet}
-                    style={{
-                      width: 36,
-                      height: 23,
-                    }}
-                    resizeMode={"contain"}
-                  />
-                </View>
-              </TouchableWithoutFeedback>
+             
               <TouchableWithoutFeedback onPress={() => {
                   const baseUrl = "https://www.ssyoutube.com/watch?v="
-                  copyToClipboard(baseUrl+localData.video_link);
+                  copyToClipboard(baseUrl+localData?.video_link);
                   ToastAndroid.show(
                     "Video link has been copied",
                     ToastAndroid.SHORT
@@ -210,12 +219,12 @@ const VideoEnlongated = (props) => {
                 <View
                   style={{
                     width: "95%",
-                    paddingVertical: 17,
+                    // paddingVertical: 13,
                     borderRadius: 12,
                     borderWidth: 1.5,
                     borderStyle: "solid",
                     borderColor: colors.grayMedium,
-                    height: 55,
+                    height: 50,
                     marginTop: 16,
                   }}
                   className="flex-row justify-center items-center bg-[#191A1C]"
@@ -223,8 +232,8 @@ const VideoEnlongated = (props) => {
                   <Image
                     source={images.FileCopy}
                     style={{
-                      width: 24,
-                      height: 24,
+                      width: 14,
+                      height: 14,
                       marginRight: 8,
                     }}
                     resizeMode={"contain"}
@@ -233,10 +242,10 @@ const VideoEnlongated = (props) => {
                     style={{
                       color: "#F5F5F5",
                       fontFamily: "Stem-Medium",
-                      fontSize: 17,
+                      fontSize: 13,
                     }}
                   >
-                    COpy
+                    Copy
                   </Text>
                 </View>
               </TouchableWithoutFeedback>
@@ -252,7 +261,7 @@ const VideoEnlongated = (props) => {
                   color: lightModeEnabled ? colors.black : colors.white,
                 }}
               >
-                {localData.description}
+                {localData?.description}
               </Text>
               <TouchableWithoutFeedback
                 onPress={() => setShowDetailedMenu(true)}
@@ -262,6 +271,7 @@ const VideoEnlongated = (props) => {
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "flex-start",
+                    flexWrap: "wrap"
                   }}
                 >
                   <Text
@@ -274,12 +284,12 @@ const VideoEnlongated = (props) => {
                   {localData?.actors?.map((item, index) => (
                     <Text
                       style={{
-                        marginHorizontal: 10,
+                        marginHorizontal: 2,
                         color: lightModeEnabled ? colors.black : colors.white,
                       }}
                       key={index}
                     >
-                      {item.name}
+                      {item.name},
                     </Text>
                   ))}
                   <Text
@@ -320,7 +330,13 @@ const VideoEnlongated = (props) => {
                 }}
               >
                 <TouchableOpacity
-                  onPress={() => dispatch(setVideoList(localData))}
+                  onPress={() => {
+                    dispatch(setVideoList(localData));
+                    ToastAndroid.show(
+                      "Video has been added to List!",
+                      ToastAndroid.SHORT
+                    );
+                  }}
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
                   <Image
@@ -338,7 +354,13 @@ const VideoEnlongated = (props) => {
                     My List
                   </Text>
                 </TouchableOpacity>
-                <View
+                <TouchableOpacity
+                  onPress={() => {
+                    ToastAndroid.show(
+                      "This feature is under development",
+                      ToastAndroid.SHORT
+                    );
+                  }}
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
                   <Image
@@ -355,8 +377,9 @@ const VideoEnlongated = (props) => {
                   >
                     Rate
                   </Text>
-                </View>
-                <View
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => onShare()}
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
                   <Image
@@ -373,7 +396,7 @@ const VideoEnlongated = (props) => {
                   >
                     Share
                   </Text>
-                </View>
+                </TouchableOpacity>
               </View>
             </View>
           </View>

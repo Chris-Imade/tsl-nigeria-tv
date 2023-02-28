@@ -11,7 +11,6 @@ import {
 import { useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { colors, ScreenWidth } from "../components/shared";
-import movies from "../firebase/Raw/vid_data.json";
 
 const Notification = () => {
   const [searchQuery, setSearchQuery] = useState("");

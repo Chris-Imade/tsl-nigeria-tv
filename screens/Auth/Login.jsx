@@ -402,7 +402,7 @@ const Login = () => {
           </TouchableOpacity>
         </View>
 
-        <View
+        {/* <View
           style={{
             marginTop: 40,
             flexDirection: "row",
@@ -448,7 +448,7 @@ const Login = () => {
               </Text>
             </View>
           </TouchableHighlight>
-        </View>
+        </View> */}
 
         <View style={[{ width: "100%", marginTop: 40 }, styles.bottomActions]}>
           <TouchableOpacity
@@ -568,7 +568,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     fontSize: 15,
     outlineWidth: 0,
-    color: "#545558",
+    color: "#ffffff",
     fontFamily: "Stem-Medium",
   },
   signInTxt: {

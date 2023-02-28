@@ -30,12 +30,17 @@ const CategoryDetails = () => {
 
   const [showDetailedMenu, setShowDetailedMenu] = useState(false);
 
-  const lightModeEnabled = useSelector(
-    (state) => state?.data?.lightModeEnabled
-  );
+  const lightModeEnabled = useSelector((state) => state?.data?.lightModeEnabled);
   const categories = useSelector((state) => state?.data?.cateogries);
+
+  const profilePhoto = useSelector((state) => state?.data?.profilePhoto);
+
   const videoId = useSelector((state) => state?.data?.videoId);
+  // console.log("videoId", videoId);
   const accessToken = useSelector((state) => state.data.accessToken);
+
+  const categoryDetailsPage = useSelector((state) => state.data.categoryDetailsPage);
+  // console.log("categoryDetailsPage", categoryDetailsPage)
 
   const animateValue = useRef(new Animated.Value(0)).current;
 
@@ -58,46 +63,6 @@ const CategoryDetails = () => {
     outputRange: ["#00000041", "#000000b6"],
     extrapolate: "clamp",
   });
-
-  useEffect(() => {
-    const getData = async (url = "") => {
-      // Default options are marked with *
-      const response = await fetch(url, {
-        method: "GET", // *GET, POST, PUT, DELETE, etc.
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Token ${accessToken}`,
-        }, // body data type must match "Content-Type" header
-      });
-
-      return response.json(); // parses JSON response into native JavaScript objects
-
-      // console.log("Happy Coding --->!");
-    };
-
-    getData(
-      `https://web-production-de75.up.railway.app/api/categories/${videoId}`
-    )
-      .then((data) => {
-        // console.log(data);
-        dispatch(setCategoryDetailsPage(data));
-
-        if (data) {
-          setIsLoading(false);
-          // console.log("<------------ Data is returned ----------------->");
-        } else {
-          // console.log("What could go wrong?")
-        }
-
-        // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
-      })
-      .catch((error) => {
-        setIsLoading("false");
-        setErrorResponseData(error.message);
-      });
-  }, [videoId]);
 
   return (
     <View
@@ -145,7 +110,7 @@ const CategoryDetails = () => {
           >
             {/* Logo */}
             <Image
-              source={images.TSLFullLogo}
+              source={images.TvLogo}
               style={{
                 width: 114,
                 height: 38,
@@ -170,11 +135,19 @@ const CategoryDetails = () => {
               <TouchableWithoutFeedback
                 onPress={() => navigation.navigate("profile-screen")}
               >
-                <Image
-                  source={images.MaleProfile}
-                  resizeMode="contain"
-                  className="w-[28px] h-[28px] mr-[26px]"
-                />
+                {profilePhoto ? (
+                   <Image
+                    source={{ uri: profilePhoto }}
+                    resizeMode="contain"
+                    className="w-[28px] h-[28px] mr-[26px]"
+                  />
+                ) : (
+                  <Image
+                    source={images.MaleProfile}
+                    resizeMode="contain"
+                    className="w-[28px] h-[28px] mr-[26px]"
+                  />
+                )}
               </TouchableWithoutFeedback>
             </View>
           </View>

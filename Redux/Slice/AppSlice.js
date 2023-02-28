@@ -17,7 +17,8 @@ const initialState = {
     categoryDetailsPage: {},
     videoList: [],
     profilePhoto: "",
-    googleAuth: null
+    googleAuth: null,
+    comingSoon: []
 }
 
 // export const getMovies = createAsyncThunk('data/getMovies', () => {
@@ -76,6 +77,9 @@ export const appSlice = createSlice({
     },
     setGoogleAuth: (state, action) => {
       state.googleAuth = action.payload;
+    },
+    setComingSoon: (state, action) => {
+      state.comingSoon = action.payload;
     }
     // extraReducers: (builder) => {
     //   // Add reducers for additional action types here, and handle loading state as needed
@@ -103,7 +107,8 @@ export const {
     setCategoryDetailsPage,
     setVideoList,
     setProfilePhoto,
-    setGoogleAuth
+    setGoogleAuth,
+    setComingSoon
  } = appSlice.actions
 
 export default appSlice.reducer;

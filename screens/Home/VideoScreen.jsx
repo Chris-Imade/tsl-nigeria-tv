@@ -8,7 +8,6 @@ import {
   Dimensions,
 } from "react-native";
 import { colors, ScreenHeight, ScreenWidth } from "../../components/shared";
-import movies from "../../firebase/Raw/vid_data.json";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { WebView } from "react-native-webview";
 import { useDispatch } from "react-redux";
