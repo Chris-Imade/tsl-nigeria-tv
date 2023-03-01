@@ -1,4 +1,4 @@
-package com.tslnigeria.tslstream.newarchitecture;
+package com.tslnigeria.tslnigeriatv.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -20,9 +20,9 @@ import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.tslnigeria.tslstream.BuildConfig;
-import com.tslnigeria.tslstream.newarchitecture.components.MainComponentsRegistry;
-import com.tslnigeria.tslstream.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.tslnigeria.tslnigeriatv.BuildConfig;
+import com.tslnigeria.tslnigeriatv.newarchitecture.components.MainComponentsRegistry;
+import com.tslnigeria.tslnigeriatv.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

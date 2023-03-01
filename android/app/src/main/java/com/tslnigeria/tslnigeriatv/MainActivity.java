@@ -1,4 +1,4 @@
-package com.tslnigeria.tslstream;
+package com.tslnigeria.tslnigeriatv;
 
 import android.os.Build;
 import android.os.Bundle;

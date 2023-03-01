@@ -1,4 +1,4 @@
-package com.tslnigeria.tslstream.newarchitecture.modules;
+package com.tslnigeria.tslnigeriatv.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;
