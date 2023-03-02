@@ -1,3 +1,7 @@
+```
+  |This screen is simply the screen where all information about a particular video is displayed in a more elaborate manner
+
+```
 import { useNavigation } from "@react-navigation/native";
 import { Skeleton } from "native-base";
 import React, { useEffect, useState } from "react";
@@ -15,7 +19,7 @@ import {
 import WebView from "react-native-webview";
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
-import { colors, ScreenHeight, ScreenWidth } from "../components/shared";
+import { baseUrl, colors, onShare, ScreenHeight, ScreenWidth } from "../components/shared";
 import { setVideoList } from "../Redux/Slice/AppSlice";
 import * as Clipboard from 'expo-clipboard';
 import { StatusBar } from "react-native";
@@ -67,7 +71,7 @@ const VideoEnlongated = (props) => {
   };
   
   useEffect(() => {
-    getData(`https://web-production-de75.up.railway.app/api/videos/${id}`)
+    getData(`${baseUrl}api/videos/${id}`)
     .then((data) => {
       // console.log(data);
       if(!data.error) {
@@ -95,26 +99,6 @@ const VideoEnlongated = (props) => {
       setShowVideo(true);
     }
   }, 5000)
-  
-  const baseUrl = "https://www.youtube.com/watch?v="
-  const onShare = async () => {
-    try {
-      const result = await Share.share({
-        message: baseUrl+localData?.video_link
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
 
 // console.log(localData.video_link);

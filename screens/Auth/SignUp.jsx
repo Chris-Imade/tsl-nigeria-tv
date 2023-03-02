@@ -104,7 +104,7 @@ const SignUp = () => {
                 return response.json(); // parses JSON response into native JavaScript objects
               }
               
-            postData(`https://web-production-de75.up.railway.app/api/user/`, userCredentials)
+            postData(`${baseUrl}api/user/`, userCredentials)
             .then((data) => {
                 if(!data.error) {
                     setResponseData(data);

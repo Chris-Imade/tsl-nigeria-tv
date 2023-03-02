@@ -18,7 +18,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
-import { ScreenHeight, colors } from "../components/shared";
+import { ScreenHeight, colors, baseUrl } from "../components/shared";
 import { updateSearchQuery } from "../Redux/Slice/AppSlice";
 
 const truncTxt = (txt) => {
@@ -70,7 +70,7 @@ const Search = () => {
       // console.log("Happy Coding --->!");
     };
 
-    getData(`https://web-production-de75.up.railway.app/api/videos`)
+    getData(`${baseUrl}api/videos`)
       .then((data) => {
         // console.log(data);
         setVideoList(data);

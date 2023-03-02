@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { useSelector } from "react-redux";
 import { images } from "../assets/images";
-import { colors, ScreenWidth } from "../components/shared";
+import { colors, onShare, ScreenWidth } from "../components/shared";
 import * as Clipboard from 'expo-clipboard';
 import { StatusBar } from "react-native";
 
@@ -36,27 +36,6 @@ const Lists = () => {
     await Clipboard.setStringAsync(link);
   };
 
-
-  const baseUrl = "https://www.youtube.com/watch?v="
-
-  const onShare = async () => {
-    try {
-      const result = await Share.share({
-        message: baseUrl+info?.video_link
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
 
   const truncTxt = (txt) => {

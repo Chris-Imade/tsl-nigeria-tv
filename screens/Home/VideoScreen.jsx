@@ -1,14 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import {
-  SafeAreaView,
-  ScrollView,
   StyleSheet,
   View,
-  BackHandler,
   Dimensions,
 } from "react-native";
-import { colors, ScreenHeight, ScreenWidth } from "../../components/shared";
-import * as ScreenOrientation from "expo-screen-orientation";
+import { colors } from "../../components/shared";
 import { WebView } from "react-native-webview";
 import { useDispatch } from "react-redux";
 

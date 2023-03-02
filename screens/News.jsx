@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
-import { colors, ScreenWidth } from "../components/shared";
+import { baseUrl, colors, ScreenWidth } from "../components/shared";
 import { setComingSoon } from "../Redux/Slice/AppSlice";
 
 const News = () => {
@@ -78,7 +78,7 @@ const News = () => {
     };
 
     getData(
-      `https://web-production-de75.up.railway.app/api/categories/${currentIndx}`
+      `${baseUrl}api/categories/${currentIndx}`
     )
       .then((data) => {
         // console.log(data);

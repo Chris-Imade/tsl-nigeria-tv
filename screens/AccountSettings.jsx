@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
-import { colors } from "../components/shared";
+import { baseUrl, colors } from "../components/shared";
 import { setAccessToken, setUser } from "../Redux/Slice/AppSlice";
 import { StatusBar } from "react-native";
 
@@ -97,7 +97,7 @@ const AccountSettings = () => {
     // };
 
     // updateUsername(
-    //   `https://web-production-de75.up.railway.app/auth/token/login/`,
+    // `${baseUrl}auth/token/login/`,
     //   userCredentials
     // )
     //   .then((data) => {

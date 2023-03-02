@@ -20,8 +20,6 @@ import { images } from "../../assets/images";
 import {
   baseUrl,
   colors,
-  ScreenHeight,
-  ScreenWidth,
 } from "../../components/shared";
 import {
   setAccessToken,
@@ -106,7 +104,7 @@ const Login = () => {
     };
 
     postData(
-      `https://web-production-de75.up.railway.app/auth/token/login/`,
+      `${baseUrl}auth/token/login/`,
       userCredentials
     )
       .then((data) => {

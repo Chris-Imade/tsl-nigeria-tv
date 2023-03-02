@@ -7,7 +7,7 @@ import { StatusBar, TouchableWithoutFeedback } from "react-native";
 import { View, Text, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
-import { colors } from "../components/shared";
+import { baseUrl, colors, onShare } from "../components/shared";
 import { setCategoryDetailsPage, setVideoList } from "../Redux/Slice/AppSlice";
 
 const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
@@ -52,7 +52,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
       // console.log("Happy Coding --->!");
     };
 
-    getData(`https://web-production-de75.up.railway.app/api/categories/${videoId}/`)
+    getData(`${baseUrl}api/categories/${videoId}/`)
       .then((data) => {
         // console.log(data);
         if(!data.error) {
@@ -76,26 +76,6 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
       });
   }, [videoId]);
 
-  const baseUrl = "https://www.youtube.com/watch?v="
-  
-  const onShare = async () => {
-    try {
-      const result = await Share.share({
-        message: baseUrl+info?.video_link
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
 
   return (

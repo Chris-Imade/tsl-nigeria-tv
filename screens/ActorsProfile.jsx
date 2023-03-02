@@ -8,7 +8,7 @@ import { ScrollView } from "react-native";
 import { View, Text } from "react-native";
 import { useSelector } from "react-redux";
 import { images } from "../assets/images";
-import { colors, ScreenWidth } from "../components/shared";
+import { baseUrl, colors, onShare, ScreenWidth } from "../components/shared";
 
 const ActorsProfile = (props) => {
   const { data } = props?.route?.params;
@@ -42,7 +42,7 @@ const ActorsProfile = (props) => {
   };
 
   useEffect(() => {
-    getData(`https://web-production-de75.up.railway.app/api/actors/${data}`)
+    getData(`${baseUrl}api/actors/${data}`)
       .then((data) => {
         // console.log(data);
         setActorsProfile(data);

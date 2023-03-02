@@ -12,7 +12,7 @@ import {
   ToastAndroid,
   ActivityIndicator,
 } from "react-native";
-import { colors } from "../components/shared";
+import { baseUrl, colors } from "../components/shared";
 import { images } from "../assets/images";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
@@ -82,7 +82,7 @@ const Profile = () => {
   //     body: formData
   //   };
   //   if(userId !== 0) {
-  //     fetch(`https://web-production-de75.up.railway.app/api/profiles/${userId}/`, options)
+      // fetch(`${baseUrl}api/profiles/${userId}/`, options)
   //     .then(response => response.json())
   //     .then(response => {
   //       // console.log(response);

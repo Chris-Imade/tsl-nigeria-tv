@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { KeyboardAvoidingView, Text, View } from "react-native";
 import { useSelector } from "react-redux";
-import { colors } from "../components/shared";
+import { baseUrl, colors } from "../components/shared";
 
 const PasswordReset = () => {
   const [firstIntBg, setFirstIntBg] = useState("");
@@ -64,7 +64,7 @@ const PasswordReset = () => {
     };
 
     getData(
-      `https://web-production-de75.up.railway.app/users/reset_password/`,
+      `${baseUrl}auth/users/reset_password/`,
       userCredentials
     )
       .then((data) => {

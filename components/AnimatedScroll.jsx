@@ -15,7 +15,7 @@ import {
 import { images } from "../assets/images";
 import { Actionsheet, Box, useDisclose, Center } from "native-base";
 import { StyleSheet } from "react-native";
-import { colors } from "./shared";
+import { colors, onShare } from "./shared";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -61,26 +61,7 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
   
 
   // console.log(categories[0].videos}[0].video_link);
-  const baseUrl = "https://www.youtube.com/watch?v="
 
-  const onShare = async () => {
-    try {
-      const result = await Share.share({
-        message: baseUrl+info?.video_link
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
   return (
     <Animated.ScrollView
