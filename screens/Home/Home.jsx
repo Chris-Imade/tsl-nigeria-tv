@@ -43,8 +43,8 @@ const Home = () => {
   const dispatch = useDispatch();
 
   // Animated Heights
-  const MIN_HEIGHT = 75;
-  const MAX_HEIGHT = 110;
+  const MIN_HEIGHT = 60;
+  const MAX_HEIGHT = 100;
   const SCROLL_VALUE = MAX_HEIGHT - MIN_HEIGHT;
 
   const animatedHeight = animateValue.interpolate({
@@ -136,7 +136,7 @@ const Home = () => {
           elevation: 1,
         }}
       >
-        <View className="flex-row justify-between items-center h-[75px]">
+        <View className="flex-row justify-between items-center h-[60px]">
           <View
             style={{
               justifyContent: "space-between",
@@ -160,7 +160,7 @@ const Home = () => {
             <View className="flex-row">
               <TouchableOpacity
                 onPress={() => navigation.navigate("search-screen")}
-                className="mr-[26px] w-[28px] h-[28px]"
+                className="mr-[26px] w-[28px] h-[28px] flex items-center justify-center"
               >
                 <Image
                   source={images.SearchSmall}
@@ -171,23 +171,24 @@ const Home = () => {
                 />
               </TouchableOpacity>
 
-              <TouchableWithoutFeedback
+              <TouchableOpacity
                 onPress={() => navigation.navigate("profile-screen")}
+                className="w-[28px] h-[28px] flex items-center justify-center mr-[26px]"
               >
-                {profilePhoto ? (
+                {profilePhoto.length !== 0 ? (
                    <Image
                     source={{ uri: profilePhoto }}
                     resizeMode="contain"
-                    className="w-[28px] h-[28px] mr-[26px]"
+                    className="w-[28px] h-[28px]"
                   />
                 ) : (
                   <Image
                     source={images.MaleProfile}
                     resizeMode="contain"
-                    className="w-[28px] h-[28px] mr-[26px]"
+                    className="w-[28px] h-[28px]"
                   />
                 )}
-              </TouchableWithoutFeedback>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -196,33 +197,29 @@ const Home = () => {
           className={`flex-row justify-around items-center shadow-md`}
           style={{}}
         >
-          <View className="flex-row justify-around w-full mb-5">
-            <TouchableWithoutFeedback onPress={() => setShowDetailedMenu(true)}>
-              <View>
-                <Text style={styles.menuTxt} className="text-white">
-                  TV Shows
-                </Text>
-              </View>
-            </TouchableWithoutFeedback>
+            <TouchableHighlight 
+            underlayColor={""}
+            onPress={() => setShowDetailedMenu(true)} style={{ paddingVertical: 10 }}>
+              <Text style={styles.menuTxt} className="text-white">
+                TV Shows
+              </Text>
+            </TouchableHighlight>
 
-            <TouchableWithoutFeedback onPress={() => setShowDetailedMenu(true)}>
-              <View>
-                <Text style={styles.menuTxt} className="text-white">
-                  Categories
-                </Text>
-              </View>
-            </TouchableWithoutFeedback>
+            <TouchableHighlight 
+            underlayColor={""}
+            onPress={() => setShowDetailedMenu(true)} style={{ paddingVertical: 10 }}>
+              <Text style={styles.menuTxt} className="text-white">
+                Categories
+              </Text>
+            </TouchableHighlight>
 
-            <TouchableWithoutFeedback
-              onPress={() => navigation.navigate("lists-screen")}
-            >
-              <View>
-                <Text style={styles.menuTxt} className="text-white">
-                  My List
-                </Text>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
+            <TouchableHighlight 
+            underlayColor={""}
+            onPress={() => navigation.navigate("lists-screen")} style={{ paddingVertical: 10 }}>
+              <Text style={styles.menuTxt} className="text-white">
+                My List
+              </Text>
+            </TouchableHighlight>
         </View>
       </Animated.View>
 
@@ -281,6 +278,7 @@ const Home = () => {
                 color: lightModeEnabled ? colors?.black : "#98999B",
                 fontFamily: "Stem-Medium",
                 fontSize: 16,
+                padding: 10
               }}
             >
               {item.name}

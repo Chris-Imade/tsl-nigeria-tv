@@ -40,11 +40,12 @@ const News = () => {
     // console.log(joinedCat);
     
     const uniqueCat = _.uniqBy(joinedCat, item => item.id);
-    
+
+
     const [currentCat, setCurrentCat] = useState(null);
-    const [currentIndx, setCurrentIndx] = useState(uniqueCat[1].id);
+    const [currentIndx, setCurrentIndx] = useState(uniqueCat[0].id);
     
-    console.log(currentIndx);
+    // console.log(currentIndx);
 
 
 
@@ -99,7 +100,11 @@ const News = () => {
         console.log('error: ', error);
       });
   }, [currentIndx]);
-  console.log(currentIndx)
+  // console.log(currentIndx);
+
+  const monthsOfTheYearAbbr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  const monthsOfTheYear = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
   return (
     <SafeAreaView className="flex-1 justify-start bg-black pt-12">
       <StatusBar backgroundColor="#000" style="dark-content" />
@@ -146,91 +151,103 @@ const News = () => {
         )}
         showsVerticalScrollIndicator={false}
         data={comingSoon}
-        renderItem={({ item }) => (
-          <View className="">
-            <View className="w-full h-[1px] bg-[#323337] my-6"></View>
-            <View className="flex-row mb-[16px]">
-              <View className="mr-[16px] items-center">
-                <Text
-                  style={{
-                    fontFamily: "Stem-Medium",
-                  }}
-                  className="text-white text-[11px]"
-                >
-                  {!item ? "Month" : new Date(item?.release_date).getMonth()}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: "Stem-Medium",
-                  }}
-                  className="text-white text-[31px]"
-                >
-                  {!item ? "Day" : new Date(item?.release_date).getDay()}
-                </Text>
-              </View>
-              <View className="mb-[25px]">
-                <Image
-                  source={{ uri: item.mobile_thumbnail }}
-                  className="h-[188px] rounded-[7px] mx-[16px] mb-[16px]"
-                  style={{
-                    width: ScreenWidth - 81,
-                  }}
-                  resizeMode={"contain"}
-                />
-                <View className="flex-row">
-                  {/* <Image
-                          source={{ uri: item.thumbnail }}
-                          className="rounded-[4px] h-[69px] w-[127px]"
-                      /> */}
-                  <View className="">{/* Icons */}</View>
-                </View>
-                <View className="my-[16px] mr-[36px] ml-4">
+        renderItem={({ item }) => !item.published
+        ? (
+            <View className="">
+              {console.log(item)}
+              <View className="w-full h-[1px] bg-[#323337] my-6"></View>
+              <View className="flex-row mb-[16px]">
+                <View className="mr-[16px] items-center">
                   <Text
                     style={{
-                      color: lightModeEnabled ? colors?.black : colors?.trueWhite,
                       fontFamily: "Stem-Medium",
-                      marginBottom: 8,
-                      fontSize: 16,
                     }}
+                    className="text-white text-[11px]"
                   >
-                    Coming Fburary 14
+                    {!item ? "Month" : monthsOfTheYearAbbr[new Date(item?.release_date).getMonth()]}
                   </Text>
                   <Text
-                    style={{ fontSize: 14, fontFamily: "Stem-Medium" }}
-                    className="text-[#76777A]"
+                    style={{
+                      fontFamily: "Stem-Medium",
+                    }}
+                    className="text-white text-[31px]"
                   >
-                    {item.title}
+                    {!item ? "Day" : new Date(item?.release_date).getDay()}
                   </Text>
-                  <View
+                </View>
+                <View className="mb-[25px]">
+                  <Image
+                    source={{ uri: item.mobile_thumbnail }}
+                    className="h-[188px] rounded-[7px] mx-[16px] mb-[16px]"
                     style={{
                       width: ScreenWidth - 81,
                     }}
-                  >
+                    resizeMode={"contain"}
+                  />
+                  <View className="flex-row">
+                    {/* <Image
+                            source={{ uri: item.thumbnail }}
+                            className="rounded-[4px] h-[69px] w-[127px]"
+                        /> */}
+                    <View className="">{/* Icons */}</View>
+                  </View>
+                  <View className="my-[16px] mr-[36px] ml-4">
+                    <Text
+                      style={{
+                        color: lightModeEnabled ? colors?.black : colors?.trueWhite,
+                        fontFamily: "Stem-Medium",
+                        marginBottom: 8,
+                        fontSize: 16,
+                      }}
+                    >
+                      Coming {!item ? "Day" : new Date(item?.release_date).getDay()}th {monthsOfTheYear[new Date(item?.release_date).getMonth()]}
+                    </Text>
                     <Text
                       style={{ fontSize: 14, fontFamily: "Stem-Medium" }}
                       className="text-[#76777A]"
                     >
-                      {item.description}
+                      {item.title}
                     </Text>
-                  </View>
-                  <View
-                    style={{ width: ScreenWidth - 81 }}
-                    className="mt-[16px] items-center flex-row justify-between space-x-1"
-                  >
-                    <Text className="text-[11px] text-white">Suspenseful</Text>
-                    <Text className="w-1 h-1 rounded-full bg-white text-[11px]"></Text>
-                    <Text className="text-[11px] text-white">Thriller</Text>
-                    <Text className="w-1 h-1 rounded-full bg-white text-[11px]"></Text>
-                    <Text className="text-[11px] text-white">1970s</Text>
-                    <Text className="text-[11px] text-white">
-                      {" "}
-                      Golden Globe Nominee{" "}
-                    </Text>
+                    <View
+                      style={{
+                        width: ScreenWidth - 81,
+                      }}
+                    >
+                      <Text
+                        style={{ fontSize: 14, fontFamily: "Stem-Medium" }}
+                        className="text-[#76777A]"
+                      >
+                        {item.description}
+                      </Text>
+                    </View>
+                    <View
+                      style={{ width: ScreenWidth - 81 }}
+                      className="mt-[16px] items-center flex-row justify-between space-x-1"
+                    >
+                      {/* {console.log(item)} */}
+                      {item.mood.map((item) => (
+                        <>
+                          <Text className="text-[11px] text-white">{item}</Text>
+                          <Text className="w-1 h-1 rounded-full bg-white text-[11px]"></Text>
+                        </>
+                      ))}
+                      {item.genres.map((item, index) => (
+                        <>
+                          <Text className="text-[11px] text-white">{item}</Text>
+                          {index > 0 ? <Text className="w-1 h-1 rounded-full bg-white text-[11px]"></Text> : null}
+                        </>
+                      ))}
+                    </View>
                   </View>
                 </View>
-              </View>
-              <View className="my-[12px] bg-[#191A1C] w-full h-[2px]"></View>
-            </View> 
+                <View className="my-[12px] bg-[#191A1C] w-full h-[2px]"></View>
+              </View> 
+            </View>
+        ) : (
+          <View className="flex-1">
+            <View className="border-dashed p-5 w-[80%] border-white border-[2px]">
+              <Text className="text-white">We'll let you know when we got something for you</Text>
+            </View>
           </View>
         )}
       />
