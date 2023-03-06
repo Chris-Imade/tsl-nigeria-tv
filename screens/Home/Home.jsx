@@ -44,7 +44,7 @@ const Home = () => {
 
   // Animated Heights
   const MIN_HEIGHT = 75;
-  const MAX_HEIGHT = 130;
+  const MAX_HEIGHT = 110;
   const SCROLL_VALUE = MAX_HEIGHT - MIN_HEIGHT;
 
   const animatedHeight = animateValue.interpolate({
@@ -198,23 +198,29 @@ const Home = () => {
         >
           <View className="flex-row justify-around w-full mb-5">
             <TouchableWithoutFeedback onPress={() => setShowDetailedMenu(true)}>
-              <Text style={styles.menuTxt} className="text-white">
-                TV Shows
-              </Text>
+              <View>
+                <Text style={styles.menuTxt} className="text-white">
+                  TV Shows
+                </Text>
+              </View>
             </TouchableWithoutFeedback>
 
             <TouchableWithoutFeedback onPress={() => setShowDetailedMenu(true)}>
-              <Text style={styles.menuTxt} className="text-white">
-                Categories
-              </Text>
+              <View>
+                <Text style={styles.menuTxt} className="text-white">
+                  Categories
+                </Text>
+              </View>
             </TouchableWithoutFeedback>
 
             <TouchableWithoutFeedback
               onPress={() => navigation.navigate("lists-screen")}
             >
-              <Text style={styles.menuTxt} className="text-white">
-                My List
-              </Text>
+              <View>
+                <Text style={styles.menuTxt} className="text-white">
+                  My List
+                </Text>
+              </View>
             </TouchableWithoutFeedback>
           </View>
         </View>

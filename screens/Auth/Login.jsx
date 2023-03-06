@@ -114,7 +114,18 @@ const Login = () => {
 
         dispatch(setAccessToken(data.auth_token));
         if (!data.error) {
-          console.log("Hey! there's no error", data);
+            console.log("Hey! there's no error", data);
+            if(data.status_code === 201) {
+              setResponseData(data.detail);
+              setIsLoading(false);
+            }
+        }
+        if (data.error) {
+            console.log("OOPS! I see some errors", data.error);
+            if(data.status_code !== 201) {
+              setResponseData(data.detail);
+              setIsLoading(false);
+            }
         }
 
         console.log("Am getting something!");

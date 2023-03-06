@@ -24,7 +24,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
 
   const videoId = useSelector((state) => state.data.videoId);
 
-  const categoryDetailsPage = useSelector((state) => state.data.categoryDetailsPage);
+  const categoryDetailsPage = useSelector((state) => state?.data?.categoryDetailsPage);
   // console.log(categoryDetailsPage);  
 
   const dispatch = useDispatch();
@@ -97,6 +97,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
     }
   };
 
+  // console.log("categoryDetailsPage: ", categoryDetailsPage);
 
   return (
     <Animated.ScrollView
@@ -108,7 +109,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
       )}
     >
       <StatusBar backgroundColor={"#000000"} />
-      {categoryDetailsPage?.videos?.length !== 0 ? (
+      {Object.keys(categoryDetailsPage).length !== 0 ? (
         <>
           <View style={{ flex: 1 }}>
             {/* <MobileNav /> */}
@@ -240,7 +241,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
             </View>
           </View>
         </>
-      ) : categoryDetailsPage?.videos?.length === 0 ? (
+      ) : Object.keys(categoryDetailsPage).length === 0 ? (
         <View className="animate-pulse w-full justify-center items-center mt-14" style={{ marginTop: 200}}>
             <View className="rounded-md bg-slate-900/60 h-[100px] w-[200px]"></View>
             <View className="w-[300px] h-6 rounded-md bg-slate-900/60 my-4"></View>
@@ -249,8 +250,8 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
 
       ) : null}
 
-      {categoryDetailsPage?.videos?.length !== 0 ? (
-        categoryDetailsPage && categoryDetailsPage?.videos?.map((item, index) => (
+      {Object.keys(categoryDetailsPage).length !== 0 ? (
+        categoryDetailsPage?.videos?.map((item, index) => (
           <View className="" key={index}>
             <View className="my-[8px] ml-2">
               <Text

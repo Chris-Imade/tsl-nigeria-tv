@@ -95,7 +95,6 @@ const SignUp = () => {
                     mode: 'no-cors',
                     headers: {
                       'Content-Type': 'application/json',
-                      'Accept': 'application/json'
                     },
                     body: JSON.stringify(data) // body data type must match "Content-Type" header
                   });
@@ -106,10 +105,22 @@ const SignUp = () => {
               
             postData(`https://web-production-de75.up.railway.app/api/user/`, userCredentials)
             .then((data) => {
+                console.log(data);
                 if(!data.error) {
-                    setResponseData(data);
+                    if(data.status_code === 201) {
+                        setResponseData(data.detail);
+                        setIsLoading(false);
+                    }
+
                     navigation.navigate("Login");
                     console.log(data);
+                }
+                if (data.error) {
+                    console.log("OOPS! I see some errors", data.error);
+                    if(data.status_code !== 201) {
+                      setResponseData(data.detail);
+                      setIsLoading(false);
+                    }
                 }
                     console.log(data);
                     
@@ -425,7 +436,7 @@ const SignUp = () => {
                                 textAlign: "center",
                                 fontFamily: "Stem-Regular"
                             }}>
-                                Kindly check your mail to activate your account😊
+                                {responseData}
                             </Text>
                         </View>
                     )}

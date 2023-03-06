@@ -417,6 +417,7 @@ const HomeStack = () => {
 const StackProfile = createNativeStackNavigator();
 
 const ProfileStack = () => {
+  const navigation = useNavigation();
   
   const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
 

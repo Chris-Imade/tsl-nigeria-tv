@@ -157,7 +157,7 @@ const News = () => {
                   }}
                   className="text-white text-[11px]"
                 >
-                  FEB
+                  {!item ? "Month" : new Date(item?.release_date).getMonth()}
                 </Text>
                 <Text
                   style={{
@@ -165,7 +165,7 @@ const News = () => {
                   }}
                   className="text-white text-[31px]"
                 >
-                  14
+                  {!item ? "Day" : new Date(item?.release_date).getDay()}
                 </Text>
               </View>
               <View className="mb-[25px]">

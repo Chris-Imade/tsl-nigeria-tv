@@ -40,7 +40,7 @@ const CategoryDetails = () => {
   const accessToken = useSelector((state) => state.data.accessToken);
 
   const categoryDetailsPage = useSelector((state) => state.data.categoryDetailsPage);
-  // console.log("categoryDetailsPage", categoryDetailsPage)
+  console.log("categoryDetails main page", categoryDetailsPage)
 
   const animateValue = useRef(new Animated.Value(0)).current;
 
