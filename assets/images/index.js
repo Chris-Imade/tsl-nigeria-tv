@@ -65,6 +65,9 @@ import DeleteForever from "./delete_forever.png";
 import AccountCirle from "./account_circle.png";
 import AccountFilled from "./account_filled.png";
 
+import Check from "./check.png";
+import CheckDark from "./check-dark.png";
+
 
 export const images = {
     Banner,
@@ -129,5 +132,7 @@ export const images = {
     FileCopy,
     DeleteForever,
     AccountCirle,
-    AccountFilled
+    AccountFilled,
+    Check,
+    CheckDark
 }

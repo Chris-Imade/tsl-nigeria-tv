@@ -35,6 +35,8 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
 
   const [indexId, setIndexId] = useState(categories[0]?.videos[0]?.id);
 
+  const [addedToList, setAddedToList] = useState(false);
+
   // console.log(categories[0]?.videos[0]);
 
   const { isOpen, onOpen, onClose } = useDisclose();
@@ -161,20 +163,31 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
             <View className="flex-row justify-around mb-[47px] mt-[24px] w-[79%]">
               <TouchableOpacity
                 onPress={() => {
-                  dispatch(setVideoList(categories[0]?.videos[0]));
-                  ToastAndroid.show(
-                    "Video has been added to List!",
-                    ToastAndroid.SHORT
-                  );
+                  if(addedToList === false) {
+                    dispatch(setVideoList(categories[0]?.videos[0]));
+                    ToastAndroid.show(
+                      "Video has been added to List!",
+                      ToastAndroid.SHORT
+                    );
+                  }
+                  setAddedToList(!addedToList);
                 }}
                 className="items-center"
               >
                 {/* My List icon */}
-                <Image
-                  source={images.AddRound}
-                  className="w-[24px] h-[24px]"
-                  resizeMode="contain"
-                />
+                {addedToList === true ? (
+                  <Image
+                    source={images.Check}
+                    className="w-[24px] h-[24px]"
+                    resizeMode="contain"
+                  />
+                ) : (
+                  <Image
+                    source={images.AddRound}
+                    className="w-[24px] h-[24px]"
+                    resizeMode="contain"
+                  />
+                )}
                 <Text
                   style={styles.menuTxt}
                   className="text-white text-[12px] pt-[8px]"

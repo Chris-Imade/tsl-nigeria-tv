@@ -32,6 +32,7 @@ const VideoEnlongated = (props) => {
   const [id, setId] = useState(data);
   const [copiedText, setCopiedText] = React.useState('');
   const [showVideo, setShowVideo] = useState(false);
+  const [addedToList, setAddedToList] = useState(false);
   // console.log(localData);
 
   
@@ -343,19 +344,30 @@ const VideoEnlongated = (props) => {
               >
                 <TouchableOpacity
                   onPress={() => {
-                    dispatch(setVideoList(localData));
-                    ToastAndroid.show(
-                      "Video has been added to List!",
-                      ToastAndroid.SHORT
-                    );
+                    if(addedToList === false) {
+                      dispatch(setVideoList(localData));
+                      ToastAndroid.show(
+                        "Video has been added to List!",
+                        ToastAndroid.SHORT
+                      );
+                    }
+                    setAddedToList(!addedToList);
                   }}
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
-                  <Image
-                    source={images.AddToList}
-                    style={{ width: 24, height: 24 }}
-                    resizeMode={"contain"}
-                  />
+                  {addedToList === true ? (
+                    <Image
+                      source={images.Check}
+                      style={{ width: 24, height: 24 }}
+                      resizeMode={"contain"}
+                    />
+                    ) : (
+                      <Image
+                        source={images.AddToList}
+                        style={{ width: 24, height: 24 }}
+                        resizeMode={"contain"}
+                      />
+                  )}
                   <Text
                     style={{
                       fontSize: 9,
