@@ -20,6 +20,7 @@ import { images } from "../../assets/images";
 import {
   baseUrl,
   colors,
+  PRODUCTION_URL,
   ScreenHeight,
   ScreenWidth,
 } from "../../components/shared";
@@ -50,15 +51,13 @@ const Login = () => {
 
   const [hideTxt, setHideTxt] = useState(true);
 
-  const [responseData, setResponseData] = useState("");
-
   const [isLoading, setIsLoading] = useState(false);
 
-  const [passwordError, setPasswordError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-  const [emailError, setEmailError] = useState("");
+  const [error, setError] = useState("");
 
-  const [overawErr, setOverawErr] = useState("Unable to login with credentials provided");
+  const [generalError, setGeneralError] = useState("");
 
   const dispatch = useDispatch();
 
@@ -106,26 +105,32 @@ const Login = () => {
     };
 
     postData(
-      `https://web-production-de75.up.railway.app/auth/token/login/`,
+      `${PRODUCTION_URL}auth/token/login/`,
       userCredentials
     )
       .then((data) => {
         console.log(data);
 
         dispatch(setAccessToken(data.auth_token));
+
         if (!data.error) {
             console.log("Hey! there's no error", data);
             if(data.status_code === 201) {
-              setResponseData(data.detail);
+              setSuccessMessage(data.detail);
               setIsLoading(false);
             }
         }
         if (data.error) {
             console.log("OOPS! I see some errors", data.error);
+            // setError(data.error.details.email[0]);
             if(data.status_code !== 201) {
-              setResponseData(data.detail);
+              setSuccessMessage(data.detail);
               setIsLoading(false);
             }
+        }
+
+        if(data.error.status_code === 400) {
+          setError(data.error.details.non_field_errors[0]);
         }
 
         console.log("Am getting something!");
@@ -202,7 +207,7 @@ const Login = () => {
               styles.txtInput,
               {
                 backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a",
-                marginBottom: !emailValid || emailError || overawErr ? 10 : 16,
+                marginBottom: !emailValid ? 10 : 16,
                 borderWidth: 0.5,
                 borderStyle: "solid",
                 borderColor: !emailValid
@@ -226,61 +231,6 @@ const Login = () => {
               keyboardType={"email-address"}
               selectionColor={"white"}
           />
-          {/* Error Toast */}
-          {!emailValid && (
-            <View
-              style={{
-                width: "100%",
-                paddingVertical: 1,
-                marginBottom: !emailValid ? 5 : 0,
-              }}
-            >
-              <Text
-                className="text-red-600 opacity-30"
-                style={{
-                  fontFamily: "Stem-Regular",
-                }}
-              >
-                Please enter a valid email
-              </Text>
-            </View>
-          )}
-          
-          {/* Error Toast */}
-          {!overawErr && (
-            <View
-              style={{
-                width: "100%",
-                paddingVertical: 1,
-                marginBottom: !overawErr ? 5 : 0,
-              }}
-            >
-              <Text
-                className="text-red-600 opacity-30"
-                style={{
-                  fontFamily: "Stem-Regular",
-                }}
-              >
-                {overawErr}
-              </Text>
-            </View>
-          )}
-
-            {emailError && (
-                <View style={{
-                    width: "100%",
-                    bottom: 15,
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                }}>
-                    <Text className="opacity-30" style={{
-                        color: "red",
-                        fontFamily: "Stem-Regular"
-                    }}>
-                        {emailError}
-                    </Text>
-                </View>
-            )}
 
           <View style={{ width: "100%", position: "relative", justifyContent: "center" }}>
             <TextInput
@@ -288,7 +238,7 @@ const Login = () => {
                 styles.txtInput,
                 {
                   backgroundColor: secondIntBg ? secondIntBg : "#1a1a1a",
-                  marginBottom: !passwordError || !passValid ? 5 : 20,
+                  marginBottom: !passValid ? 5 : 20,
                   borderWidth: 0.5,
                   borderStyle: "solid",
                   borderColor: !passValid
@@ -359,20 +309,19 @@ const Login = () => {
               </Text>
             </View>
           )}
-          {/* Password network errors */}
-          {passwordError && (
-              <View style={{
-                  width: "100%",
-                  bottom: 15,
-                  justifyContent: "flex-start",
-                  alignItems: "flex-start",
-              }}>
-                  <Text className="text-red-600 opacity-30" style={{
-                      fontFamily: "Stem-Regular"
-                  }}>
-                      {passwordError}
-                  </Text>
-              </View>
+          {error && (
+                <View style={{
+                    width: "100%",
+                    bottom: 15,
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
+                }}>
+                    <Text className="opacity-30 text-red-600" style={{
+                        fontFamily: "Stem-Regular"
+                    }}>
+                        {error}
+                    </Text>
+                </View>
           )}
         </KeyboardAvoidingView>
 
