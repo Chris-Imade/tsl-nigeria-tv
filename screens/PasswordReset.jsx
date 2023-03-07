@@ -19,7 +19,7 @@ const PasswordReset = () => {
   const [emailFocus, setEmailFocus] = useState("no");
   const [errorResponseData, setErrorResponseData] = useState("");
   const [responseData, setResponseData] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const accessToken = useSelector((state) => state.data.accessToken);
 
   const lightModeEnabled = useSelector(
@@ -34,61 +34,25 @@ const PasswordReset = () => {
     // console.log(validMail);
     validMail ? setEmailValid(true) : setEmailValid(false);
     const userCredentials = {
-      email,
+      email
     };
 
-    setIsLoading("true");
+    fetch("https://web-production-de75.up.railway.app/auth/users/reset_password/", {
+      method: "POST",
+      mode: 'no-cors',
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Token ${accessToken}`,
+      }
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+    });
 
-    Alert.alert("Check your mail for password reset link");
-    setTimeout(() => {
-      navigation.navigate("Login");
-    }, 5000);
-
-    setIsLoading(true);
-    const getData = async (url = "", data) => {
-      // Default options are marked with *
-      const response = await fetch(url, {
-        method: "POST", // *GET, POST, PUT, DELETE, etc.
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Token ${accessToken}`,
-        }, // body data type must match "Content-Type" header
-        body: JSON.parse(data),
-      });
-
-      return response.json(); // parses JSON response into native JavaScript objects
-
-      // console.log("Happy Coding --->!");
-    };
-
-    getData(
-      `https://web-production-de75.up.railway.app/users/reset_password/`,
-      userCredentials
-    )
-      .then((data) => {
-        // console.log(data);
-        if (!data.error) {
-          setIsLoading(false);
-          navigation.navigate("Login");
-          ToastAndroid.show(
-            "Video has been added to List!",
-            ToastAndroid.SHORT
-          );
-          // console.log("<------------ Data is returned ----------------->");
-        } else {
-          // console.log("What could go wrong?")
-          setIsLoading(false);
-        }
-
-        // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        setErrorResponseData(error.message);
-      });
   };
+
+  console.log("Token ----->", accessToken);
 
   const isEmail = (emailAdress) => {
     // validation for mails of any kind
@@ -96,7 +60,7 @@ const PasswordReset = () => {
 
     if (emailAdress.match(regex)) return true;
     else return false;
-  };
+  }
 
   return (
     <View
@@ -203,7 +167,7 @@ const PasswordReset = () => {
             marginHorizontal: 20,
           }}
         >
-          {isLoading === "true" ? (
+          {isLoading === true ? (
             <TouchableOpacity style={styles.signInBtn}>
               <ActivityIndicator size={"small"} color="white" />
             </TouchableOpacity>
@@ -211,7 +175,7 @@ const PasswordReset = () => {
             <TouchableOpacity
               style={styles.signInBtn}
               onPress={() => onReset()}
-              disabled={!emailValid || isLoading === "true" || email === ""}
+              disabled={!emailValid || isLoading === true || email === ""}
             >
               <Text style={styles.signInTxt}>Reset</Text>
             </TouchableOpacity>
@@ -237,7 +201,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     fontSize: 15,
     outlineWidth: 0,
-    color: "#545558",
+    color: "#ffffff",
     fontFamily: "Stem-SemiLight",
   },
   signInTxt: {

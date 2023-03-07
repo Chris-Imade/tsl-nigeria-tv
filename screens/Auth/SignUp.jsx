@@ -17,7 +17,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../../assets/images";
-import { baseUrl, colors } from "../../components/shared";
+import { baseUrl, colors, PRODUCTION_URL } from "../../components/shared";
 import NetInfo from "@react-native-community/netinfo";
 import { Center, Modal, useDisclose } from "native-base";
 import * as Google from 'expo-auth-session/providers/google';
@@ -38,12 +38,7 @@ const SignUp = () => {
     const [confirmPasswordFocus, setConfirmPasswordFocus] = useState("no");
     const [emailFocus, setEmailFocus] = useState("no");
     const [hideTxt, setHideTxt] = useState(true);
-    const [responseData, setResponseData] = useState("");
-    const [errorResponseData, setErrorResponseData] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [passwordError, setPasswordError] = useState("");
-    const [emailError, setEmailError] = useState("");
-    const [usernameError, setUsernameError] = useState("");
     const [usernameBg, setUsernameBg] = useState("");
     const [usernameFocus, setUsernameFocus] = useState("no");
     const [username, setUsername] = useState("");
@@ -51,6 +46,8 @@ const SignUp = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [userCreated, setUserCreated] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [error, setError] = useState("");
 
     // Google authentication
     const [userInfo, setUserInfo] = useState();
@@ -71,93 +68,40 @@ const SignUp = () => {
     const googleAuth = useSelector((state) => state?.data?.googleAuth);
 
     const navigation = useNavigation();
+    // console.log(PRODUCTION_URL);
 
-    const onSignUp = () => {
+    const onSignUp = async (username, email, password) => {
         const validMail = isEmail(email);
         const validPass = isPassword(password);
 
         // console.log(validMail);
         validMail ? setEmailValid(true) : setEmailValid(false);
         validPass ? setPassValid(true) : setPassValid(false);
-            const userCredentials = {
-                username,
-                email,
-                password,
-                password2: confirmPassword,
-            }
 
-            setIsLoading(true);
+        const response = await fetch(`${PRODUCTION_URL}api/user/`, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username: username, email: email, password: password, password2: password })
+        })
 
-            const postData = async(url = '', data) => {
-                // Default options are marked with *
-                const response = await fetch(url, {
-                    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                    mode: 'no-cors',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data) // body data type must match "Content-Type" header
-                  });
-                  
-                
-                return response.json(); // parses JSON response into native JavaScript objects
-              }
-              
-            postData(`https://web-production-de75.up.railway.app/api/user/`, userCredentials)
-            .then((data) => {
-                console.log(data);
-                if(!data.error) {
-                    if(data.status_code === 201) {
-                        setResponseData(data.detail);
-                        setIsLoading(false);
-                    }
-
-                    navigation.navigate("Login");
-                    console.log(data);
-                }
-                if (data.error) {
-                    console.log("OOPS! I see some errors", data.error);
-                    if(data.status_code !== 201) {
-                      setResponseData(data.detail);
-                      setIsLoading(false);
-                    }
-                }
-                    console.log(data);
-                    
-                    if(data) {
-                        setIsLoading(false);
-                        console.log("<------------ Data is returned ----------------->");
-                    } else {
-                        console.log("What could go wrong?")
-                    }
-                    
-                }).catch((error) => {
-                    setIsLoading(false);
-                    setErrorResponseData(error.message);
-                });
-            }
-            console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
-            
-    responseData && navigation.navigate("Login");
+        response.json().then((data) => console.log(data));
+    }
 
 
     const isEmail = (emailAdress) => {
         // validation for mails of any kind
-        let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    
-      if (emailAdress.match(regex)) 
-        return true; 
-    
-       else 
-        return false;
+        if (emailAdress.length > 0) return true;
+        else return false;
     }
 
     const isPassword = (passValue) => {
-
+        // Validating for password
         if (passValue.length >= 4) return true;
         else return false;
     };
-
 
 
     // Everything google sign in
@@ -359,7 +303,7 @@ const SignUp = () => {
                     </Text>
 
                     <TextInput 
-                        style={[styles.txtInput, { color: "white", backgroundColor: firstIntBg ? usernameBg : "#1a1a1a", marginBottom: !emailValid || usernameError ? 10 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: usernameFocus === "yes" ? "#80D200" : null }]}
+                        style={[styles.txtInput, { color: "white", backgroundColor: firstIntBg ? usernameBg : "#1a1a1a", marginBottom: !emailValid ? 10 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: usernameFocus === "yes" ? "#80D200" : null }]}
                         placeholder="Username"
                         placeholderTextColor={"#545558"}
                         onBlur={() => {
@@ -375,7 +319,7 @@ const SignUp = () => {
                         selectionColor={"white"}
                     />                    
                     <TextInput 
-                        style={[styles.txtInput, { color: "white", backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a", marginBottom: !emailValid || emailError ? 10 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: !emailValid ? "red" : emailFocus === "yes" ? "#80D200" : null }]}
+                        style={[styles.txtInput, { color: "white", backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a", marginBottom: error ? 10 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: !emailValid ? "red" : emailFocus === "yes" ? "#80D200" : null }]}
                         placeholder="Enter your email"
                         placeholderTextColor={"#545558"}
                         onBlur={() => {
@@ -391,22 +335,8 @@ const SignUp = () => {
                         selectionColor={"white"}
                     />
                     {/* Error Toast */}
-                    {!emailValid && (
-                        <View style={{
-                            width: "100%",
-                            justifyContent: "center",
-                            marginBottom: !emailValid ? 5 : 0,
-                        }}>
-                            <Text className="text-red-600 opacity-30" style={{
-                                fontFamily: "Stem-Regular",
-                                textAlign: "center"
-                            }}>
-                                Invalid email! please enter a valid email
-                            </Text>
-                        </View>
-                    )}
                     {/* Error value */}
-                    {emailError && (
+                    {error && (
                         <View style={{
                             width: "100%",
                             bottom: 15,
@@ -414,17 +344,16 @@ const SignUp = () => {
                             alignItems: "flex-start",
                             marginTop: 10
                         }}>
-                            <Text className="opacity-30" style={{
-                                color: "red",
+                            <Text className="opacity-30 text-red-600" style={{
                                 fontFamily: "Stem-Regular"
                             }}>
-                                {emailError}
+                                {error}
                             </Text>
                         </View>
                     )}
                     
                     {/* Response value */}
-                    {responseData && (
+                    {successMessage.length > 1 && (
                         <View style={{
                             width: "100%",
                             bottom: 15,
@@ -436,7 +365,7 @@ const SignUp = () => {
                                 textAlign: "center",
                                 fontFamily: "Stem-Regular"
                             }}>
-                                {responseData}
+                                {successMessage}
                             </Text>
                         </View>
                     )}
@@ -480,7 +409,7 @@ const SignUp = () => {
                     
                     <View style={{ width: "100%", position: "relative" }}>
                         <TextInput 
-                            style={[styles.txtInput, { color: "white", backgroundColor: thirdIntBg ? thirdIntBg : "#1a1a1a", marginBottom: !passValid || passwordError ? 15 : 40, borderWidth: 0.5, borderStyle: "solid", borderColor: !passValid ? "red" : confirmPasswordFocus === "yes" ? "#80D200" : null }]}
+                            style={[styles.txtInput, { color: "white", backgroundColor: thirdIntBg ? thirdIntBg : "#1a1a1a", marginBottom: !passValid ? 15 : 40, borderWidth: 0.5, borderStyle: "solid", borderColor: !passValid ? "red" : confirmPasswordFocus === "yes" ? "#80D200" : null }]}
                             placeholder="Confirm Password"
                             placeholderTextColor={"#545558"}
                             onBlur={() => {
@@ -523,7 +452,7 @@ const SignUp = () => {
                     </View>
                     )}
                     
-                    {/* Password network errors */}
+                    {/* Password network errors
                     {passwordError && (
                         <View style={{
                             width: "100%",
@@ -537,7 +466,7 @@ const SignUp = () => {
                                 {passwordError}
                             </Text>
                         </View>
-                    )}
+                    )} */}
                 </KeyboardAvoidingView>
 
                 <View style={{ justifyContent: "center", alignItems: "center", marginTop: 40, marginHorizontal: 20 }}>
@@ -573,11 +502,11 @@ const SignUp = () => {
                             backgroundColor: confirmPassword.length > 4 ? colors.companyGreen : null
                         }}
                         onPress={() => {
-                            onSignUp();
-                            setPasswordError("");
-                            setEmailError("");
+                            setError("");
+                            setSuccessMessage("");
+                            onSignUp(email, username, password);
                         }}
-                        disabled={ password !== confirmPassword || !emailValid || !passValid || isLoading === true || email === "" || password === "" || confirmPassword === "" }
+                        disabled={ password !== confirmPassword || !passValid || isLoading === true || email === "" || password === "" || confirmPassword === "" }
                     >
                         <Text style={[styles.signInTxt, { color: confirmPassword.length > 4 ? colors.black : "#D6D6D7" }]}>Sign Up</Text>
                     </TouchableOpacity>

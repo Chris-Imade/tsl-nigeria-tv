@@ -23,7 +23,7 @@ export const sizes = {
     horizontalNavMargin: 16
 }
 
-export const baseUrl = "https://web-production-93c3.up.railway.app/";
+export const PRODUCTION_URL = "https://web-production-de75.up.railway.app/";
 
 export const ScreenHeight = Dimensions.get("screen").height;
 export const ScreenWidth = Dimensions.get("screen").width;

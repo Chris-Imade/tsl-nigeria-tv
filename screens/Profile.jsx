@@ -162,6 +162,7 @@ const Profile = () => {
         }}
       >
         <View className="w-full items-center justify-center">
+          {/* Profile Photo */}
           <View className="items-center">
             {profilePhoto ? (
               <Image
@@ -187,6 +188,7 @@ const Profile = () => {
               {user.username}
             </Text>
           </View>
+          {/* Image edit icon */}
           <TouchableOpacity onPress={() => setShowUpdatePhoto(true)} className="justify-center  m-[48px] mt-[20px] flex-row items-center">
             <Image
               source={images.Edit}
@@ -383,7 +385,7 @@ const Profile = () => {
                       <Text style={{ color: "#98999B" }}>
                         Select any image of your choice
                       </Text>
-                        {console.log(image)}
+                        {/* {console.log(image)} */}
                         {profilePhoto === null ? (
                             <TouchableHighlight 
                             onPress={() => pickImage()}
@@ -474,7 +476,6 @@ const Profile = () => {
                         </TouchableOpacity>
                       <TouchableHighlight
                         onPress={() => {
-                          // setChangePassword(false);
                           setShowUpdatePhoto(false);
                           // Submit function here
                         }}

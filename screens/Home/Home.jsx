@@ -175,7 +175,7 @@ const Home = () => {
                 onPress={() => navigation.navigate("profile-screen")}
                 className="w-[28px] h-[28px] flex items-center justify-center mr-[26px]"
               >
-                {profilePhoto.length !== 0 ? (
+                {profilePhoto ? (
                    <Image
                     source={{ uri: profilePhoto }}
                     resizeMode="contain"

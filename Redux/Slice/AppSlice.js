@@ -16,7 +16,7 @@ const initialState = {
     videoId: 1,
     categoryDetailsPage: {},
     videoList: [],
-    profilePhoto: "",
+    profilePhoto: null,
     googleAuth: null,
     comingSoon: []
 }
