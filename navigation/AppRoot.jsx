@@ -12,7 +12,6 @@ import {
   ActorsProfile,
   ChangeCredentials,
   DirectorProfile,
-  // Downloads,
   Home,
   Lists,
   Login,
@@ -22,7 +21,6 @@ import {
   Profile,
   SignUp,
   VideoEnlongated,
-  VideoScreen,
   Welcome,
 } from "../screens";
 import Search from "../screens/Search";
@@ -74,20 +72,6 @@ const HomeStack = () => {
         }}
         name="home-screen"
         component={Home}
-      />
-      <RootStack.Screen
-        options={{
-          // headerTintColor: colors.white,
-          // headerStyle: {
-          //     backgroundColor: colors.black
-          // },
-          // headerTitleStyle: {
-          //     color: "transparent"
-          // },
-          headerShown: false,
-        }}
-        name="video-screen"
-        component={VideoScreen}
       />
       <RootStack.Screen
         options={{
@@ -168,17 +152,6 @@ const HomeStack = () => {
           },
           headerTitle: "Notification",
           headerTintColor: colors.white,
-          headerRight: () => (
-            <TouchableHighlight
-              onPress={() => dispatch(setSearchNotification())}
-            >
-              <Image
-                source={images.SearchSmall}
-                className="w-[24px] h-[24px]"
-                resizeMode="contain"
-              />
-            </TouchableHighlight>
-          ),
         }}
         name="notification-screen"
         component={Notification}

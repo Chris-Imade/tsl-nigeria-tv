@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { KeyboardAvoidingView, Text, View } from "react-native";
 import { useSelector } from "react-redux";
-import { colors } from "../components/shared";
+import { colors, PRODUCTION_URL } from "../components/shared";
 
 const PasswordReset = () => {
   const [firstIntBg, setFirstIntBg] = useState("");
@@ -37,7 +37,7 @@ const PasswordReset = () => {
       email
     };
 
-    fetch("https://web-production-de75.up.railway.app/auth/users/reset_password/", {
+    fetch(`${PRODUCTION_URL}auth/users/reset_password/`, {
       method: "POST",
       mode: 'no-cors',
       headers: {

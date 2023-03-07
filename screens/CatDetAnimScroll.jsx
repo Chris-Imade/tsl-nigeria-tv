@@ -7,7 +7,7 @@ import { StatusBar, TouchableWithoutFeedback } from "react-native";
 import { View, Text, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
-import { colors } from "../components/shared";
+import { colors, PRODUCTION_URL } from "../components/shared";
 import { setCategoryDetailsPage, setVideoList } from "../Redux/Slice/AppSlice";
 
 const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
@@ -52,7 +52,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
       // console.log("Happy Coding --->!");
     };
 
-    getData(`https://web-production-de75.up.railway.app/api/categories/${videoId}/`)
+    getData(`${PRODUCTION_URL}api/categories/${videoId}/`)
       .then((data) => {
         // console.log(data);
         if(!data.error) {

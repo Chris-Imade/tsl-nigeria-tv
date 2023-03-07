@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { AnimatedScroll } from "../../components";
-import { colors, ScreenHeight, ScreenWidth } from "../../components/shared";
+import { colors, PRODUCTION_URL, ScreenHeight, ScreenWidth } from "../../components/shared";
 import { useNavigation } from "@react-navigation/native";
 import { images } from "../../assets/images";
 import { setCategories, setVideoId } from "../../Redux/Slice/AppSlice";
@@ -78,7 +78,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    getData(`https://web-production-de75.up.railway.app/api/categories`)
+    getData(`${PRODUCTION_URL}api/categories`)
       .then((data) => {
         if(!data.error) {
           dispatch(setCategories(data));

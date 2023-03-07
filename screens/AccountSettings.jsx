@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
-import { colors } from "../components/shared";
+import { colors, PRODUCTION_URL } from "../components/shared";
 import { setAccessToken, setUser } from "../Redux/Slice/AppSlice";
 import { StatusBar } from "react-native";
 
@@ -192,7 +192,7 @@ const AccountSettings = () => {
   // console.log(isLoading);
 
   useEffect(() => {
-    getUserId(`https://web-production-de75.up.railway.app/auth/users/me`)
+    getUserId(`${PRODUCTION_URL}auth/users/me`)
       .then((data) => {
         // console.log("<------------ Data is returned ----------------->");
         // console.log(data);

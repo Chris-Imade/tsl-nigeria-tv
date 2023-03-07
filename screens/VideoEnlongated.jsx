@@ -15,7 +15,7 @@ import {
 import WebView from "react-native-webview";
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
-import { colors, ScreenHeight, ScreenWidth } from "../components/shared";
+import { colors, PRODUCTION_URL, ScreenHeight, ScreenWidth } from "../components/shared";
 import { setVideoList } from "../Redux/Slice/AppSlice";
 import * as Clipboard from 'expo-clipboard';
 import { StatusBar } from "react-native";
@@ -67,7 +67,7 @@ const VideoEnlongated = (props) => {
   };
   
   useEffect(() => {
-    getData(`https://web-production-de75.up.railway.app/api/videos/${id}`)
+    getData(`${PRODUCTION_URL}api/videos/${id}`)
     .then((data) => {
       // console.log(data);
       if(!data.error) {

@@ -1,7 +1,6 @@
 export { default as Home } from "./Home/Home";
 export { default as Login } from "./Auth/Login";
 export { default as SignUp } from "./Auth/SignUp"
-export { default as VideoScreen } from "./Home/VideoScreen";
 export { default as Profile } from "./Profile";
 export { default as Lists } from "./Lists";
 export { default as Notification } from "./Notification";

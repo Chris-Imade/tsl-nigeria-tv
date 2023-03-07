@@ -12,7 +12,7 @@ import {
   ToastAndroid,
   ActivityIndicator,
 } from "react-native";
-import { colors } from "../components/shared";
+import { colors, PRODUCTION_URL } from "../components/shared";
 import { images } from "../assets/images";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
@@ -129,7 +129,7 @@ const Profile = () => {
   // console.log(isLoading);
 
   useEffect(() => {
-    getUserId(`https://web-production-de75.up.railway.app/auth/users/me`)
+    getUserId(`${PRODUCTION_URL}auth/users/me`)
       .then((data) => {
         // console.log("<------------ Data is returned ----------------->");
         // console.log(data);

@@ -42,24 +42,6 @@ const Notification = () => {
   return (
     <SafeAreaView className="flex-1 bg-black pt-5 justify-center items-center">
       <StatusBar backgroundColor="#000" style="dark-content" />
-      {searchNotification && (
-        <View className="flex-row w-full mx-[20px] items-center">
-          <Image
-            source={images.SearchSmall}
-            resizeMode="contain"
-            className="w-[24px] h-[24px] ml-3"
-          />
-          <TextInput
-            placeholder="Search from your list..."
-            placeholderTextColor={colors.white}
-            className="mx-[10px] py-3 text-white"
-            onChangeText={(text) => setSearchQuery(text)}
-            style={{
-              fontFamily: "Stem-Regular",
-            }}
-          />
-        </View>
-      )}
       {data.length !== 0 || Object.keys(pushDataObject).length !== 0 ? (
         <View style={{
           display: "flex",
@@ -100,8 +82,8 @@ const Notification = () => {
             style={{
               width: ScreenWidth - 80,
               fontFamily: "Stem-Regular",
-              fontSize: 12,
-              lineHeight: 13,
+              fontSize: 15,
+              lineHeight: 22,
             }}
             className="text-white"
           >
