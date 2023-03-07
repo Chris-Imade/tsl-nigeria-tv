@@ -48,6 +48,7 @@ const SignUp = () => {
     const [userCreated, setUserCreated] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [error, setError] = useState("");
+    const [generalError, setGeneralError] = useState("");
 
     // Google authentication
     const [userInfo, setUserInfo] = useState();
@@ -70,25 +71,66 @@ const SignUp = () => {
     const navigation = useNavigation();
     // console.log(PRODUCTION_URL);
 
-    const onSignUp = async (username, email, password) => {
+    const onSignUp = (email, username, password) => {
         const validMail = isEmail(email);
         const validPass = isPassword(password);
 
         // console.log(validMail);
         validMail ? setEmailValid(true) : setEmailValid(false);
         validPass ? setPassValid(true) : setPassValid(false);
+            const userCredentials = {
+                username,
+                email,
+                password,
+                password2: password,
+            }
 
-        const response = await fetch(`${PRODUCTION_URL}api/user/`, {
-            method: "POST",
-            mode: "no-cors",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ username: username, email: email, password: password, password2: password })
-        })
+            setIsLoading(true);
 
-        response.json().then((data) => console.log(data));
-    }
+            const postData = async(url = '', data) => {
+                // Default options are marked with *
+                const response = await fetch(url, {
+                    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                    mode: 'no-cors',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data) // body data type must match "Content-Type" header
+                  });
+                  
+                
+                return response.json(); // parses JSON response into native JavaScript objects
+              }
+              
+            postData(`${PRODUCTION_URL}api/user/`, userCredentials)
+            .then((data) => {
+                console.log(data);
+                // If there is no errors
+                if(!data.error) {
+                    setSuccessMessage(data.detail);
+                    // navigation.navigate("Login");
+                    console.log(data);
+                }
+                
+                if(data.error) {
+                    // console.log("-------------->");
+                    setError(data.error.details.email[0]);
+                    // console.log("-------------->");
+                }
+
+                if(data.status_code === 201) {
+                    setTimeout(() => {
+                        navigation.navigate("Login");
+                    }, 2000);
+                }
+                    
+                }).catch((error) => {
+                    setIsLoading(false);
+                    setGeneralError(error.message);
+                    console.log("Error should be here", error);
+                }).finally(() => setIsLoading(false));
+            }
 
 
     const isEmail = (emailAdress) => {
@@ -302,6 +344,41 @@ const SignUp = () => {
                         Sign up
                     </Text>
 
+
+                     {/* General error value */}
+                     {generalError && (
+                        <View style={{
+                            width: "100%",
+                            bottom: 15,
+                            justifyContent: "flex-start",
+                            alignItems: "flex-start",
+                            marginTop: 10
+                        }}>
+                            <Text className="opacity-30 text-red-600" style={{
+                                fontFamily: "Stem-Regular"
+                            }}>
+                                {generalError}
+                            </Text>
+                        </View>
+                    )}
+                    {/* Response value */}
+                    {successMessage.length > 1 && (
+                        <View style={{
+                            width: "100%",
+                            bottom: 15,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}>
+                            <Text style={{
+                                color: "#80D200",
+                                textAlign: "center",
+                                fontFamily: "Stem-Regular"
+                            }}>
+                                {successMessage}
+                            </Text>
+                        </View>
+                    )}
+
                     <TextInput 
                         style={[styles.txtInput, { color: "white", backgroundColor: firstIntBg ? usernameBg : "#1a1a1a", marginBottom: !emailValid ? 10 : 16, borderWidth: 0.5, borderStyle: "solid", borderColor: usernameFocus === "yes" ? "#80D200" : null }]}
                         placeholder="Username"
@@ -352,23 +429,6 @@ const SignUp = () => {
                         </View>
                     )}
                     
-                    {/* Response value */}
-                    {successMessage.length > 1 && (
-                        <View style={{
-                            width: "100%",
-                            bottom: 15,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}>
-                            <Text style={{
-                                color: "#80D200",
-                                textAlign: "center",
-                                fontFamily: "Stem-Regular"
-                            }}>
-                                {successMessage}
-                            </Text>
-                        </View>
-                    )}
                     <View style={{ width: "100%", position: "relative" }}>
                         <TextInput
                             style={[styles.txtInput, { 
