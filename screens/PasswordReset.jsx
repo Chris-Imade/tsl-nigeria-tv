@@ -20,7 +20,7 @@ const PasswordReset = () => {
   const [errorResponseData, setErrorResponseData] = useState("");
   const [responseData, setResponseData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const accessToken = useSelector((state) => state.data.accessToken);
+  const passwordResetToken = useSelector((state) => state.data.passwordResetToken);
 
   const lightModeEnabled = useSelector(
     (state) => state?.data?.lightModeEnabled
@@ -28,39 +28,43 @@ const PasswordReset = () => {
 
   const navigation = useNavigation();
 
-  const onReset = () => {
-    const validMail = isEmail(email);
+  // console.log("Access Token", passwordResetToken);
 
-    // console.log(validMail);
-    validMail ? setEmailValid(true) : setEmailValid(false);
-    const userCredentials = {
-      email
-    };
-
-    fetch(`${PRODUCTION_URL}auth/users/reset_password/`, {
-      method: "POST",
-      mode: 'no-cors',
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Token ${accessToken}`,
-      }
-    })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-    });
-
-  };
-
-  console.log("Token ----->", accessToken);
+const onReset = () => {
 
   const isEmail = (emailAdress) => {
-    // validation for mails of any kind
-    let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-    if (emailAdress.match(regex)) return true;
+    if (emailAdress.length > 0) return true;
     else return false;
   }
+
+  const validMail = isEmail(email);
+
+  validMail ? setEmailValid(true) : setEmailValid(false);
+
+  setIsLoading(true);
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Token ${passwordResetToken}`
+    },
+    body: JSON.stringify({ email: email })
+  };
+  
+  fetch(`${PRODUCTION_URL}auth/users/reset_password/`, options)
+    .then(response => {
+      response.json();
+      setIsLoading(false);
+      Alert.alert("Please check your mail for a reset link...");
+    })
+    .then(response => console.log(response))
+    .catch(err => {
+      console.error(err);
+      setIsLoading(false);
+    });
+  
+
+}
 
   return (
     <View

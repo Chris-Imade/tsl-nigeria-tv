@@ -22,6 +22,7 @@ import {
   // setVideoDownloadData,
   // setVideoIdForDownload,
   setVideoList,
+  setRemoveListItem
 } from "../Redux/Slice/AppSlice";
 import * as Clipboard from 'expo-clipboard';
 // import * as Sharing from 'expo-sharing';
@@ -43,6 +44,8 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
 
   const [copiedText, setCopiedText] = React.useState('');
 
+  const [bottomList, setBottomList] = useState(false);
+
   const truncTxt = (txt) => {
     return txt?.length > 21 ? `${txt.substr(0, 21)}...` : txt;
   };
@@ -50,6 +53,8 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
   const dispatch = useDispatch();
 
   const navigation = useNavigation();
+
+  const videoList = useSelector((state) => state.data.videoList);
 
 
   useEffect(() => {
@@ -83,6 +88,29 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
       console.log(error.message);
     }
   };
+
+  const CheckList = ({ id }) => {
+    const findItem = videoList.filter((item) => item.id === id);
+    console.log("id: ", id);
+    // console.log("ITEM FOUND ", findItem);
+    if(findItem.length > 0) {
+      return (
+        <Image
+          source={images.Check}
+          className="w-[24px] h-[24px]"
+          resizeMode="contain"
+        />
+      )
+    } else {
+      return (
+        <Image
+          source={images.AddRound}
+          className="w-[24px] h-[24px]"
+          resizeMode="contain"
+        />
+      )
+    }
+  } 
 
   return (
     <Animated.ScrollView
@@ -167,6 +195,12 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                     dispatch(setVideoList(categories[0]?.videos[0]));
                     ToastAndroid.show(
                       "Video has been added to List!",
+                      ToastAndroid.SHORT
+                    );
+                  } else {
+                    dispatch(setRemoveListItem(categories[0]?.videos[0]));
+                    ToastAndroid.show(
+                      "Video has been removed from List!",
                       ToastAndroid.SHORT
                     );
                   }
@@ -410,32 +444,32 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                   </TouchableWithoutFeedback>
                   <TouchableWithoutFeedback
                     onPress={() => {
-                      dispatch(setVideoList(info));
-                      ToastAndroid.show(
-                        "Video has been added to List!",
-                        ToastAndroid.SHORT
-                      );
-                    }}
-                  >
-                    <TouchableOpacity onPress={() => {
-                      dispatch(setVideoList(categories[0]?.videos[0]));
+                      if(bottomList === false) {
+                        dispatch(setVideoList(info));
                         ToastAndroid.show(
                           "Video has been added to List!",
-                        ToastAndroid.SHORT
-                      );
-                    }} className="justify-center items-center opacity-[0.5]">
-                      <Image
-                        source={images.AddRound}
-                        className="w-[27px] h-[27px] mb-[8px]"
-                        resizeMode="contain"
-                      />
+                          ToastAndroid.SHORT
+                        );
+                      } else {
+                        dispatch(setRemoveListItem(info));
+                        ToastAndroid.show(
+                          "Video has been removed from List!",
+                          ToastAndroid.SHORT
+                        );
+                      }
+                      setBottomList(!bottomList);
+                    }}
+                  >
+                    <View className="justify-center items-center opacity-[0.5]">
+                    <CheckList id={info.id} />
+                    {console.log("Video ObjectId: ", info)}
                       <Text
                         style={{ fontFamily: "Stem-Medium" }}
                         className="text-white text-[11px"
                       >
-                        Playlist
+                        My List
                       </Text>
-                    </TouchableOpacity>
+                    </View>
                   </TouchableWithoutFeedback>
                   <TouchableOpacity onPress={() => onShare()} className="justify-center items-center opacity-[0.5]">
                     <Image

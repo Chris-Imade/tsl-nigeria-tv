@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import _ from "lodash";
 
 const initialState = {
     categories: [],
@@ -18,7 +19,8 @@ const initialState = {
     videoList: [],
     profilePhoto: null,
     googleAuth: null,
-    comingSoon: []
+    comingSoon: [],
+    passwordResetToken: ""
 }
 
 // export const getMovies = createAsyncThunk('data/getMovies', () => {
@@ -69,8 +71,11 @@ export const appSlice = createSlice({
       state.categoryDetailsPage = action.payload;
     },
     setVideoList: (state, action) => {
-      state.videoList = [...state.videoList, action.payload];
-      // state.videoList = [action.payload];
+      let unsorted = [...state.videoList, action.payload];
+      let sortedList = _.uniqBy(unsorted, item => item.id);
+      state.videoList = sortedList;
+      console.log("sortedList: ", sortedList);
+      console.log("unsorted: ", unsorted);
     },
     setProfilePhoto: (state, action) => {
       state.profilePhoto = action.payload;
@@ -80,6 +85,12 @@ export const appSlice = createSlice({
     },
     setComingSoon: (state, action) => {
       state.comingSoon = action.payload;
+    },
+    setPasswordResetToken: (state, action) => {
+      state.passwordResetToken = action.payload;
+    },
+    setRemoveListItem: (state, action) => {
+      state.videoList = state.videoList.filter((item) => item.id !== action.payload.id);
     }
     // extraReducers: (builder) => {
     //   // Add reducers for additional action types here, and handle loading state as needed
@@ -108,7 +119,9 @@ export const {
     setVideoList,
     setProfilePhoto,
     setGoogleAuth,
-    setComingSoon
+    setComingSoon,
+    setPasswordResetToken,
+    setRemoveListItem
  } = appSlice.actions
 
 export default appSlice.reducer;

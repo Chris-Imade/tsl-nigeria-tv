@@ -67,6 +67,7 @@ import AccountFilled from "./account_filled.png";
 
 import Check from "./check.png";
 import CheckDark from "./check-dark.png";
+import DeleteBottom from "./delete_forever-bottom.png";
 
 
 export const images = {
@@ -134,5 +135,6 @@ export const images = {
     AccountCirle,
     AccountFilled,
     Check,
-    CheckDark
+    CheckDark,
+    DeleteBottom
 }

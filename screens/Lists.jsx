@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { Actionsheet, Center, useDisclose } from "native-base";
 import React, { useState } from "react";
-import { TouchableWithoutFeedback } from "react-native";
+import { TouchableHighlight, TouchableWithoutFeedback } from "react-native";
 import {
   Image,
   SafeAreaView,
@@ -25,6 +25,7 @@ const Lists = () => {
 
   const searchList = useSelector((state) => state.data.searchList);
   const videoList = useSelector((state) => state.data.videoList);
+  const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
 
   const [info, setInfo] = useState({});
 
@@ -63,16 +64,13 @@ const Lists = () => {
     return txt?.length > 21 ? `${txt.substr(0, 21)}...` : txt;
   };
 
-  const filteredList =
-    videoList &&
-    videoList.filter((item) => {
-      return Object.values(item)
-        .join("")
-        .toLowerCase()
-        ?.includes(searchQuery?.toLowerCase());
-    });
+  // const filteredList =
+  //   videoList &&
+  //   videoList.filter((item) => {
+  //     return Object?.values(item)?.join("")?.toLowerCase()?.includes(searchQuery?.toLowerCase());
+  //   });
 
-    if(filteredList.length === 0) {
+    if(videoList.length === 0) {
       return (
         
         <SafeAreaView
@@ -122,7 +120,7 @@ const Lists = () => {
             paddingTop: Platform.OS == "android" ? 30 : 30,
           }}
         >
-          {searchList && (
+          {/* {searchList && (
             <View className="flex-row w-full mx-[20px] items-center my-7">
               <Image
                 source={images.SearchSmall}
@@ -136,26 +134,69 @@ const Lists = () => {
                 onChangeText={(text) => setSearchQuery(text)}
               />
             </View>
-          )}
+          )} */}
           <ScrollView className="w-full">
             <View className="flex-wrap justify-start flex-row mx-[16px] w-full">
-              {filteredList
-                ? filteredList?.map((item, index) => (
-                    <TouchableNativeFeedback
-                      onPress={() => {
-                        setInfo(item);
-                        onOpen();
+              {videoList
+                ? videoList?.map((item, index) => (
+                  <TouchableHighlight
+                    key={index}
+                    onPress={() =>{
+                      setInfo(item);
+                      onOpen();
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        paddingRight: 7,
+                        backgroundColor: lightModeEnabled
+                          ? colors.lightGray
+                          : "#221F1F",
+                        marginVertical: 1,
+                        width: ScreenWidth
                       }}
-                      key={index}
                     >
+                      <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <Image
+                          source={{
+                            uri: item?.desktop_thumbnail,
+                          }}
+                          style={{
+                            width: 124,
+                            height: 59,
+                          }}
+                          resizeMode={"cover"}
+                        />
+        
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            color: colors.white,
+                            marginLeft: 20,
+                            fontWeight: "900",
+                            fontFamily: "Stem-Regular",
+                          }}
+                        >
+                          {truncTxt(item?.title)}
+                        </Text>
+                      </View>
+        
                       <Image
-                        source={{ uri: item.mobile_thumbnail }}
-                        className="my-[6px] mx-[6px] h-[176px] w-[124px] rounded-[8px]"
-                        resizeMode="contain"
+                        source={images.PlaySmall}
+                        resizeMode={"contain"}
+                        style={{
+                          width: 24,
+                          height: 24,
+                          marginRight: 15,
+                        }}
                       />
-                    </TouchableNativeFeedback>
+                    </View>
+                  </TouchableHighlight>
                   ))
-                : filteredList.map((item, index) => (
+                : videoList.map((item, index) => (
                     <View key={index}>
                       <View className="bg-slate-900/60 my-[6px] mx-[6px] h-[176px] w-[124px] rounded-[8px]"></View>
                     </View>

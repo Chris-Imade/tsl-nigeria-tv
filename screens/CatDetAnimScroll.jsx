@@ -8,7 +8,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { colors, PRODUCTION_URL } from "../components/shared";
-import { setCategoryDetailsPage, setVideoList } from "../Redux/Slice/AppSlice";
+import { setCategoryDetailsPage, setRemoveListItem, setVideoList } from "../Redux/Slice/AppSlice";
 
 const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
 
@@ -18,7 +18,13 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
 
   const [errorResponseData, setErrorResponseData] = useState("");
 
+  const [bottomList, setBottomList] = useState("");
+  
+  const [addedToList, setAddedToList] = useState("");
+
   const accessToken = useSelector((state) => state.data.accessToken);
+
+  const videoList = useSelector((state) => state.data.videoList);
 
   const navigation = useNavigation();
 
@@ -98,6 +104,29 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
   };
 
   // console.log("categoryDetailsPage: ", categoryDetailsPage);
+
+  const CheckList = ({ id }) => {
+    const findItem = videoList.filter((item) => item.id === id);
+    console.log("id: ", id);
+    // console.log("ITEM FOUND ", findItem);
+    if(findItem.length > 0) {
+      return (
+        <Image
+          source={images.Check}
+          className="w-[24px] h-[24px]"
+          resizeMode="contain"
+        />
+      )
+    } else {
+      return (
+        <Image
+          source={images.AddRound}
+          className="w-[24px] h-[24px]"
+          resizeMode="contain"
+        />
+      )
+    }
+  } 
 
   return (
     <Animated.ScrollView
@@ -179,20 +208,37 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
             <View className="flex-row justify-around mb-[47px] mt-[24px] w-[79%]">
               <TouchableOpacity
                 onPress={() => {
-                  dispatch(setVideoList(categoryDetailsPage?.videos[0]));
-                  ToastAndroid.show(
-                    "Video has been added to List!",
-                    ToastAndroid.SHORT
-                  );
+                  if(addedToList === false) {
+                    dispatch(setVideoList(categoryDetailsPage?.videos[0]));
+                    ToastAndroid.show(
+                      "Video has been added to List!",
+                      ToastAndroid.SHORT
+                    );
+                  } else {
+                    dispatch(setRemoveListItem(categoryDetailsPage?.videos[0]));
+                    ToastAndroid.show(
+                      "Video has been removed to List!",
+                      ToastAndroid.SHORT
+                    );
+                  }
+                  setAddedToList(!addedToList);
                 }}
                 className="items-center"
               >
                 {/* My List icon */}
-                <Image
-                  source={images.AddRound}
-                  className="w-[24px] h-[24px]"
-                  resizeMode="contain"
-                />
+                {addedToList === true ? (
+                    <Image
+                      source={images.Check}
+                      className="w-[24px] h-[24px]"
+                      resizeMode="contain"
+                    />
+                  ) : (
+                    <Image
+                      source={images.AddRound}
+                      className="w-[24px] h-[24px]"
+                      resizeMode="contain"
+                    />
+                  )}
                 <Text
                   style={styles.menuTxt}
                   className="text-white text-[12px] pt-[8px]"
@@ -412,22 +458,27 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                     </View>
                   </TouchableWithoutFeedback>
                     <TouchableOpacity onPress={() => {
-                      dispatch(setVideoList(categories[0]?.videos[0]));
-                        ToastAndroid.show(
-                          "Video has been added to List!",
-                        ToastAndroid.SHORT
-                      );
+                     if(bottomList === false) {
+                        dispatch(setVideoList(info));
+                          ToastAndroid.show(
+                            "Video has been added to List!",
+                          ToastAndroid.SHORT
+                        );
+                     } else {
+                        dispatch(setRemoveListItem(info));
+                          ToastAndroid.show(
+                            "Video has been removed to List!",
+                          ToastAndroid.SHORT
+                        );
+                        setBottomList(!bottomList);
+                     }
                     }} className="justify-center items-center opacity-[0.5]">
-                      <Image
-                        source={images.AddRound}
-                        className="w-[27px] h-[27px] mb-[8px]"
-                        resizeMode="contain"
-                      />
+                      <CheckList id={info.id} />
                       <Text
                         style={{ fontFamily: "Stem-Medium" }}
                         className="text-white text-[11px"
                       >
-                        Playlist
+                        My List
                       </Text>
                     </TouchableOpacity>
                   <TouchableOpacity onPress={() => onShare()} className="justify-center items-center opacity-[0.5]">

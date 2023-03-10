@@ -91,7 +91,7 @@ const SignUp = () => {
                 // Default options are marked with *
                 const response = await fetch(url, {
                     method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                    mode: 'no-cors',
+                    // mode: 'no-cors',
                     headers: {
                       'Content-Type': 'application/json',
                       'Accept': 'application/json'

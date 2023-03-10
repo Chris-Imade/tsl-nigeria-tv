@@ -132,15 +132,6 @@ const HomeStack = () => {
           },
           headerTitle: "Lists",
           headerTintColor: colors.white,
-          headerRight: () => (
-            <TouchableHighlight onPress={() => dispatch(setSearchList())}>
-              <Image
-                source={images.SearchSmall}
-                className="w-[24px] h-[24px]"
-                resizeMode="contain"
-              />
-            </TouchableHighlight>
-          ),
         }}
         name="lists-screen"
         component={Lists}

@@ -25,7 +25,7 @@ import {
   ScreenWidth,
 } from "../../components/shared";
 import {
-  setAccessToken,
+  setAccessToken, setPasswordResetToken,
   // setRefreshToken
 } from "../../Redux/Slice/AppSlice";
 import { Center, Modal, useDisclose } from "native-base";
@@ -103,7 +103,7 @@ const Login = () => {
 
       return response.json(); // parses JSON response into native JavaScript objects
     };
-
+    
     postData(
       `${PRODUCTION_URL}auth/token/login/`,
       userCredentials
@@ -112,6 +112,7 @@ const Login = () => {
         console.log(data);
 
         dispatch(setAccessToken(data.auth_token));
+        dispatch(setPasswordResetToken(data.auth_token));
 
         if (!data.error) {
             console.log("Hey! there's no error", data);
@@ -121,8 +122,9 @@ const Login = () => {
             }
         }
         if (data.error) {
-            console.log("OOPS! I see some errors", data.error);
-            // setError(data.error.details.email[0]);
+            console.log("OOPS! I see some errors", data);
+            setError(data?.error?.details?.email[0]);
+            
             if(data.status_code !== 201) {
               setSuccessMessage(data.detail);
               setIsLoading(false);
@@ -148,6 +150,7 @@ const Login = () => {
       .catch((error) => {
         setIsLoading(false);
         console.log("Hey there's an error here!", error);
+        setError("Unable to login please check your network and try again");
       });
   };
 
