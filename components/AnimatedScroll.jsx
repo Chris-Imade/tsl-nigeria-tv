@@ -182,7 +182,7 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                   style={styles.menuTxt}
                   className="text-[12px] text-[#D6D6D7]"
                 >
-                  {categories[0]?.videos[0]?.genres[1]}
+                  {"Comedy"}
                 </Text>
               </View>
             </View>

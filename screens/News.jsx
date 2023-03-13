@@ -154,7 +154,7 @@ const News = () => {
         renderItem={({ item }) => !item.published
         ? (
             <View className="">
-              {console.log(item)}
+              {/* {console.log(item)} */}
               <View className="w-full h-[1px] bg-[#323337] my-6"></View>
               <View className="flex-row mb-[16px]">
                 <View className="mr-[16px] items-center">
@@ -222,20 +222,20 @@ const News = () => {
                     </View>
                     <View
                       style={{ width: ScreenWidth - 81 }}
-                      className="mt-[16px] items-center flex-row justify-between space-x-1"
+                      className="mt-[16px]  space-x-1 items-center flex-row justify-evenly"
                     >
                       {/* {console.log(item)} */}
-                      {item.mood.map((item) => (
-                        <>
+                      {item.mood.map((item, index) => (
+                        <View key={index} className="items-center flex-row justify-between">
                           <Text className="text-[11px] text-white">{item}</Text>
-                          <Text className="w-1 h-1 rounded-full bg-white text-[11px]"></Text>
-                        </>
+                          <Text className="w-1 h-1 rounded-full bg-white text-[11px] ml-12"></Text>
+                        </View>
                       ))}
                       {item.genres.map((item, index) => (
-                        <>
+                        <View key={index} className="items-center flex-row justify-between">
                           <Text className="text-[11px] text-white">{item}</Text>
-                          {index > 0 ? <Text className="w-1 h-1 rounded-full bg-white text-[11px]"></Text> : null}
-                        </>
+                          {index > 0 ? <Text className="w-1 h-1 rounded-full bg-white text-[11px] ml-12"></Text> : null}
+                        </View>
                       ))}
                     </View>
                   </View>

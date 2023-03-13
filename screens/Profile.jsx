@@ -45,6 +45,7 @@ const Profile = () => {
       quality: 1,
     });
 
+    // Important Note to take down is that the uri am sending could be the cause of my failure in making this request.
     // console.log(result);
 
     if (!result.canceled) {
@@ -57,10 +58,12 @@ const Profile = () => {
 
 
   const submitProfilePhoto = () => {
-    function get_url_extension( url ) {
-      return url.split(/[#?]/)[0].split('.').pop().trim();
-  }
-  setIsLoading(true);
+    // function get_url_extension( url ) {
+    //   return url.split(/[#?]/)[0].split('.').pop().trim();
+    // }
+  console.log("Image Name", image.name);
+  console.log("Image Type", image.type);
+  // setIsLoading(true);
   // const fileName = image.substring(image.lastIndexOf('/') + 1);
   // const fileType = get_url_extension(image);
   // const formData = new FormData();
@@ -106,7 +109,8 @@ const Profile = () => {
         "Photo Uploaded Successfully",
         ToastAndroid.SHORT
       );
-    }, 2000)
+    }, 2000);
+
   }
 
   const getUserId = async (url = "") => {

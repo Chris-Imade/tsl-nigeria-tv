@@ -31,11 +31,12 @@ const CategoryDetails = () => {
   const [showDetailedMenu, setShowDetailedMenu] = useState(false);
 
   const lightModeEnabled = useSelector((state) => state?.data?.lightModeEnabled);
+
   const categories = useSelector((state) => state?.data?.cateogries);
 
   const profilePhoto = useSelector((state) => state?.data?.profilePhoto);
 
-  const videoId = useSelector((state) => state?.data?.videoId);
+  // const videoId = useSelector((state) => state?.data?.videoId);
   // console.log("videoId", videoId);
   const accessToken = useSelector((state) => state.data.accessToken);
 

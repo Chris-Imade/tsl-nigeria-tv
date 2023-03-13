@@ -7,7 +7,6 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   Animated,
   TouchableHighlight,
 } from "react-native";
@@ -22,8 +21,6 @@ const Home = () => {
   const [errorResponseData, setErrorResponseData] = useState("");
   const [responseData, setResponseData] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-
-  const [loaded, setLoaded] = useState(false);
 
   const navigation = useNavigation();
 

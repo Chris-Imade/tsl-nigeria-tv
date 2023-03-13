@@ -9,9 +9,6 @@ const initialState = {
     tvShowsData: [],
     searchList: false,
     searchNotification: false,
-    videoIdForDownload: "",
-    videoDownloadData: [],
-    downloadDetails: {},
     accessToken: "",
     refreshToken: "",
     videoId: 1,
@@ -22,10 +19,6 @@ const initialState = {
     comingSoon: [],
     passwordResetToken: ""
 }
-
-// export const getMovies = createAsyncThunk('data/getMovies', () => {
-//         return;
-// })
 
 export const appSlice = createSlice({
   name: 'data',

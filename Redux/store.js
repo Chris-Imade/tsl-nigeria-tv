@@ -19,7 +19,7 @@ const persistConfig = {
     'user', 
     'lightModeEnabled', 
     'accessToken', 
-    // 'videoList', 
+    'videoList', 
     'profilePhoto', 
     'categories', 
     'videoId', 
