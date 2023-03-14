@@ -16,7 +16,7 @@ import WebView from "react-native-webview";
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { colors, PRODUCTION_URL, ScreenHeight, ScreenWidth } from "../components/shared";
-import { setVideoList } from "../Redux/Slice/AppSlice";
+import { setRemoveListItem, setVideoList } from "../Redux/Slice/AppSlice";
 import * as Clipboard from 'expo-clipboard';
 import { StatusBar } from "react-native";
 import { Share } from "react-native";
@@ -345,11 +345,35 @@ const VideoEnlongated = (props) => {
                 <TouchableOpacity
                   onPress={() => {
                     if(addedToList === false) {
-                      dispatch(setVideoList(localData));
-                      ToastAndroid.show(
-                        "Video has been added to List!",
-                        ToastAndroid.SHORT
-                      );
+                      if(localData) {
+                        dispatch(setVideoList(localData));
+                          ToastAndroid.show(
+                            "Video has been added to List!",
+                            ToastAndroid.SHORT
+                          );
+                      }else {
+                        return (
+                          ToastAndroid.show(
+                            "Please wait for video to load...",
+                          ToastAndroid.SHORT
+                          )
+                        );
+                      }
+                    } else {
+                      if(localData){
+                        dispatch(setRemoveListItem(localData));
+                          ToastAndroid.show(
+                            "Video has been removed from List!",
+                            ToastAndroid.SHORT
+                          );
+                      } else {
+                        return (
+                          ToastAndroid.show(
+                            "Please wait for video to load...",
+                          ToastAndroid.SHORT
+                          )
+                        );
+                      }
                     }
                     setAddedToList(!addedToList);
                   }}
@@ -381,9 +405,15 @@ const VideoEnlongated = (props) => {
                 <TouchableOpacity
                   onPress={() => {
                     ToastAndroid.show(
-                      "This feature is under development",
+                      "⭐⭐⭐⭐⭐",
                       ToastAndroid.SHORT
                     );
+                    setTimeout(() => {
+                      ToastAndroid.show(
+                        "Thanks, we appreciate your feedback 😊",
+                        ToastAndroid.SHORT
+                      );
+                    }, 4000);
                   }}
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
@@ -506,6 +536,7 @@ const VideoEnlongated = (props) => {
                 key={index}
                 onPress={() => {
                   navigation.navigate("actors-profile", { data: item.id });
+                  setShowDetailedMenu(false);
                 }}
                 className="mt-[33px]"
               >

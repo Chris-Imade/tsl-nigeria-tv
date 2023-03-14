@@ -357,7 +357,7 @@ const SignUp = () => {
                             <Text className="opacity-30 text-red-600" style={{
                                 fontFamily: "Stem-Regular"
                             }}>
-                                {generalError}
+                                {generalError === "Network Request Failed" ? "Please check your connections and try again" : "Are you connected?"}
                             </Text>
                         </View>
                     )}

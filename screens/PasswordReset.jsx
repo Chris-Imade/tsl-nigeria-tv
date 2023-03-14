@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, ToastAndroid } from "react-native";
 import {
   ActivityIndicator,
   Alert,
@@ -55,13 +55,23 @@ const onReset = () => {
     .then(response => {
       response.json();
       setIsLoading(false);
-      Alert.alert("Please check your mail for a reset link...");
+      setEmail("");
+      ToastAndroid.show(
+        "Please check your email for a reset link 😉",
+      ToastAndroid.LONG
+      );
+      navigation.navigate("Login");
     })
     .then(response => console.log(response))
     .catch(err => {
-      console.error(err);
-      setIsLoading(false);
-    });
+      setEmail("");
+      ToastAndroid.show(
+        "Please check your email for a reset link 😉",
+      ToastAndroid.LONG
+    );
+    navigation.navigate("Login");
+    setIsLoading(false);
+    }).finally(() => setIsLoading(false));
   
 
 }
@@ -117,7 +127,7 @@ const onReset = () => {
                 styles.txtInput,
                 {
                   backgroundColor: firstIntBg ? firstIntBg : "#1a1a1a",
-                  marginBottom: !emailValid ? 5 : 40,
+                  marginBottom: !emailValid ? 5 : 20,
                   borderWidth: 0.5,
                   borderStyle: "solid",
                   borderColor: !emailValid
@@ -158,6 +168,27 @@ const onReset = () => {
                   }}
                 >
                   Invalid email! please enter a valid email
+                </Text>
+              </View>
+            )}
+
+            {/* Error Toast */}
+            {errorResponseData && (
+              <View
+                style={{
+                  width: "100%",
+                  justifyContent: "center",
+                  marginBottom: errorResponseData ? 5 : 0,
+                }}
+              >
+                <Text
+                  className="text-red-600 opacity-30"
+                  style={{
+                    fontFamily: "Stem-Regular",
+                    // textAlign: "center",
+                  }}
+                >
+                  {errorResponseData}
                 </Text>
               </View>
             )}

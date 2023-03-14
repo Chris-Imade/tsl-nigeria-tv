@@ -58,6 +58,8 @@ const AccountSettings = () => {
 
   const [userId, setUserId] = useState(0); 
 
+  const [passwordError, setPasswordError] = useState("");
+
   // console.log(userId);
 
   const dispatch = useDispatch();
@@ -79,53 +81,60 @@ const AccountSettings = () => {
 
   const submitChangedPassword = () => {
     setIsLoading(true);
+
+    const userCredentials = {
+      old_password: currentPassword,
+      new_password: newPassword
+    }
     
 
-    // const updateUsername = async (url = "", data) => {
-    //   // Default options are marked with *
-    //   const response = await fetch(url, {
-    //     method: "POST", // *GET, POST, PUT, DELETE, etc.
-    //     mode: "no-cors",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Accept: "application/json",
-    //     },
-    //     body: JSON.stringify(data), // body data type must match "Content-Type" header
-    //   });
+    const updatePassword = async (url = "", data) => {
+      // Default options are marked with *
+      const response = await fetch(url, {
+        method: "PUT", // *GET, POST, PUT, DELETE, etc.
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${accessToken}`,
+          Accept: "application/json",
+        },
+        body: JSON.stringify(data), // body data type must match "Content-Type" header
+      });
 
-    //   return response.json(); // parses JSON response into native JavaScript objects
-    // };
+      return response.json(); // parses JSON response into native JavaScript objects
+    };
 
-    // updateUsername(
-    //   `https://web-production-de75.up.railway.app/auth/token/login/`,
-    //   userCredentials
-    // )
-    //   .then((data) => {
-    //     console.log(data);
-    //     // const { password, new_password } = data.error.details;
-    //     // password && setPasswordError(password[0]);
-    //     // email && setEmailError(email[0]);
-    //     // non_field_errors && setOverawErr(non_field_errors[0]);
+    updatePassword(
+      `${PRODUCTION_URL}api/change-password/`,
+      userCredentials
+    )
+      .then((data) => {
+        const { old_password } = data;
+        setPasswordError(old_password[0]);
         
-    //     if (!data.error) {
-    //       setChangePassword(false);
-    //     }
-    //     // console.log(data);
+        if (data.code === 200) {
+          setChangePassword(false);
+            ToastAndroid.show(
+              "Password changed Successfully",
+            ToastAndroid.SHORT
+          );
+        }
+        console.log(data);
 
-    //     if (data) {
-    //       setIsLoading(false);
-    //       // console.log("<------------ Data is returned ----------------->");
-    //     } else {
-    //       // console.log("What could go wrong?")
-    //       console.log(data);
-    //     }
+        if (data) {
+          setIsLoading(false);
+          // console.log("<------------ Data is returned ----------------->");
+        } else {
+          // console.log("What could go wrong?")
+          // console.log(data);
+        }
 
-    //     // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
-    //   })
-    //   .catch((error) => {
-    //     setIsLoading(false);
-    //     console.log(error);
-    //   });
+        // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.log("This is the ERROR ---------->", error);
+      });
     
   };
 
@@ -324,38 +333,6 @@ const AccountSettings = () => {
             </View>
           </TouchableWithoutFeedback>
           <View className="h-5"></View>
-          {/* PHoto Upload */}
-          {/* <TouchableWithoutFeedback>
-            <View
-              className="bg-[#121212]"
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                borderRadius: 8,
-                position: "relative",
-              }}
-            >
-              <View style={{ padding: 15 }}>
-                <Text
-                  style={{ fontFamily: "Stem-Medium", fontSize: 16 }}
-                  className="text-[#F5F5F5]"
-                >
-                  Upload Image
-                </Text>
-                <Text style={{ color: "#98999B", fontSize: 11 }}>{"type/image"}</Text>
-              </View>
-              <Image
-                source={images.SettingR}
-                style={{
-                  width: 24,
-                  height: 24,
-                  position: "absolute",
-                  right: 20,
-                }}
-                resizeMode={"contain"}
-              />
-            </View>
-          </TouchableWithoutFeedback> */}
         </View>
 
 
@@ -402,52 +379,6 @@ const AccountSettings = () => {
             </View>
           </TouchableWithoutFeedback>
         </View>
-
-       
-
-        {/* <View style={{ marginHorizontal: 20, marginTop: 40 }}>
-          <Text
-            style={{
-              color: "#98999B",
-              fontFamily: "Stem-Medium",
-              fontSize: 15,
-              marginBottom: 13,
-            }}
-          >
-            SETTINGS
-          </Text>
-          <TouchableWithoutFeedback>
-            <View
-              className="bg-[#121212]"
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                borderRadius: 8,
-                position: "relative",
-              }}
-            >
-              <View style={{ padding: 15 }}>
-                <Text
-                  style={{ fontFamily: "Stem-Medium", fontSize: 16 }}
-                  className="text-[#F5F5F5]"
-                >
-                  Delete account
-                </Text>
-                <Text style={{ color: "#98999B", fontSize: 9 }}>User3452m</Text>
-              </View>
-              <Image
-                source={images.SettingR}
-                style={{
-                  width: 24,
-                  height: 24,
-                  position: "absolute",
-                  right: 20,
-                }}
-                resizeMode={"contain"}
-              />
-            </View>
-          </TouchableWithoutFeedback>
-        </View> */}
       </ScrollView>
 
       {/* Change password */}
@@ -528,6 +459,11 @@ const AccountSettings = () => {
                       }}
                       secureTextEntry={true}
                     />
+                    {passwordError && (
+                      <View className="w-full text-start">
+                        <Text className="text-red-500 mb-3" style={{ fontFamily: "Stem-Medium" }}>{passwordError}</Text>
+                      </View>
+                    )}
 
                     <TextInput
                       style={{

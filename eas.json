@@ -9,7 +9,7 @@
       }
     },
     "preview2": {
-      "android": {
+    "android": {
         "gradleCommand": ":app:assembleRelease"
       }
     },

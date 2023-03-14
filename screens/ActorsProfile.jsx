@@ -1,8 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { Actionsheet, Center, useDisclose, VStack } from "native-base";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Image, TouchableHighlight, TouchableOpacity } from "react-native";
-import { TouchableWithoutFeedback } from "react-native";
+import { ActivityIndicator, Image, Share, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { StatusBar } from "react-native";
 import { ScrollView } from "react-native";
 import { View, Text } from "react-native";
@@ -66,51 +65,110 @@ const ActorsProfile = (props) => {
     return txt?.length > 21 ? `${txt.substr(0, 21)}...` : txt;
   };
 
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: baseUrl+info?.video_link
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <>
-        <ScrollView
-          contentContainerStyle={{
-            paddingTop: 50,
-            flex: 1,
-            backgroundColor: lightModeEnabled ? colors.white : colors.black,
-          }}
-        >
-        <StatusBar backgroundColor="#000" style="dark-content" />
-          {actorsProfile ? (
-            <>
-              <View style={{ flexDirection: "row", marginHorizontal: 20 }}>
-              <View className="items-center text-center mr-[16px]">
-                <Image
-                  source={{ uri: actorsProfile.image }}
-                  style={{
-                    width: 156,
-                    height: 173,
-                  }}
-                  resizeMode={"cover"}
-                />
-                <View className="mt-[8px]">
+        <View style={{ paddingTop: 50, flex: 1, backgroundColor: lightModeEnabled ? colors.white : colors.black }}>
+          <ScrollView>
+          <StatusBar backgroundColor="#000" style="dark-content" />
+            {actorsProfile ? (
+              <>
+                <View style={{ flexDirection: "row", marginHorizontal: 20 }}>
+                <View className="items-center text-center mr-[16px]">
+                  <Image
+                    source={{ uri: actorsProfile.image }}
+                    style={{
+                      width: 156,
+                      height: 173,
+                    }}
+                    resizeMode={"cover"}
+                  />
+                  <View className="mt-[8px]">
+                    <Text
+                      style={{
+                        fontFamily: "Stem-Medium",
+                        fontSize: 16,
+                        color: lightModeEnabled ? colors.black : colors.white,
+                      }}
+                    >
+                      {actorsProfile.name}
+                    </Text>
+                    <Text
+                    style={{
+                      fontFamily: "Stem-Medium",
+                      color: "#545558",
+                      fontSize: 11,
+                    }}
+                  >
+                    {actorsProfile?.cast_position}
+                  </Text>
+                  </View>
+                </View>
+                <View style={{
+                  width: ScreenWidth - 196
+                }}>
                   <Text
                     style={{
                       fontFamily: "Stem-Medium",
-                      fontSize: 16,
-                      color: lightModeEnabled ? colors.black : colors.white,
+                      color: "#545558",
+                      fontSize: 11,
                     }}
                   >
-                    {actorsProfile.name}
+                    About
                   </Text>
-                </View>
-              </View>
-              <View style={{
-                width: ScreenWidth - 196
-              }}>
-                <Text
+                  <Text
+                    style={{
+                      color: lightModeEnabled ? colors.black : colors.white,
+                      flexWrap: 'wrap'
+                    }}
+                  >
+                    {actorsProfile?.bio}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: "Stem-Medium",
+                      color: "#545558",
+                      fontSize: 11,
+                      marginVertical: 5
+                    }}
+                  >
+                    Born
+                  </Text>
+                  <Text
+                    style={{
+                      color: lightModeEnabled ? colors.black : colors.white,
+                      flexWrap: 'wrap'
+                    }}
+                  >
+                    {actorsProfile.born}
+                  </Text>
+                  <Text
                   style={{
                     fontFamily: "Stem-Medium",
                     color: "#545558",
                     fontSize: 11,
+                    marginVertical: 5
                   }}
                 >
-                  About
+                  Education
                 </Text>
                 <Text
                   style={{
@@ -118,50 +176,51 @@ const ActorsProfile = (props) => {
                     flexWrap: 'wrap'
                   }}
                 >
-                  {actorsProfile.bio}
+                  {actorsProfile?.education}
                 </Text>
+                </View>
               </View>
-            </View>
 
-            <View className="mt-[32px] mb-12">
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: "Stem-Medium",
-                  color: "#F5F5F5",
-                  marginHorizontal: 20,
-                  marginBottom: 15,
-                }}
-              >
-                Feature TVShows
-              </Text>
-              <View className="flex-wrap justify-start flex-row mx-[16px] w-full">
-                {actorsProfile?._videos?.map((item, index) => (
-                  <>
-                    <TouchableHighlight
-                      onPress={() => {
-                        onOpen();
-                        setInfo(item);
-                      }}
-                      key={index}
-                    >
-                      <Image
-                        source={{ uri: item?.mobile_thumbnail }}
-                        className="my-[6px] mx-[6px] h-[176px] w-[124px] rounded-[8px]"
-                        resizeMode="contain"
-                      />
-                    </TouchableHighlight>
-                  </>
-                ))}
+              <View className="mt-[32px] mb-12">
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: "Stem-Medium",
+                    color: "#F5F5F5",
+                    marginHorizontal: 20,
+                    marginBottom: 15,
+                  }}
+                >
+                  Feature TVShows
+                </Text>
+                <View className="flex-wrap justify-start flex-row mx-[16px] w-full">
+                  {actorsProfile?._videos?.map((item, index) => (
+                    <View key={index}>
+                      <TouchableHighlight
+                        onPress={() => {
+                          onOpen();
+                          setInfo(item);
+                        }}
+                        key={index}
+                      >
+                        <Image
+                          source={{ uri: item?.mobile_thumbnail }}
+                          className="my-[6px] mx-[6px] h-[176px] w-[124px] rounded-[8px]"
+                          resizeMode="contain"
+                        />
+                      </TouchableHighlight>
+                    </View>
+                  ))}
+                </View>
+              </View>          
+              </>
+            ) : (
+              <View className="justify-center items-center flex-1">
+                <ActivityIndicator size={"large"} color={"white"} />
               </View>
-            </View>          
-            </>
-          ) : (
-            <View className="justify-center items-center flex-1">
-              <ActivityIndicator size={"large"} color={"white"} />
-            </View>
-          )}
-        </ScrollView>
+            )}
+          </ScrollView>
+        </View>
        <Center>
         <Actionsheet isOpen={isOpen} onClose={onClose}>
           <Actionsheet.Content style={{ backgroundColor: colors.darkMode }}>

@@ -1,8 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { Actionsheet, Center, useDisclose, VStack } from "native-base";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Image, TouchableHighlight, TouchableOpacity } from "react-native";
-import { TouchableWithoutFeedback } from "react-native";
+import { ActivityIndicator, Image, TouchableHighlight, TouchableOpacity, Share, TouchableWithoutFeedback } from "react-native";
 import { StatusBar } from "react-native";
 import { ScrollView } from "react-native";
 import { View, Text } from "react-native";
@@ -41,6 +40,25 @@ const DirectorProfile = (props) => {
     // console.log("Happy Coding --->!");
   };
 
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: baseUrl+info?.video_link
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   useEffect(() => {
     getData(`${PRODUCTION_URL}api/directors/${data}`)
       .then((data) => {
@@ -68,10 +86,10 @@ const DirectorProfile = (props) => {
 
   return (
     <>
+    <View style={{ paddingTop: 50, flex: 1, backgroundColor: lightModeEnabled ? colors.white : colors.black}}></View>
         <ScrollView
           contentContainerStyle={{
             paddingTop: 50,
-            flex: 1,
             backgroundColor: lightModeEnabled ? colors.white : colors.black,
           }}
         >
@@ -88,7 +106,7 @@ const DirectorProfile = (props) => {
                   }}
                   resizeMode={"cover"}
                 />
-                <View className="mt-[8px]">
+                <View className="mt-[8px] text-center justify-center items-center">
                   <Text
                     style={{
                       fontFamily: "Stem-Medium",
@@ -97,6 +115,15 @@ const DirectorProfile = (props) => {
                     }}
                   >
                     {directorProfile.name}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: "Stem-Medium",
+                      color: "#545558",
+                      fontSize: 11,
+                    }}
+                  >
+                    {directorProfile.cast_position}
                   </Text>
                 </View>
               </View>
@@ -120,6 +147,42 @@ const DirectorProfile = (props) => {
                 >
                   {directorProfile.bio}
                 </Text>
+                <Text
+                  style={{
+                    fontFamily: "Stem-Medium",
+                    color: "#545558",
+                    fontSize: 11,
+                    marginVertical: 5
+                  }}
+                >
+                  Born
+                </Text>
+                <Text
+                  style={{
+                    color: lightModeEnabled ? colors.black : colors.white,
+                    flexWrap: 'wrap'
+                  }}
+                >
+                  {directorProfile.born}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: "Stem-Medium",
+                    color: "#545558",
+                    fontSize: 11,
+                    marginVertical: 5
+                  }}
+                >
+                  Education
+                </Text>
+                <Text
+                  style={{
+                    color: lightModeEnabled ? colors.black : colors.white,
+                    flexWrap: 'wrap'
+                  }}
+                >
+                  {directorProfile.education}
+                </Text>
               </View>
             </View>
 
@@ -137,7 +200,7 @@ const DirectorProfile = (props) => {
               </Text>
               <View className="flex-wrap justify-start flex-row mx-[16px] w-full">
                 {directorProfile?._videos?.map((item, index) => (
-                  <>
+                  <View key={index}>
                     <TouchableHighlight
                       onPress={() => {
                         onOpen();
@@ -151,7 +214,7 @@ const DirectorProfile = (props) => {
                         resizeMode="contain"
                       />
                     </TouchableHighlight>
-                  </>
+                  </View>
                 ))}
               </View>
             </View>          

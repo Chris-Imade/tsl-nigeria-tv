@@ -14,18 +14,21 @@ import {
   ToastAndroid,
   Share
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { images } from "../assets/images";
 import { colors, ScreenWidth } from "../components/shared";
 import * as Clipboard from 'expo-clipboard';
 import { StatusBar } from "react-native";
+import { setRemoveListItem, setVideoList } from "../Redux/Slice/AppSlice";
 
 const Lists = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [bottomList, setBottomList] = useState(false);
 
   const searchList = useSelector((state) => state.data.searchList);
   const videoList = useSelector((state) => state.data.videoList);
   const lightModeEnabled = useSelector((state) => state.data.lightModeEnabled);
+  const dispatch = useDispatch();
 
   const [info, setInfo] = useState({});
 
@@ -37,6 +40,28 @@ const Lists = () => {
     await Clipboard.setStringAsync(link);
   };
 
+  const CheckList = ({ id }) => {
+    const findItem = videoList.filter((item) => item.id === id);
+    console.log("id: ", id);
+    // console.log("ITEM FOUND ", findItem);
+    if(findItem.length > 0) {
+      return (
+        <Image
+          source={images.Check}
+          className="w-[24px] h-[24px]"
+          resizeMode="contain"
+        />
+      )
+    } else {
+      return (
+        <Image
+          source={images.AddRound}
+          className="w-[24px] h-[24px]"
+          resizeMode="contain"
+        />
+      )
+    }
+  } 
 
   const baseUrl = "https://www.youtube.com/watch?v="
 
@@ -242,9 +267,6 @@ const Lists = () => {
                         >
                           {info.rating}
                         </Text>
-                        {/* <Text
-                                            style={{ fontFamily: "Stem-Medium" }}
-                                            className="text-[#98999B] text-[11px] mx-1">{info.director}</Text> */}
                       </View>
                       <Text
                         style={{ fontFamily: "Stem-Medium" }}
@@ -264,7 +286,7 @@ const Lists = () => {
                         <View className="justify-center items-center">
                           <Image
                             source={images.PlayRound}
-                            className="w-[37px] h-[37px] mb-[8px]"
+                            className="w-[27px] h-[27px] mb-[8px]"
                             resizeMode="contain"
                           />
                           <Text
@@ -288,7 +310,7 @@ const Lists = () => {
                         <View className="justify-center items-center opacity-[0.5]">
                           <Image
                             source={images.FileCopy}
-                            className="w-[37px] h-[37px] mb-[8px]"
+                            className="w-[27px] h-[27px] mb-[8px]"
                             resizeMode="contain"
                           />
                           <Text
@@ -299,12 +321,60 @@ const Lists = () => {
                           </Text>
                         </View>
                       </TouchableWithoutFeedback>
+                      {/* Add to List */}
+                      <TouchableWithoutFeedback
+                        onPress={() => {
+                          if(bottomList === false) {
+                            if(info) {
+                              dispatch(setVideoList(info));
+                                ToastAndroid.show(
+                                  "Video has been added to List!",
+                                ToastAndroid.SHORT
+                              );
+                            } else {
+                              return (
+                                ToastAndroid.show(
+                                  "Please wait for video to load...",
+                                ToastAndroid.SHORT
+                                )
+                              );
+                            }
+                          } else {
+                            if(info) {
+                              dispatch(setRemoveListItem(info));
+                                ToastAndroid.show(
+                                "Video has been removed from List!",
+                                ToastAndroid.SHORT
+                              );
+                            } else {
+                              return (
+                                ToastAndroid.show(
+                                  "Please wait for video to load...",
+                                ToastAndroid.SHORT
+                                )
+                              );
+                            }
+                          }
+                          setBottomList(!bottomList);
+                        }}
+                      >
+                        <View className="justify-center items-center opacity-[0.5]">
+                        <CheckList id={info.id} />
+                        {console.log("Video ObjectId: ", info)}
+                          <Text
+                            style={{ fontFamily: "Stem-Medium" }}
+                            className="text-white text-[11px"
+                          >
+                            My List
+                          </Text>
+                        </View>
+                      </TouchableWithoutFeedback>
                       <TouchableOpacity 
                       onPress={() => onShare()}
                       className="justify-center items-center opacity-[0.5]">
                         <Image
                           source={images.ShareRound}
-                          className="w-[37px] h-[37px] mb-[8px]"
+                          className="w-[27px] h-[27px] mb-[8px]"
                           resizeMode="contain"
                         />
                         <Text

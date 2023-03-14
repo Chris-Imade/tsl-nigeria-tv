@@ -109,21 +109,21 @@ const Login = () => {
       userCredentials
     )
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         dispatch(setAccessToken(data.auth_token));
         dispatch(setPasswordResetToken(data.auth_token));
 
         if (!data.error) {
-            console.log("Hey! there's no error", data);
+            // console.log("Hey! there's no error", data);
             if(data.status_code === 201) {
               setSuccessMessage(data.detail);
               setIsLoading(false);
             }
         }
         if (data.error) {
-            console.log("OOPS! I see some errors", data);
-            setError(data?.error?.details?.email[0]);
+            // console.log("OOPS! I see some errors", data);
+            // setError(data?.error?.details?.email[0]);
             
             if(data.status_code !== 201) {
               setSuccessMessage(data.detail);
@@ -131,26 +131,23 @@ const Login = () => {
             }
         }
 
-        if(data.error.status_code === 400) {
-          setError(data.error.details.non_field_errors[0]);
+        if(data.error) {
+          setError(data.error.details.non_field_errors[0] + "\n" + "Check your email & password")
         }
 
-        console.log("Am getting something!");
         
         if (data) {
           setIsLoading(false);
-          console.log("<------------ Data is returned ----------------->");
-        } else {
-          console.log("What could go wrong?")
-          
+          console.log(data);
         }
 
         // console.log("<------------ ErrorResponseData ----------------->", errorResponseData);
       })
       .catch((error) => {
         setIsLoading(false);
-        console.log("Hey there's an error here!", error);
-        setError("Unable to login please check your network and try again");
+        // console.log("Hey there's an error here!", error);
+        // const { non_field_errors } = error.error.details;
+        // console.log(JSON.parse(non_field_errors));
       });
   };
 

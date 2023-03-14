@@ -202,7 +202,7 @@ const Profile = () => {
             <Text style={{
               fontFamily: "Stem-Medium",
               fontSize: 20
-            }} className="text-[#76777A]">Manage Profile</Text>
+            }} className="text-[#76777A]">Change Profile</Text>
           </TouchableOpacity>
         </View>
       </View>

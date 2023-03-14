@@ -209,17 +209,30 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
               <TouchableOpacity
                 onPress={() => {
                   if(addedToList === false) {
-                    dispatch(setVideoList(categoryDetailsPage?.videos[0]));
-                    ToastAndroid.show(
-                      "Video has been added to List!",
-                      ToastAndroid.SHORT
-                    );
+                    if(categoryDetailsPage?.videos[0]) {
+                      dispatch(setVideoList(categoryDetailsPage?.videos[0]));
+                      ToastAndroid.show(
+                        "Video has been added to List!",
+                        ToastAndroid.SHORT
+                      );
+                    } else {
+                      return null;
+                    }
                   } else {
-                    dispatch(setRemoveListItem(categoryDetailsPage?.videos[0]));
-                    ToastAndroid.show(
-                      "Video has been removed to List!",
+                    if(categoryDetailsPage?.videos[0]) {
+                      dispatch(setRemoveListItem(categoryDetailsPage?.videos[0]));
+                      ToastAndroid.show(
+                        "Video has been removed to List!",
                       ToastAndroid.SHORT
                     );
+                    } else {
+                      return (
+                        ToastAndroid.show(
+                          "Please wait for video to load...",
+                          ToastAndroid.SHORT
+                        )
+                      )
+                    }
                   }
                   setAddedToList(!addedToList);
                 }}
@@ -296,9 +309,9 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
 
       ) : null}
 
+      {/* Main Body of horizontal scrolls and more */}
       {Object.keys(categoryDetailsPage).length !== 0 ? (
-        categoryDetailsPage?.videos?.map((item, index) => (
-          <View className="" key={index}>
+          <View className="">
             <View className="my-[8px] ml-2">
               <Text
                 style={{
@@ -306,7 +319,7 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                 }}
                 className="text-[17px] text-white"
               >
-                {item?._category?.name}
+                {categoryDetailsPage?.name}
               </Text>
             </View>
             <ScrollView
@@ -317,28 +330,29 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                 }
               }
             >
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    setInfo(item);
-                    onOpen();
-                  }}
-                >
-                  <Image
-                    source={{ uri: item?.mobile_thumbnail }}
-                    resizeMode={"contain"}
-                    style={{
-                      width: 124,
-                      height: 176,
-                      marginHorizontal: 4,
-                      marginLeft: 8,
-                      borderRadius: 8,
+               {categoryDetailsPage?.videos?.map((item, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      setInfo(item);
+                      onOpen();
                     }}
-                  />
-                </TouchableOpacity>
+                  >
+                    <Image
+                      source={{ uri: item?.mobile_thumbnail }}
+                      resizeMode={"contain"}
+                      style={{
+                        width: 124,
+                        height: 176,
+                        marginHorizontal: 4,
+                        marginLeft: 8,
+                        borderRadius: 8,
+                      }}
+                    />
+                  </TouchableOpacity>
+               ))}
             </ScrollView>
           </View>
-        ))
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View>
@@ -459,17 +473,35 @@ const CatDetAnimScroll = ({ animateValue, isLoading, setIsLoading }) => {
                   </TouchableWithoutFeedback>
                     <TouchableOpacity onPress={() => {
                      if(bottomList === false) {
+                      if(info) {
                         dispatch(setVideoList(info));
                           ToastAndroid.show(
                             "Video has been added to List!",
                           ToastAndroid.SHORT
                         );
-                     } else {
-                        dispatch(setRemoveListItem(info));
+                      } else {
+                        return (
                           ToastAndroid.show(
-                            "Video has been removed to List!",
-                          ToastAndroid.SHORT
-                        );
+                            "Please wait for video to load...",
+                            ToastAndroid.SHORT
+                          )
+                        )
+                      }
+                     } else {
+                      if(info) {
+                        dispatch(setRemoveListItem(info));
+                        ToastAndroid.show(
+                          "Video has been removed to List!",
+                        ToastAndroid.SHORT
+                      );
+                      } else {
+                        return (
+                          ToastAndroid.show(
+                            "Please wait for video to load...",
+                            ToastAndroid.SHORT
+                          )
+                        )
+                      }
                         setBottomList(!bottomList);
                      }
                     }} className="justify-center items-center opacity-[0.5]">

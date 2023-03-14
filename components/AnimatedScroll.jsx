@@ -192,17 +192,35 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
               <TouchableOpacity
                 onPress={() => {
                   if(addedToList === false) {
-                    dispatch(setVideoList(categories[0]?.videos[0]));
-                    ToastAndroid.show(
-                      "Video has been added to List!",
-                      ToastAndroid.SHORT
-                    );
+                    if(categories[0]?.videos[0]) {
+                      dispatch(setVideoList(categories[0]?.videos[0]));
+                      ToastAndroid.show(
+                        "Video has been added to List!",
+                        ToastAndroid.SHORT
+                      );
+                    } else {
+                      return (
+                        ToastAndroid.show(
+                          "Please wait for video to load...",
+                          ToastAndroid.SHORT
+                        )
+                      );
+                    }
                   } else {
-                    dispatch(setRemoveListItem(categories[0]?.videos[0]));
-                    ToastAndroid.show(
-                      "Video has been removed from List!",
-                      ToastAndroid.SHORT
-                    );
+                    if(categories[0]?.videos[0]) {
+                      dispatch(setRemoveListItem(categories[0]?.videos[0]));
+                        ToastAndroid.show(
+                          "Video has been removed from List!",
+                          ToastAndroid.SHORT
+                        );
+                    } else {
+                      return (
+                        ToastAndroid.show(
+                          "Please wait for video to load...",
+                          ToastAndroid.SHORT
+                        )
+                      );
+                    }
                   }
                   setAddedToList(!addedToList);
                 }}
@@ -445,17 +463,35 @@ const AnimatedScroll = ({ animateValue, isLoading, setIsLoading }) => {
                   <TouchableWithoutFeedback
                     onPress={() => {
                       if(bottomList === false) {
-                        dispatch(setVideoList(info));
-                        ToastAndroid.show(
-                          "Video has been added to List!",
-                          ToastAndroid.SHORT
-                        );
+                        if(info) {
+                          dispatch(setVideoList(info));
+                            ToastAndroid.show(
+                              "Video has been added to List!",
+                            ToastAndroid.SHORT
+                          );
+                        } else {
+                          return (
+                            ToastAndroid.show(
+                              "Please wait for video to load...",
+                            ToastAndroid.SHORT
+                            )
+                          );
+                        }
                       } else {
-                        dispatch(setRemoveListItem(info));
-                        ToastAndroid.show(
-                          "Video has been removed from List!",
-                          ToastAndroid.SHORT
-                        );
+                        if(info) {
+                          dispatch(setRemoveListItem(info));
+                            ToastAndroid.show(
+                            "Video has been removed from List!",
+                            ToastAndroid.SHORT
+                          );
+                        } else {
+                          return (
+                            ToastAndroid.show(
+                              "Please wait for video to load...",
+                            ToastAndroid.SHORT
+                            )
+                          );
+                        }
                       }
                       setBottomList(!bottomList);
                     }}

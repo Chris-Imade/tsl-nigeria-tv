@@ -387,6 +387,8 @@ const ProfileStack = () => {
 
   const profilePhoto = useSelector((state) => state?.data?.profilePhoto);
 
+  const dispatch = useDispatch();
+
   return (
     <StackProfile.Navigator initialRouteName="Profile">
       {/* All the profile related screens */}
@@ -408,17 +410,17 @@ const ProfileStack = () => {
           },
           headerTitle: "Notification",
           headerTintColor: colors.white,
-          headerRight: () => (
-            <TouchableHighlight
-              onPress={() => dispatch(setSearchNotification())}
-            >
-              <Image
-                source={images.SearchSmall}
-                className="w-[24px] h-[24px]"
-                resizeMode="contain"
-              />
-            </TouchableHighlight>
-          ),
+          // headerRight: () => (
+          //   <TouchableHighlight
+          //     onPress={() => dispatch(setSearchNotification())}
+          //   >
+          //     <Image
+          //       source={images.SearchSmall}
+          //       className="w-[24px] h-[24px]"
+          //       resizeMode="contain"
+          //     />
+          //   </TouchableHighlight>
+          // ),
         }}
         name="notification-screen"
         component={Notification}
